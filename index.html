@@ -1,292 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue 3 + Pinia + Element Plus Auto Loan Calculator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vue 3 + Pinia + Element Plus Auto Loan Calculator</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		/>
 
-    <!-- Import Vue 3 -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- Import Pinia -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.14.6/index.iife.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pinia/2.1.7/pinia.iife.js"></script>
+		<!-- Import Vue 3 -->
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+		<!-- Import Pinia -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.14.6/index.iife.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pinia/2.1.7/pinia.iife.js"></script>
 
-    <!-- Import Element Plus CSS & JS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/element-plus/dist/index.css"
-    />
-    <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+		<!-- Import Element Plus CSS & JS -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/element-plus/dist/index.css"
+		/>
+		<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 
-    <style>
-      /* Shared Styles */
-      body {
-        background-color: #f3f4f6;
-        font-family: "Helvetica Neue", Helvetica, "PingFang SC",
-          "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-      }
+		<style>
+			/* Shared Styles */
+			body {
+				background-color: #f3f4f6;
+				font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+					"Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial,
+					sans-serif;
+			}
 
-      /* Overrides for Element Plus to match the desired look */
-      .el-card {
-        border-radius: 12px;
-      }
-      .el-dialog {
-        border-radius: 16px;
-        overflow: hidden;
-      }
-      .el-slider__button {
-        border-color: #409eff;
-      }
+			/* Overrides for Element Plus to match the desired look */
+			.el-card {
+				border-radius: 12px;
+			}
+			.el-dialog {
+				border-radius: 16px;
+				overflow: hidden;
+			}
+			.el-slider__button {
+				border-color: #409eff;
+			}
 
-      /* Custom transitions */
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: opacity 0.3s;
-      }
-      .fade-enter-from,
-      .fade-leave-to {
-        opacity: 0;
-      }
+			/* Custom transitions */
+			.fade-enter-active,
+			.fade-leave-active {
+				transition: opacity 0.3s;
+			}
+			.fade-enter-from,
+			.fade-leave-to {
+				opacity: 0;
+			}
 
-      /* Vehicle Card Hover Effect */
-      .vehicle-card {
-        transition: all 0.3s;
-        border: 1px solid transparent;
-      }
-      .vehicle-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border-color: #c6e2ff;
-      }
+			/* Vehicle Card Hover Effect */
+			.vehicle-card {
+				transition: all 0.3s;
+				border: 1px solid transparent;
+			}
+			.vehicle-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+				border-color: #c6e2ff;
+			}
 
-      /* Summary Card Customization */
-      .summary-card {
-        background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
-        border: none;
-        color: white;
-      }
-      .summary-card .el-card__body {
-        padding: 24px;
-      }
+			/* Summary Card Customization */
+			.summary-card {
+				background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+				border: none;
+				color: white;
+			}
+			.summary-card .el-card__body {
+				padding: 24px;
+			}
 
-      /* Responsive adjustments for Element Plus on small screens */
-      @media (max-width: 640px) {
-        .el-message-box {
-          width: 90% !important;
-          max-width: 400px;
-        }
-        .el-dialog {
-          width: 95% !important;
-        }
-      }
-    </style>
-  </head>
-  <body class="p-4 md:p-8">
-    <div id="app" class="max-w-7xl mx-auto">
-      <!-- App content renders here -->
-    </div>
+			/* Responsive adjustments for Element Plus on small screens */
+			@media (max-width: 640px) {
+				.el-message-box {
+					width: 90% !important;
+					max-width: 400px;
+				}
+				.el-dialog {
+					width: 95% !important;
+				}
+			}
+		</style>
+	</head>
+	<body class="p-4 md:p-8">
+		<div id="app" class="max-w-7xl mx-auto">
+			<!-- App content renders here -->
+		</div>
 
-    <script>
-      const { createApp, ref, computed, watch, reactive } = Vue;
-      const { defineStore, createPinia } = Pinia;
-      const { ElMessage } = ElementPlus;
+		<script>
+			const { createApp, ref, computed, watch, reactive } = Vue;
+			const { defineStore, createPinia } = Pinia;
+			const { ElMessage } = ElementPlus;
 
-      // ==========================================
-      // 1. PINIA STORE
-      // ==========================================
-      const useLoanStore = defineStore("loan", () => {
-        // -- App State --
-        const currentView = ref("calculator");
-        const selectedVehicle = ref(null);
+			// ==========================================
+			// 1. PINIA STORE
+			// ==========================================
+			const useLoanStore = defineStore("loan", () => {
+				// -- App State --
+				const currentView = ref("calculator");
+				const selectedVehicle = ref(null);
 
-        // -- Calculator State --
-        const price = ref(20000);
-        const downPayment = ref(1000);
-        const tradeIn = ref(0);
-        const amountOwed = ref(0);
-        const interestRate = ref(7.0);
-        const loanTerm = ref(24);
+				// -- Calculator State --
+				const price = ref(20000);
+				const downPayment = ref(1000);
+				const tradeIn = ref(0);
+				const amountOwed = ref(0);
+				const interestRate = ref(7.0);
+				const loanTerm = ref(24);
 
-        // -- Mock Vehicle Data --
-        const inventory = [
-          {
-            id: 1,
-            make: "Toyota",
-            model: "Camry SE",
-            year: 2021,
-            price: 24500,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Toyota+Camry",
-            desc: "Reliable sedan with sport tuning and advanced safety features.",
-          },
-          {
-            id: 2,
-            make: "Honda",
-            model: "Civic EX",
-            year: 2022,
-            price: 22000,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Honda+Civic",
-            desc: "Fuel efficient compact car with a spacious interior.",
-          },
-          {
-            id: 3,
-            make: "Ford",
-            model: "F-150 XL",
-            year: 2020,
-            price: 32000,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Ford+F-150",
-            desc: "Powerful work truck with towing capability.",
-          },
-          {
-            id: 4,
-            make: "Chevrolet",
-            model: "Malibu",
-            year: 2021,
-            price: 19500,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Chevy+Malibu",
-            desc: "Comfortable midsize sedan perfect for commuting.",
-          },
-          {
-            id: 5,
-            make: "Nissan",
-            model: "Altima",
-            year: 2022,
-            price: 23000,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Nissan+Altima",
-            desc: "Tech-forward sedan with AWD options.",
-          },
-          {
-            id: 6,
-            make: "Hyundai",
-            model: "Elantra",
-            year: 2023,
-            price: 21500,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Hyundai+Elantra",
-            desc: "Stylish design with excellent warranty coverage.",
-          },
-          {
-            id: 7,
-            make: "BMW",
-            model: "330i",
-            year: 2019,
-            price: 31000,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=BMW+3+Series",
-            desc: "Luxury sports sedan with premium interior.",
-          },
-          {
-            id: 8,
-            make: "Kia",
-            model: "K5",
-            year: 2022,
-            price: 25000,
-            img: "https://placehold.co/600x400/1e293b/FFF?text=Kia+K5",
-            desc: "Bold styling and turbo performance.",
-          },
-        ];
+				// -- Mock Vehicle Data --
+				const inventory = [
+					{
+						id: 1,
+						make: "Toyota",
+						model: "Camry SE",
+						year: 2021,
+						price: 24500,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Toyota+Camry",
+						desc: "Reliable sedan with sport tuning and advanced safety features.",
+					},
+					{
+						id: 2,
+						make: "Honda",
+						model: "Civic EX",
+						year: 2022,
+						price: 22000,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Honda+Civic",
+						desc: "Fuel efficient compact car with a spacious interior.",
+					},
+					{
+						id: 3,
+						make: "Ford",
+						model: "F-150 XL",
+						year: 2020,
+						price: 32000,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Ford+F-150",
+						desc: "Powerful work truck with towing capability.",
+					},
+					{
+						id: 4,
+						make: "Chevrolet",
+						model: "Malibu",
+						year: 2021,
+						price: 19500,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Chevy+Malibu",
+						desc: "Comfortable midsize sedan perfect for commuting.",
+					},
+					{
+						id: 5,
+						make: "Nissan",
+						model: "Altima",
+						year: 2022,
+						price: 23000,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Nissan+Altima",
+						desc: "Tech-forward sedan with AWD options.",
+					},
+					{
+						id: 6,
+						make: "Hyundai",
+						model: "Elantra",
+						year: 2023,
+						price: 21500,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Hyundai+Elantra",
+						desc: "Stylish design with excellent warranty coverage.",
+					},
+					{
+						id: 7,
+						make: "BMW",
+						model: "330i",
+						year: 2019,
+						price: 31000,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=BMW+3+Series",
+						desc: "Luxury sports sedan with premium interior.",
+					},
+					{
+						id: 8,
+						make: "Kia",
+						model: "K5",
+						year: 2022,
+						price: 25000,
+						img: "https://placehold.co/600x400/1e293b/FFF?text=Kia+K5",
+						desc: "Bold styling and turbo performance.",
+					},
+				];
 
-        // -- Logic --
-        watch(
-          [price, downPayment, tradeIn, amountOwed, interestRate],
-          ([newPrice, newDown, newTrade, newOwed, newRate]) => {
-            if (newPrice < 0) price.value = 0;
-            if (newDown < 0) downPayment.value = 0;
-            if (newTrade < 0) tradeIn.value = 0;
-            if (newOwed < 0) amountOwed.value = 0;
-            if (newRate < 0) interestRate.value = 0;
-          }
-        );
+				// -- Logic --
+				watch(
+					[price, downPayment, tradeIn, amountOwed, interestRate],
+					([newPrice, newDown, newTrade, newOwed, newRate]) => {
+						if (newPrice < 0) price.value = 0;
+						if (newDown < 0) downPayment.value = 0;
+						if (newTrade < 0) tradeIn.value = 0;
+						if (newOwed < 0) amountOwed.value = 0;
+						if (newRate < 0) interestRate.value = 0;
+					}
+				);
 
-        const netTradeImpact = computed(
-          () => (tradeIn.value || 0) - (amountOwed.value || 0)
-        );
+				const netTradeImpact = computed(
+					() => (tradeIn.value || 0) - (amountOwed.value || 0)
+				);
 
-        const principal = computed(() => {
-          let p =
-            (price.value || 0) -
-            (downPayment.value || 0) -
-            netTradeImpact.value;
-          return p > 0 ? p : 0;
-        });
+				const principal = computed(() => {
+					let p =
+						(price.value || 0) -
+						(downPayment.value || 0) -
+						netTradeImpact.value;
+					return p > 0 ? p : 0;
+				});
 
-        const monthlyPayment = computed(() => {
-          const A = downPayment.value || 0;
-          const B = price.value || 0;
-          const C = tradeIn.value || 0;
-          const D = interestRate.value || 0;
-          const G = amountOwed.value || 0;
-          const H = loanTerm.value || 0;
+				const monthlyPayment = computed(() => {
+					const A = downPayment.value || 0;
+					const B = price.value || 0;
+					const C = tradeIn.value || 0;
+					const D = interestRate.value || 0;
+					const G = amountOwed.value || 0;
+					const H = loanTerm.value || 0;
 
-          const principalAmount = B - A - C + G;
-          if (principalAmount <= 0) return 0;
-          if (D === 0) return principalAmount / H;
+					const principalAmount = B - A - C + G;
+					if (principalAmount <= 0) return 0;
+					if (D === 0) return principalAmount / H;
 
-          const monthlyRate = D / 1200;
-          const numerator = principalAmount * monthlyRate;
-          const denominator = 1 - 1 / Math.pow(1 + monthlyRate, H);
-          const payment = numerator / denominator;
+					const monthlyRate = D / 1200;
+					const numerator = principalAmount * monthlyRate;
+					const denominator = 1 - 1 / Math.pow(1 + monthlyRate, H);
+					const payment = numerator / denominator;
 
-          return isFinite(payment) ? payment : 0;
-        });
+					return isFinite(payment) ? payment : 0;
+				});
 
-        const recommendedVehicles = computed(() => {
-          const targetPrice = price.value;
-          return inventory.filter(
-            (v) =>
-              v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000
-          );
-        });
+				const recommendedVehicles = computed(() => {
+					const targetPrice = price.value;
+					return inventory.filter(
+						(v) =>
+							v.price >= targetPrice - 10000 &&
+							v.price <= targetPrice + 10000
+					);
+				});
 
-        const startApplication = () => {
-          currentView.value = "application";
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        };
+				const startApplication = () => {
+					currentView.value = "application";
+					window.scrollTo({ top: 0, behavior: "smooth" });
+				};
 
-        const resetView = () => {
-          currentView.value = "calculator";
-          selectedVehicle.value = null;
-        };
+				const resetView = () => {
+					currentView.value = "calculator";
+					selectedVehicle.value = null;
+				};
 
-        return {
-          price,
-          downPayment,
-          tradeIn,
-          amountOwed,
-          interestRate,
-          loanTerm,
-          netTradeImpact,
-          principal,
-          monthlyPayment,
-          recommendedVehicles,
-          currentView,
-          selectedVehicle,
-          startApplication,
-          resetView,
-        };
-      });
+				return {
+					price,
+					downPayment,
+					tradeIn,
+					amountOwed,
+					interestRate,
+					loanTerm,
+					netTradeImpact,
+					principal,
+					monthlyPayment,
+					recommendedVehicles,
+					currentView,
+					selectedVehicle,
+					startApplication,
+					resetView,
+				};
+			});
 
-      // ==========================================
-      // 2. COMPONENTS (CALCULATOR)
-      // ==========================================
+			// ==========================================
+			// 2. COMPONENTS (CALCULATOR)
+			// ==========================================
 
-      const LoanInputSection = {
-        setup() {
-          const store = useLoanStore();
-          const termOptions = [
-            { value: 12, label: "12 Months" },
-            { value: 24, label: "24 Months" },
-            { value: 36, label: "36 Months" },
-            { value: 48, label: "48 Months" },
-            { value: 60, label: "60 Months" },
-            { value: 72, label: "72 Months" },
-            { value: 84, label: "84 Months" },
-          ];
-          return { store, termOptions };
-        },
-        template: `
+			const LoanInputSection = {
+				setup() {
+					const store = useLoanStore();
+					const termOptions = [
+						{ value: 12, label: "12 Months" },
+						{ value: 24, label: "24 Months" },
+						{ value: 36, label: "36 Months" },
+						{ value: 48, label: "48 Months" },
+						{ value: 60, label: "60 Months" },
+						{ value: 72, label: "72 Months" },
+						{ value: 84, label: "84 Months" },
+					];
+					return { store, termOptions };
+				},
+				template: `
                 <el-card shadow="hover" class="mb-6">
                     <template #header>
                         <div class="flex items-center text-lg font-bold text-gray-800">
@@ -296,33 +298,24 @@
                     </template>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- Vehicle Selling Price -->
                         <div class="space-y-1">
                             <div class="flex items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600 mr-2">Vehicle Selling Price</span>
-                                <el-tooltip content="The total sticker price of the vehicle." placement="top">
-                                    <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
-                                </el-tooltip>
+                                <el-tooltip content="The total sticker price of the vehicle." placement="top"><i class="fas fa-info-circle text-gray-400 cursor-help"></i></el-tooltip>
                             </div>
                             <el-input v-model.number="store.price" type="number" placeholder="0.00" size="large">
                                 <template #prefix><i class="fas fa-dollar-sign text-gray-400"></i></template>
                             </el-input>
                         </div>
-
-                        <!-- Down Payment -->
                         <div class="space-y-1">
                             <div class="flex items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600 mr-2">Cash Down Payment</span>
-                                <el-tooltip content="Cash paid upfront to reduce the loan amount." placement="top">
-                                    <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
-                                </el-tooltip>
+                                <el-tooltip content="Cash paid upfront to reduce the loan amount." placement="top"><i class="fas fa-info-circle text-gray-400 cursor-help"></i></el-tooltip>
                             </div>
                             <el-input v-model.number="store.downPayment" type="number" placeholder="0.00" size="large">
                                 <template #prefix><i class="fas fa-dollar-sign text-gray-400"></i></template>
                             </el-input>
                         </div>
-
-                        <!-- Interest Rate -->
                         <div class="space-y-1 md:col-span-2 lg:col-span-1">
                             <div class="flex justify-between items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600">Interest Rate (APR)</span>
@@ -330,40 +323,28 @@
                             </div>
                             <el-slider v-model="store.interestRate" :min="0" :max="20" :step="0.1" show-input size="small" :show-input-controls="false" />
                         </div>
-
-                         <!-- Loan Duration -->
                          <div class="space-y-1">
                             <div class="flex items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600 mr-2">Loan Duration</span>
-                                <el-tooltip content="Length of the loan in months." placement="top">
-                                    <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
-                                </el-tooltip>
+                                <el-tooltip content="Length of the loan in months." placement="top"><i class="fas fa-info-circle text-gray-400 cursor-help"></i></el-tooltip>
                             </div>
                             <el-select v-model="store.loanTerm" class="w-full" size="large" placeholder="Select Term">
                                 <el-option v-for="opt in termOptions" :key="opt.value" :label="opt.label" :value="opt.value" />
                             </el-select>
                         </div>
-
-                        <!-- Trade-in Offer -->
                         <div class="space-y-1">
                             <div class="flex items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600 mr-2">Trade-in Offer</span>
-                                <el-tooltip content="The amount offered for your old car." placement="top">
-                                    <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
-                                </el-tooltip>
+                                <el-tooltip content="The amount offered for your old car." placement="top"><i class="fas fa-info-circle text-gray-400 cursor-help"></i></el-tooltip>
                             </div>
                             <el-input v-model.number="store.tradeIn" type="number" placeholder="0.00" size="large">
                                 <template #prefix><i class="fas fa-dollar-sign text-gray-400"></i></template>
                             </el-input>
                         </div>
-
-                        <!-- Amount Owed -->
                         <div class="space-y-1">
                             <div class="flex items-center mb-1">
                                 <span class="text-sm font-semibold text-gray-600 mr-2">Amount Owed on Trade-in</span>
-                                <el-tooltip content="Remaining loan balance on your trade-in vehicle." placement="top">
-                                    <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
-                                </el-tooltip>
+                                <el-tooltip content="Remaining loan balance on your trade-in vehicle." placement="top"><i class="fas fa-info-circle text-gray-400 cursor-help"></i></el-tooltip>
                             </div>
                             <el-input v-model.number="store.amountOwed" type="number" placeholder="0.00" size="large">
                                 <template #prefix><i class="fas fa-dollar-sign text-gray-400"></i></template>
@@ -371,37 +352,27 @@
                         </div>
                     </div>
                 </el-card>`,
-      };
+			};
 
-      const LoanSummary = {
-        setup() {
-          const store = useLoanStore();
-          const formatCurrency = (val) =>
-            new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-            }).format(val || 0);
-          return { store, formatCurrency };
-        },
-        template: `
+			const LoanSummary = {
+				setup() {
+					const store = useLoanStore();
+					const formatCurrency = (val) =>
+						new Intl.NumberFormat("en-US", {
+							style: "currency",
+							currency: "USD",
+						}).format(val || 0);
+					return { store, formatCurrency };
+				},
+				template: `
                 <el-card class="summary-card shadow-xl sticky top-4" :body-style="{ padding: '0px' }">
                     <div class="p-6 text-white">
                         <p class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-1">Estimated Monthly Payment</p>
                         <h2 class="text-4xl md:text-5xl font-bold mb-4">{{ formatCurrency(store.monthlyPayment) }}</h2>
-                        
                         <div class="border-t border-blue-400/30 pt-4 space-y-2 text-sm text-blue-50">
-                            <div class="flex justify-between">
-                                <span>Vehicle Price:</span>
-                                <span class="font-semibold">{{ formatCurrency(store.price) }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Loan Term:</span>
-                                <span class="font-semibold">{{ store.loanTerm }} Months</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Interest Rate:</span>
-                                <span class="font-semibold">{{ store.interestRate }}%</span>
-                            </div>
+                            <div class="flex justify-between"><span>Vehicle Price:</span><span class="font-semibold">{{ formatCurrency(store.price) }}</span></div>
+                            <div class="flex justify-between"><span>Loan Term:</span><span class="font-semibold">{{ store.loanTerm }} Months</span></div>
+                            <div class="flex justify-between"><span>Interest Rate:</span><span class="font-semibold">{{ store.interestRate }}%</span></div>
                              <div class="flex justify-between" v-if="store.netTradeImpact !== 0">
                                 <span>Trade-in Impact:</span>
                                 <span :class="store.netTradeImpact > 0 ? 'text-green-300' : 'text-red-300'" class="font-semibold">
@@ -411,87 +382,60 @@
                         </div>
                     </div>
                 </el-card>`,
-      };
+			};
 
-      const VehicleGrid = {
-        setup() {
-          const store = useLoanStore();
-          const openModal = (vehicle) => (store.selectedVehicle = vehicle);
-          const formatCurrency = (val) =>
-            new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              maximumFractionDigits: 0,
-            }).format(val);
-          return { store, openModal, formatCurrency };
-        },
-        template: `
+			const VehicleGrid = {
+				setup() {
+					const store = useLoanStore();
+					const openModal = (vehicle) =>
+						(store.selectedVehicle = vehicle);
+					const formatCurrency = (val) =>
+						new Intl.NumberFormat("en-US", {
+							style: "currency",
+							currency: "USD",
+							maximumFractionDigits: 0,
+						}).format(val);
+					return { store, openModal, formatCurrency };
+				},
+				template: `
                 <div class="mt-10">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 px-1 flex items-center">
-                        <i class="fas fa-car-side text-blue-500 mr-3"></i> Recommended Vehicles
-                    </h3>
-                    
-                    <div v-if="store.recommendedVehicles.length === 0">
-                        <el-empty description="No vehicles found in this price range. Try adjusting your vehicle price." />
-                    </div>
-
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 px-1 flex items-center"><i class="fas fa-car-side text-blue-500 mr-3"></i> Recommended Vehicles</h3>
+                    <div v-if="store.recommendedVehicles.length === 0"><el-empty description="No vehicles found in this price range. Try adjusting your vehicle price." /></div>
                     <el-row :gutter="24" v-else>
-                        <el-col 
-                            v-for="car in store.recommendedVehicles" 
-                            :key="car.id" 
-                            :xs="24" :sm="12" :lg="8" 
-                            class="mb-6"
-                        >
-                            <el-card 
-                                :body-style="{ padding: '0px' }" 
-                                shadow="hover" 
-                                class="vehicle-card h-full flex flex-col cursor-pointer"
-                                @click="openModal(car)"
-                            >
+                        <el-col v-for="car in store.recommendedVehicles" :key="car.id" :xs="24" :sm="12" :lg="8" class="mb-6">
+                            <el-card :body-style="{ padding: '0px' }" shadow="hover" class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
                                 <div class="relative h-48 overflow-hidden bg-gray-100">
                                     <img :src="car.img" alt="Car" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                                    <div class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">
-                                        {{ car.year }}
-                                    </div>
+                                    <div class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">{{ car.year }}</div>
                                 </div>
                                 <div class="p-5 flex flex-col flex-grow">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{ car.model }}</h4>
-                                    </div>
+                                    <div class="flex justify-between items-start mb-2"><h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{ car.model }}</h4></div>
                                     <div class="text-xl font-extrabold text-blue-600 mb-2">{{ formatCurrency(car.price) }}</div>
                                     <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.desc }}</p>
-                                    
-                                    <div class="mt-auto pt-2">
-                                        <el-button type="primary" plain class="w-full">
-                                            View Details
-                                        </el-button>
-                                    </div>
+                                    <div class="mt-auto pt-2"><el-button type="primary" plain class="w-full">View Details</el-button></div>
                                 </div>
                             </el-card>
                         </el-col>
                     </el-row>
                 </div>`,
-      };
+			};
 
-      const VehicleModal = {
-        setup() {
-          const store = useLoanStore();
-          // We use a computed property for v-model to handle open/close sync
-          const dialogVisible = computed({
-            get: () => !!store.selectedVehicle,
-            set: (val) => {
-              if (!val) store.selectedVehicle = null;
-            },
-          });
-
-          const proceedToConsultant = () => {
-            store.selectedVehicle = null;
-            store.startApplication();
-          };
-
-          return { store, dialogVisible, proceedToConsultant };
-        },
-        template: `
+			const VehicleModal = {
+				setup() {
+					const store = useLoanStore();
+					const dialogVisible = computed({
+						get: () => !!store.selectedVehicle,
+						set: (val) => {
+							if (!val) store.selectedVehicle = null;
+						},
+					});
+					const proceedToConsultant = () => {
+						store.selectedVehicle = null;
+						store.startApplication();
+					};
+					return { store, dialogVisible, proceedToConsultant };
+				},
+				template: `
                 <el-dialog v-model="dialogVisible" width="95%" class="max-w-2xl rounded-2xl" align-center destroy-on-close>
                     <div v-if="store.selectedVehicle">
                          <div class="relative h-56 md:h-64 -mx-5 -mt-5 mb-5 overflow-hidden">
@@ -501,13 +445,11 @@
                                 <p class="text-blue-200 font-medium text-sm md:text-base">Stock #{{ store.selectedVehicle.id }}8492</p>
                             </div>
                         </div>
-
                         <div class="px-2">
                             <div class="flex justify-between items-center mb-6 bg-blue-50 p-4 rounded-xl">
                                 <span class="text-gray-600 font-semibold uppercase text-xs tracking-wide">Listing Price</span>
                                 <span class="text-2xl md:text-3xl font-bold text-blue-700">$ {{ store.selectedVehicle.price.toLocaleString() }}</span>
                             </div>
-
                             <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-2">Description</h4>
                             <p class="text-gray-700 leading-relaxed text-base md:text-lg mb-8">{{ store.selectedVehicle.desc }}</p>
                         </div>
@@ -515,352 +457,489 @@
                     <template #footer>
                         <div class="flex flex-col md:flex-row gap-3">
                             <el-button @click="dialogVisible = false" size="large" class="w-full md:w-auto">Cancel</el-button>
-                            <el-button type="primary" @click="proceedToConsultant" size="large" class="w-full md:flex-1">
-                                <i class="fas fa-user-tie mr-2"></i> Get Consultant
-                            </el-button>
+                            <el-button type="primary" @click="proceedToConsultant" size="large" class="w-full md:flex-1"><i class="fas fa-user-tie mr-2"></i> Get Consultant</el-button>
                         </div>
                     </template>
                 </el-dialog>`,
-      };
+			};
 
-      // ==========================================
-      // 3. CONSULTANT FORM (Element Plus)
-      // ==========================================
-      const ConsultantForm = {
-        setup() {
-          const store = useLoanStore();
+			// ==========================================
+			// 3. CONSULTANT FORM (Element Plus + Validation)
+			// ==========================================
+			const ConsultantForm = {
+				setup() {
+					const store = useLoanStore();
 
-          // 1. Schema
-          const schema = {
-            formHeading: "Finance application",
-            formDescription:
-              "Please complete the details below securely. A dedicated consultant will review your information and contact you shortly.",
-            groups: [
-              {
-                heading: "Personal Information",
-                inputs: [
-                  { label: "First Name", type: "text", required: true },
-                  { label: "Last Name", type: "text", required: true },
-                  { label: "SSN", type: "password", required: true },
-                  {
-                    label: "Date of birth",
-                    type: "text",
-                    required: true,
-                    format: "mm/dd/yyyy",
-                    components: {
-                      mm: { type: "select", options: "1..12" },
-                      dd: { type: "select", options: "1..31" },
-                      yy: { type: "select", options: "1920..2025" },
-                    },
-                  },
-                  {
-                    label: "Phone",
-                    type: "text",
-                    required: true,
-                    format: "(XXX) XXX-XXXX",
-                    masked: true,
-                  },
-                  { label: "Email", type: "email", required: true },
-                ],
-              },
-              {
-                heading: "Residence",
-                inputs: [
-                  { label: "Current Address", type: "text", required: true },
-                  { label: "Address Line 1", type: "text", required: true },
-                  { label: "Address Line 2", type: "text", required: false },
-                  {
-                    label: "City",
-                    type: "select",
-                    required: true,
-                    options: "US cities",
-                  },
-                  {
-                    label: "State",
-                    type: "select",
-                    required: true,
-                    options: "US states",
-                  },
-                  { label: "Zip Code", type: "text", required: true },
-                  {
-                    label: "Housing Status",
-                    type: "select",
-                    required: true,
-                    options: ["Rent", "Own", "Live with relative"],
-                  },
-                  {
-                    label: "Monthly Payment (Your portion)",
-                    type: "number",
-                    required: false,
-                  },
-                  {
-                    label: "Time at current address",
-                    type: "text",
-                    required: true,
-                    format: "() years, () months",
-                    components: {
-                      year: { type: "number" },
-                      month: { type: "number" },
-                    },
-                  },
-                ],
-              },
-              {
-                heading: "Employment",
-                inputs: [
-                  {
-                    label: "Employment Status",
-                    type: "select",
-                    required: true,
-                    options: ["Employed", "Retired", "Self-employed", "Other"],
-                  },
-                  { label: "Company Name", type: "text", required: true },
-                ],
-              },
-              {
-                heading: "Work Address",
-                inputs: [
-                  { label: "Address", type: "text", required: true },
-                  { label: "Company Name", type: "text", required: true },
-                  { label: "Address Line 1", type: "text", required: true },
-                  {
-                    label: "City",
-                    type: "select",
-                    required: true,
-                    options: "US cities",
-                  },
-                  {
-                    label: "State",
-                    type: "select",
-                    required: true,
-                    options: "US states",
-                  },
-                  { label: "Zip Code", type: "text", required: true },
-                  {
-                    label: "Occupation/Job Title",
-                    type: "text",
-                    required: true,
-                  },
-                  { label: "Work Phone", type: "text", required: false },
-                  {
-                    label: "Time of Current Employment",
-                    type: "text",
-                    required: true,
-                    format: "() years, () months",
-                    components: {
-                      year: { type: "number" },
-                      month: { type: "number" },
-                    },
-                  },
-                  {
-                    label: "Total Monthly Income or Annually",
-                    type: "number",
-                    required: true,
-                  },
-                ],
-              },
-              {
-                heading: "Final details",
-                inputs: [
-                  {
-                    label:
-                      "Ok to run credit reports by our top rated dealership",
-                    type: "checkbox",
-                    default: false,
-                  },
-                  {
-                    label: "How much of Down Payment?",
-                    type: "number",
-                    required: true,
-                  },
-                  {
-                    label:
-                      "I authorize this dealership to run my credit report.",
-                    type: "checkbox",
-                    default: false,
-                    required: true,
-                  },
-                  {
-                    label:
-                      "I agree to the collection and processing of my personal data.",
-                    type: "checkbox",
-                    default: false,
-                    required: true,
-                  },
-                  {
-                    label: "I agree to receive newsletters.",
-                    type: "checkbox",
-                    default: false,
-                    required: false,
-                  },
-                ],
-              },
-            ],
-          };
+					// 1. Schema
+					const schema = {
+						formHeading: "Finance application",
+						formDescription:
+							"Please complete the details below securely. A dedicated consultant will review your information and contact you shortly.",
+						groups: [
+							{
+								heading: "Personal Information",
+								inputs: [
+									{
+										label: "First Name",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Last Name",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "SSN",
+										type: "password",
+										required: true,
+									},
+									{
+										label: "Date of birth",
+										type: "text",
+										required: true,
+										format: "mm/dd/yyyy",
+										components: {
+											mm: {
+												type: "select",
+												options: "1..12",
+											},
+											dd: {
+												type: "select",
+												options: "1..31",
+											},
+											yy: {
+												type: "select",
+												options: "1920..2025",
+											},
+										},
+									},
+									{
+										label: "Phone",
+										type: "text",
+										required: true,
+										format: "(XXX) XXX-XXXX",
+										masked: true,
+									},
+									{
+										label: "Email",
+										type: "email",
+										required: true,
+									},
+								],
+							},
+							{
+								heading: "Residence",
+								inputs: [
+									{
+										label: "Current Address",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Address Line 1",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Address Line 2",
+										type: "text",
+										required: false,
+									},
+									{
+										label: "City",
+										type: "select",
+										required: true,
+										options: "US cities",
+									},
+									{
+										label: "State",
+										type: "select",
+										required: true,
+										options: "US states",
+									},
+									{
+										label: "Zip Code",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Housing Status",
+										type: "select",
+										required: true,
+										options: [
+											"Rent",
+											"Own",
+											"Live with relative",
+										],
+									},
+									{
+										label: "Monthly Payment (Your portion)",
+										type: "number",
+										required: false,
+									},
+									{
+										label: "Time at current address",
+										type: "text",
+										required: true,
+										format: "() years, () months",
+										components: {
+											year: { type: "number" },
+											month: { type: "number" },
+										},
+									},
+								],
+							},
+							{
+								heading: "Employment",
+								inputs: [
+									{
+										label: "Employment Status",
+										type: "select",
+										required: true,
+										options: [
+											"Employed",
+											"Retired",
+											"Self-employed",
+											"Other",
+										],
+									},
+									{
+										label: "Company Name",
+										type: "text",
+										required: true,
+									},
+								],
+							},
+							{
+								heading: "Work Address",
+								inputs: [
+									{
+										label: "Address",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Company Name",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Address Line 1",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "City",
+										type: "select",
+										required: true,
+										options: "US cities",
+									},
+									{
+										label: "State",
+										type: "select",
+										required: true,
+										options: "US states",
+									},
+									{
+										label: "Zip Code",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Occupation/Job Title",
+										type: "text",
+										required: true,
+									},
+									{
+										label: "Work Phone",
+										type: "text",
+										required: false,
+									},
+									{
+										label: "Time of Current Employment",
+										type: "text",
+										required: true,
+										format: "() years, () months",
+										components: {
+											year: { type: "number" },
+											month: { type: "number" },
+										},
+									},
+									{
+										label: "Total Monthly Income or Annually",
+										type: "number",
+										required: true,
+									},
+								],
+							},
+							{
+								heading: "Final details",
+								inputs: [
+									{
+										label: "Ok to run credit reports by our top rated dealership",
+										type: "checkbox",
+										default: false,
+									},
+									{
+										label: "How much of Down Payment?",
+										type: "number",
+										required: true,
+									},
+									{
+										label: "I authorize this dealership to run my credit report.",
+										type: "checkbox",
+										default: false,
+										required: true,
+									},
+									{
+										label: "I agree to the collection and processing of my personal data.",
+										type: "checkbox",
+										default: false,
+										required: true,
+									},
+									{
+										label: "I agree to receive newsletters.",
+										type: "checkbox",
+										default: false,
+										required: false,
+									},
+								],
+							},
+						],
+					};
 
-          // 2. State
-          const formData = reactive({});
-          const usStates = [
-            "AL",
-            "AK",
-            "AZ",
-            "AR",
-            "CA",
-            "CO",
-            "CT",
-            "DE",
-            "FL",
-            "GA",
-            "HI",
-            "ID",
-            "IL",
-            "IN",
-            "IA",
-            "KS",
-            "KY",
-            "LA",
-            "ME",
-            "MD",
-            "MA",
-            "MI",
-            "MN",
-            "MS",
-            "MO",
-            "MT",
-            "NE",
-            "NV",
-            "NH",
-            "NJ",
-            "NM",
-            "NY",
-            "NC",
-            "ND",
-            "OH",
-            "OK",
-            "OR",
-            "PA",
-            "RI",
-            "SC",
-            "SD",
-            "TN",
-            "TX",
-            "UT",
-            "VT",
-            "VA",
-            "WA",
-            "WV",
-            "WI",
-            "WY",
-          ];
-          const mockCities = [
-            "New York",
-            "Los Angeles",
-            "Chicago",
-            "Houston",
-            "Phoenix",
-            "Philadelphia",
-            "San Antonio",
-            "San Diego",
-            "Dallas",
-            "San Jose",
-          ];
+					// 2. State
+					const formData = reactive({});
+					const errors = reactive({}); // Error state
+					const itemRefs = {}; // Store DOM refs for scrolling
 
-          const generateKey = (groupHeading, label) => {
-            const prefix = groupHeading.replace(/\s+/g, "").toLowerCase();
-            const suffix = label.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-            return `${prefix}_${suffix}`;
-          };
+					const usStates = [
+						"AL",
+						"AK",
+						"AZ",
+						"AR",
+						"CA",
+						"CO",
+						"CT",
+						"DE",
+						"FL",
+						"GA",
+						"HI",
+						"ID",
+						"IL",
+						"IN",
+						"IA",
+						"KS",
+						"KY",
+						"LA",
+						"ME",
+						"MD",
+						"MA",
+						"MI",
+						"MN",
+						"MS",
+						"MO",
+						"MT",
+						"NE",
+						"NV",
+						"NH",
+						"NJ",
+						"NM",
+						"NY",
+						"NC",
+						"ND",
+						"OH",
+						"OK",
+						"OR",
+						"PA",
+						"RI",
+						"SC",
+						"SD",
+						"TN",
+						"TX",
+						"UT",
+						"VT",
+						"VA",
+						"WA",
+						"WV",
+						"WI",
+						"WY",
+					];
+					const mockCities = [
+						"New York",
+						"Los Angeles",
+						"Chicago",
+						"Houston",
+						"Phoenix",
+						"Philadelphia",
+						"San Antonio",
+						"San Diego",
+						"Dallas",
+						"San Jose",
+					];
 
-          // Init State
-          schema.groups.forEach((group) => {
-            group.inputs.forEach((input) => {
-              const key = generateKey(group.heading, input.label);
-              if (input.components) {
-                formData[key] = {};
-                Object.keys(input.components).forEach((compKey) => {
-                  formData[key][compKey] = "";
-                });
-              } else {
-                if (input.label.includes("Down Payment")) {
-                  formData[key] = store.downPayment;
-                } else if (input.type === "checkbox") {
-                  formData[key] = input.default || false;
-                } else {
-                  formData[key] = "";
-                }
-              }
-            });
-          });
+					const generateKey = (groupHeading, label) => {
+						const prefix = groupHeading
+							.replace(/\s+/g, "")
+							.toLowerCase();
+						const suffix = label
+							.replace(/[^a-zA-Z0-9]/g, "")
+							.toLowerCase();
+						return `${prefix}_${suffix}`;
+					};
 
-          const resolveOptions = (optionsStr) => {
-            if (Array.isArray(optionsStr)) return optionsStr;
-            if (optionsStr === "US states") return usStates;
-            if (optionsStr === "US cities") return mockCities;
-            if (optionsStr && optionsStr.includes("..")) {
-              const [start, end] = optionsStr.split("..").map(Number);
-              const arr = [];
-              for (let i = start; i <= end; i++) arr.push(i);
-              return arr;
-            }
-            return [];
-          };
+					// Function to set refs dynamically
+					const setItemRef = (el, key) => {
+						if (el) itemRefs[key] = el;
+					};
 
-          const getResponsiveProps = (input) => {
-            const l = input.label.toLowerCase();
-            if (input.type === "checkbox") return { span: 24 };
-            if (l === "current address" || l === "address")
-              return { xs: 24, sm: 24, md: 24, lg: 24 };
-            return { xs: 24, sm: 12, md: 12, lg: 8 };
-          };
+					// Init State
+					schema.groups.forEach((group) => {
+						group.inputs.forEach((input) => {
+							const key = generateKey(group.heading, input.label);
+							if (input.components) {
+								formData[key] = {};
+								Object.keys(input.components).forEach(
+									(compKey) => {
+										formData[key][compKey] = "";
+									}
+								);
+							} else {
+								if (input.label.includes("Down Payment")) {
+									formData[key] = store.downPayment;
+								} else if (input.type === "checkbox") {
+									formData[key] = input.default || false;
+								} else {
+									formData[key] = "";
+								}
+							}
+						});
+					});
 
-          const submitForm = () => {
-            let missing = [];
-            schema.groups.forEach((group) => {
-              group.inputs.forEach((input) => {
-                const key = generateKey(group.heading, input.label);
-                if (input.required) {
-                  if (input.components) {
-                    Object.keys(input.components).forEach((k) => {
-                      if (!formData[key][k]) missing.push(`${input.label}`);
-                    });
-                  } else {
-                    if (!formData[key] && formData[key] !== 0)
-                      missing.push(input.label);
-                    if (input.type === "checkbox" && !formData[key])
-                      missing.push(input.label);
-                  }
-                }
-              });
-            });
+					const resolveOptions = (optionsStr) => {
+						if (Array.isArray(optionsStr)) return optionsStr;
+						if (optionsStr === "US states") return usStates;
+						if (optionsStr === "US cities") return mockCities;
+						if (optionsStr && optionsStr.includes("..")) {
+							const [start, end] = optionsStr
+								.split("..")
+								.map(Number);
+							const arr = [];
+							for (let i = start; i <= end; i++) arr.push(i);
+							return arr;
+						}
+						return [];
+					};
 
-            if (missing.length === 0) {
-              ElMessage({
-                message:
-                  "Application Submitted! A consultant will contact you shortly.",
-                type: "success",
-                duration: 4000,
-              });
-              setTimeout(() => store.resetView(), 2000);
-            } else {
-              ElMessage({
-                message: "Please complete all required fields.",
-                type: "error",
-                duration: 3000,
-              });
-            }
-          };
+					const getResponsiveProps = (input) => {
+						const l = input.label.toLowerCase();
+						if (input.type === "checkbox") return { span: 24 };
+						if (l === "current address" || l === "address")
+							return { xs: 24, sm: 24, md: 24, lg: 24 };
+						return { xs: 24, sm: 12, md: 12, lg: 8 };
+					};
 
-          return {
-            store,
-            formData,
-            schema,
-            generateKey,
-            resolveOptions,
-            getResponsiveProps,
-            submitForm,
-          };
-        },
-        template: `
+					const submitForm = () => {
+						// 1. Clear previous errors
+						Object.keys(errors).forEach(
+							(key) => delete errors[key]
+						);
+						let firstErrorKey = null;
+
+						// 2. Validate Loop
+						schema.groups.forEach((group) => {
+							group.inputs.forEach((input) => {
+								const key = generateKey(
+									group.heading,
+									input.label
+								);
+								let errorMsg = null;
+
+								// A. Required Check
+								if (input.required) {
+									if (input.components) {
+										// Complex (Date/Duration): Check all parts
+										const parts = formData[key];
+										const missingPart = Object.values(
+											parts
+										).some((val) => !val);
+										if (missingPart)
+											errorMsg = `Please complete the ${input.label.toLowerCase()}.`;
+									} else {
+										// Standard
+										const val = formData[key];
+										if (!val && val !== 0) {
+											if (input.type === "checkbox")
+												errorMsg =
+													"This field is required.";
+											else
+												errorMsg = `${input.label} is required.`;
+										}
+									}
+								}
+
+								// B. Email Check
+								if (
+									!errorMsg &&
+									input.type === "email" &&
+									formData[key]
+								) {
+									const emailRegex =
+										/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+									if (!emailRegex.test(formData[key]))
+										errorMsg =
+											"Please enter a valid email address.";
+								}
+
+								// C. Collect Error
+								if (errorMsg) {
+									errors[key] = errorMsg;
+									if (!firstErrorKey) firstErrorKey = key;
+								}
+							});
+						});
+
+						// 3. Result Action
+						if (firstErrorKey) {
+							// Scroll to first error
+							const element = itemRefs[firstErrorKey];
+							if (element && element.$el) {
+								element.$el.scrollIntoView({
+									behavior: "smooth",
+									block: "center",
+								});
+							}
+							ElMessage({
+								message:
+									"Please correct the errors highlighted below.",
+								type: "error",
+								duration: 3000,
+							});
+						} else {
+							ElMessage({
+								message:
+									"Application Submitted! A consultant will contact you shortly.",
+								type: "success",
+								duration: 4000,
+							});
+							setTimeout(() => store.resetView(), 2000);
+						}
+					};
+
+					return {
+						store,
+						formData,
+						schema,
+						errors,
+						generateKey,
+						resolveOptions,
+						getResponsiveProps,
+						submitForm,
+						setItemRef,
+					};
+				},
+				template: `
                 <div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
                     <div class="flex justify-between items-center mb-6 px-2">
                         <div>
@@ -869,21 +948,41 @@
                         </div>
                         <el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
                     </div>
+                    
                     <el-form label-position="top" @submit.prevent="submitForm">
                         <div v-for="(group, gIndex) in schema.groups" :key="gIndex" class="mb-6">
                             <el-card shadow="hover" class="rounded-xl border-0 shadow-sm" :body-style="{ padding: '16px' }">
                                 <template #header>
                                     <div class="flex items-center"><i class="fas fa-caret-right text-blue-500 mr-2"></i><span>{{ group.heading }}</span></div>
                                 </template>
+                                
                                 <el-row :gutter="24">
                                     <el-col v-for="(input, iIndex) in group.inputs" :key="iIndex" v-bind="getResponsiveProps(input)">
-                                        <el-form-item v-if="input.type === 'checkbox'" class="mb-2">
+                                        
+                                        <!-- Checkbox Field -->
+                                        <el-form-item 
+                                            v-if="input.type === 'checkbox'" 
+                                            class="mb-2" 
+                                            :error="errors[generateKey(group.heading, input.label)]"
+                                            :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
+                                        >
                                             <el-checkbox v-model="formData[generateKey(group.heading, input.label)]" :label="input.label" size="large" class="whitespace-normal h-auto py-2" />
                                         </el-form-item>
-                                        <el-form-item v-else :label="input.label + (input.required ? ' *' : '')" class="mb-6">
+
+                                        <!-- Standard & Complex Fields -->
+                                        <el-form-item 
+                                            v-else 
+                                            :label="input.label + (input.required ? ' *' : '')" 
+                                            class="mb-6"
+                                            :error="errors[generateKey(group.heading, input.label)]"
+                                            :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
+                                        >
+                                            <!-- Select -->
                                             <el-select v-if="input.type === 'select'" v-model="formData[generateKey(group.heading, input.label)]" placeholder="Select..." class="w-full">
                                                 <el-option v-for="opt in resolveOptions(input.options)" :key="opt" :label="opt" :value="opt" />
                                             </el-select>
+                                            
+                                            <!-- Complex (Date/Duration) -->
                                             <div v-else-if="input.components" class="w-full flex gap-2">
                                                 <div v-for="(compConfig, compKey) in input.components" :key="compKey" class="flex-1">
                                                     <el-select v-if="compConfig.type === 'select'" v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey.toUpperCase()">
@@ -892,10 +991,13 @@
                                                     <el-input v-else v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey" type="number" />
                                                 </div>
                                             </div>
+                                            
+                                            <!-- Standard Text/Number -->
                                             <el-input v-else v-model="formData[generateKey(group.heading, input.label)]" :type="input.type === 'number' ? 'number' : (input.type === 'password' ? 'password' : 'text')" :placeholder="input.format || ''">
                                                 <template #prefix v-if="input.label.includes('Price') || input.label.includes('Payment') || input.label.includes('Income')"><i class="fas fa-dollar-sign"></i></template>
                                             </el-input>
                                         </el-form-item>
+
                                     </el-col>
                                 </el-row>
                             </el-card>
@@ -906,45 +1008,37 @@
                         </div>
                     </el-form>
                 </div>`,
-      };
+			};
 
-      // ==========================================
-      // 4. MAIN APP
-      // ==========================================
-      const App = {
-        components: {
-          LoanInputSection,
-          LoanSummary,
-          VehicleGrid,
-          VehicleModal,
-          ConsultantForm,
-        },
-        setup() {
-          const store = useLoanStore();
-          return { store };
-        },
-        template: `
+			// ==========================================
+			// 4. MAIN APP
+			// ==========================================
+			const App = {
+				components: {
+					LoanInputSection,
+					LoanSummary,
+					VehicleGrid,
+					VehicleModal,
+					ConsultantForm,
+				},
+				setup() {
+					const store = useLoanStore();
+					return { store };
+				},
+				template: `
                 <div class="space-y-6">
                     <transition name="fade" mode="out-in">
                         <div v-if="store.currentView === 'calculator'" key="calc">
-                             <!-- Desktop Layout: Grid -->
-                             <!-- Mobile Layout: Flex Col -->
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                
-                                <!-- Left Column (Inputs) -->
                                 <div class="lg:col-span-2 order-1">
                                     <loan-input-section></loan-input-section>
                                 </div>
-                                
-                                <!-- Right Column (Summary - Sticky on Desktop) -->
                                 <div class="lg:col-span-1 order-2 lg:order-2">
                                     <div class="lg:sticky lg:top-4">
                                         <loan-summary></loan-summary>
                                         <el-alert title="Tip" type="info" description="Click on any vehicle to view details and apply." show-icon :closable="false" class="mt-6 hidden lg:flex" />
                                     </div>
                                 </div>
-
-                                <!-- Bottom Section (Vehicles - Full Width visually on mobile, nested in grid on desktop) -->
                                 <div class="lg:col-span-3 order-3">
                                     <vehicle-grid></vehicle-grid>
                                 </div>
@@ -957,13 +1051,13 @@
                     </transition>
                 </div>
             `,
-      };
+			};
 
-      const pinia = createPinia();
-      const app = createApp(App);
-      app.use(ElementPlus);
-      app.use(pinia);
-      app.mount("#app");
-    </script>
-  </body>
+			const pinia = createPinia();
+			const app = createApp(App);
+			app.use(ElementPlus);
+			app.use(pinia);
+			app.mount("#app");
+		</script>
+	</body>
 </html>
