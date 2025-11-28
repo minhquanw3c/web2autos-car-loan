@@ -986,16 +986,25 @@
 						return firstErrorKey;
 					};
 
-					// Trigger Validation -> Open Summary Modal
 					const submitForm = () => {
 						const firstErrorKey = checkErrors();
 						if (firstErrorKey) {
 							const element = itemRefs[firstErrorKey];
-							if (element && element.$el)
+							if (element && element.$el) {
 								element.$el.scrollIntoView({
 									behavior: "smooth",
 									block: "center",
 								});
+
+								// Find and focus the actual input element inside the ElFormItem
+								// This covers el-input, el-select (underlying input), and native inputs
+								const inputElement = element.$el.querySelector(
+									"input, textarea, select"
+								);
+								if (inputElement) {
+									inputElement.focus();
+								}
+							}
 							ElMessage({
 								message:
 									"Please correct the errors highlighted below.",
