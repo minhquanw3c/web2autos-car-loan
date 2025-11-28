@@ -95,7 +95,7 @@
 		<script>
 			const { createApp, ref, computed, watch, reactive } = Vue;
 			const { defineStore, createPinia } = Pinia;
-			const { ElMessage } = ElementPlus;
+			const { ElMessage, ElMessageBox } = ElementPlus;
 
 			// ==========================================
 			// 1. PINIA STORE
@@ -469,6 +469,7 @@
 			const ConsultantForm = {
 				setup() {
 					const store = useLoanStore();
+					const isSubmitted = ref(false); // Track submission state
 
 					// 1. Schema
 					const schema = {
@@ -709,11 +710,10 @@
 						],
 					};
 
-					// 2. State
+					// 2. State & Seeding
 					const formData = reactive({});
-					const errors = reactive({}); // Error state
-					const itemRefs = {}; // Store DOM refs for scrolling
-
+					const errors = reactive({});
+					const itemRefs = {};
 					const usStates = [
 						"AL",
 						"AK",
@@ -789,12 +789,12 @@
 						return `${prefix}_${suffix}`;
 					};
 
-					// Function to set refs dynamically
 					const setItemRef = (el, key) => {
 						if (el) itemRefs[key] = el;
 					};
 
-					// Init State
+					// -- INITIALIZE & SEED DATA --
+					// We pre-fill known keys to save time testing
 					schema.groups.forEach((group) => {
 						group.inputs.forEach((input) => {
 							const key = generateKey(group.heading, input.label);
@@ -802,17 +802,72 @@
 								formData[key] = {};
 								Object.keys(input.components).forEach(
 									(compKey) => {
-										formData[key][compKey] = "";
+										// Default seed values for complex components
+										let val = "";
+										if (key.includes("dateofbirth")) {
+											if (compKey === "mm") val = "5";
+											if (compKey === "dd") val = "15";
+											if (compKey === "yy") val = "1990";
+										} else if (key.includes("time")) {
+											if (compKey === "year") val = 2;
+											if (compKey === "month") val = 6;
+										}
+										formData[key][compKey] = val;
 									}
 								);
 							} else {
-								if (input.label.includes("Down Payment")) {
-									formData[key] = store.downPayment;
-								} else if (input.type === "checkbox") {
-									formData[key] = input.default || false;
-								} else {
-									formData[key] = "";
-								}
+								let val = "";
+								// --- SEEDING LOGIC ---
+								if (input.label.includes("First Name"))
+									val = "John";
+								else if (input.label.includes("Last Name"))
+									val = "Doe";
+								else if (input.label.includes("SSN"))
+									val = "123456789";
+								else if (input.label.includes("Email"))
+									val = "john.doe@example.com";
+								else if (
+									input.label.includes("Phone") &&
+									!input.label.includes("Work")
+								)
+									val = "(555) 123-4567";
+								else if (
+									input.label.includes("Current Address")
+								)
+									val = "123 Maple Street";
+								else if (input.label.includes("Address Line 1"))
+									val = "Apt 4B";
+								else if (input.label.includes("City"))
+									val = "New York";
+								else if (input.label.includes("State"))
+									val = "NY";
+								else if (input.label.includes("Zip Code"))
+									val = "10001";
+								else if (input.label.includes("Housing Status"))
+									val = "Rent";
+								else if (
+									input.label.includes("Monthly Payment")
+								)
+									val = 1500;
+								else if (
+									input.label.includes("Employment Status")
+								)
+									val = "Employed";
+								else if (input.label.includes("Company Name"))
+									val = "Tech Corp";
+								else if (input.label.includes("Occupation"))
+									val = "Software Engineer";
+								else if (input.label.includes("Income"))
+									val = 8500;
+								else if (input.label.includes("Down Payment"))
+									val = store.downPayment;
+								else if (
+									input.type === "checkbox" &&
+									input.required
+								)
+									val = true; // Auto check required boxes
+
+								formData[key] = val;
 							}
 						});
 					});
@@ -840,14 +895,11 @@
 						return { xs: 24, sm: 12, md: 12, lg: 8 };
 					};
 
-					const submitForm = () => {
-						// 1. Clear previous errors
+					const checkErrors = () => {
 						Object.keys(errors).forEach(
 							(key) => delete errors[key]
 						);
 						let firstErrorKey = null;
-
-						// 2. Validate Loop
 						schema.groups.forEach((group) => {
 							group.inputs.forEach((input) => {
 								const key = generateKey(
@@ -855,61 +907,55 @@
 									input.label
 								);
 								let errorMsg = null;
-
-								// A. Required Check
 								if (input.required) {
 									if (input.components) {
-										// Complex (Date/Duration): Check all parts
 										const parts = formData[key];
-										const missingPart = Object.values(
-											parts
-										).some((val) => !val);
-										if (missingPart)
+										if (
+											Object.values(parts).some(
+												(val) => !val
+											)
+										)
 											errorMsg = `Please complete the ${input.label.toLowerCase()}.`;
 									} else {
-										// Standard
 										const val = formData[key];
-										if (!val && val !== 0) {
-											if (input.type === "checkbox")
-												errorMsg =
-													"This field is required.";
-											else
-												errorMsg = `${input.label} is required.`;
-										}
+										if (!val && val !== 0)
+											errorMsg =
+												input.type === "checkbox"
+													? "This field is required."
+													: `${input.label} is required.`;
 									}
 								}
-
-								// B. Email Check
 								if (
 									!errorMsg &&
 									input.type === "email" &&
 									formData[key]
 								) {
-									const emailRegex =
-										/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-									if (!emailRegex.test(formData[key]))
+									if (
+										!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+											formData[key]
+										)
+									)
 										errorMsg =
 											"Please enter a valid email address.";
 								}
-
-								// C. Collect Error
 								if (errorMsg) {
 									errors[key] = errorMsg;
 									if (!firstErrorKey) firstErrorKey = key;
 								}
 							});
 						});
+						return firstErrorKey;
+					};
 
-						// 3. Result Action
+					const submitForm = () => {
+						const firstErrorKey = checkErrors();
 						if (firstErrorKey) {
-							// Scroll to first error
 							const element = itemRefs[firstErrorKey];
-							if (element && element.$el) {
+							if (element && element.$el)
 								element.$el.scrollIntoView({
 									behavior: "smooth",
 									block: "center",
 								});
-							}
 							ElMessage({
 								message:
 									"Please correct the errors highlighted below.",
@@ -917,14 +963,44 @@
 								duration: 3000,
 							});
 						} else {
-							ElMessage({
-								message:
-									"Application Submitted! A consultant will contact you shortly.",
-								type: "success",
-								duration: 4000,
-							});
-							setTimeout(() => store.resetView(), 2000);
+							// Success -> Show Summary
+							window.scrollTo({ top: 0, behavior: "smooth" });
+							isSubmitted.value = true;
 						}
+					};
+
+					const finalConfirm = () => {
+						ElMessageBox.alert(
+							"Your application has been officially received! We will be in touch shortly.",
+							"Success",
+							{
+								confirmButtonText: "Back to Home",
+								callback: () => {
+									store.resetView();
+								},
+							}
+						);
+					};
+
+					// Helper to format complex values for summary display
+					const formatValue = (key, input) => {
+						const val = formData[key];
+						if (input.components) {
+							if (input.label.includes("birth"))
+								return `${val.mm}/${val.dd}/${val.yy}`;
+							if (input.label.includes("Time"))
+								return `${val.year} Years, ${val.month} Months`;
+							return JSON.stringify(val);
+						}
+						if (input.type === "checkbox")
+							return val ? "Yes" : "No";
+						if (
+							input.label.includes("Price") ||
+							input.label.includes("Income") ||
+							input.label.includes("Payment")
+						)
+							return `$ ${Number(val).toLocaleString()}`;
+						return val;
 					};
 
 					return {
@@ -932,81 +1008,123 @@
 						formData,
 						schema,
 						errors,
+						isSubmitted,
 						generateKey,
 						resolveOptions,
 						getResponsiveProps,
 						submitForm,
 						setItemRef,
+						finalConfirm,
+						formatValue,
 					};
 				},
 				template: `
                 <div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
-                    <div class="flex justify-between items-center mb-6 px-2">
-                        <div>
-                             <h2 class="text-2xl md:text-3xl font-bold text-slate-800">{{ schema.formHeading }}</h2>
-                             <p class="text-slate-500 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
-                        </div>
-                        <el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
-                    </div>
                     
-                    <el-form label-position="top" @submit.prevent="submitForm">
-                        <div v-for="(group, gIndex) in schema.groups" :key="gIndex" class="mb-6">
-                            <el-card shadow="hover" class="rounded-xl border-0 shadow-sm" :body-style="{ padding: '16px' }">
-                                <template #header>
-                                    <div class="flex items-center"><i class="fas fa-caret-right text-blue-500 mr-2"></i><span>{{ group.heading }}</span></div>
-                                </template>
-                                
-                                <el-row :gutter="24">
-                                    <el-col v-for="(input, iIndex) in group.inputs" :key="iIndex" v-bind="getResponsiveProps(input)">
-                                        
-                                        <!-- Checkbox Field -->
-                                        <el-form-item 
-                                            v-if="input.type === 'checkbox'" 
-                                            class="mb-2" 
-                                            :error="errors[generateKey(group.heading, input.label)]"
-                                            :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
-                                        >
-                                            <el-checkbox v-model="formData[generateKey(group.heading, input.label)]" :label="input.label" size="large" class="whitespace-normal h-auto py-2" />
-                                        </el-form-item>
+                    <!-- SUMMARY VIEW (Read Only) -->
+                    <div v-if="isSubmitted">
+                        <div class="flex justify-between items-center mb-6 px-2">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Review Application</h2>
+                                <p class="text-slate-500 mt-1">Please review your details before final submission.</p>
+                            </div>
+                        </div>
 
-                                        <!-- Standard & Complex Fields -->
-                                        <el-form-item 
-                                            v-else 
-                                            :label="input.label + (input.required ? ' *' : '')" 
-                                            class="mb-6"
-                                            :error="errors[generateKey(group.heading, input.label)]"
-                                            :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
-                                        >
-                                            <!-- Select -->
-                                            <el-select v-if="input.type === 'select'" v-model="formData[generateKey(group.heading, input.label)]" placeholder="Select..." class="w-full">
-                                                <el-option v-for="opt in resolveOptions(input.options)" :key="opt" :label="opt" :value="opt" />
-                                            </el-select>
+                        <el-card shadow="hover" class="mb-6 rounded-xl border-0 shadow-sm" v-for="(group, gIndex) in schema.groups" :key="gIndex">
+                            <template #header>
+                                <div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
+                            </template>
+                            <el-descriptions :column="2" border>
+                                <el-descriptions-item 
+                                    v-for="(input, iIndex) in group.inputs" 
+                                    :key="iIndex" 
+                                    :label="input.label"
+                                    label-class-name="font-semibold text-slate-500 bg-slate-50 w-1/3"
+                                >
+                                    <span v-if="input.type === 'checkbox' && !formData[generateKey(group.heading, input.label)]" class="text-slate-400">No</span>
+                                    <span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"><i class="fas fa-check mr-1"></i> Agreed</span>
+                                    <span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
+                                </el-descriptions-item>
+                            </el-descriptions>
+                        </el-card>
+
+                        <div class="flex justify-end gap-4 mt-8 pb-10">
+                            <el-button size="large" @click="isSubmitted = false">Edit Information</el-button>
+                            <el-button type="success" size="large" class="!px-8 !text-lg !font-bold" @click="finalConfirm">
+                                Confirm & Finish <i class="fas fa-check-circle ml-2"></i>
+                            </el-button>
+                        </div>
+                    </div>
+
+                    <!-- FORM VIEW (Editable) -->
+                    <div v-else>
+                        <div class="flex justify-between items-center mb-6 px-2">
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">{{ schema.formHeading }}</h2>
+                                <p class="text-slate-500 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
+                            </div>
+                            <el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
+                        </div>
+                        
+                        <el-form label-position="top" @submit.prevent="submitForm">
+                            <div v-for="(group, gIndex) in schema.groups" :key="gIndex" class="mb-6">
+                                <el-card shadow="hover" class="rounded-xl border-0 shadow-sm" :body-style="{ padding: '16px' }">
+                                    <template #header>
+                                        <div class="flex items-center"><i class="fas fa-caret-right text-blue-500 mr-2"></i><span>{{ group.heading }}</span></div>
+                                    </template>
+                                    
+                                    <el-row :gutter="24">
+                                        <el-col v-for="(input, iIndex) in group.inputs" :key="iIndex" v-bind="getResponsiveProps(input)">
                                             
-                                            <!-- Complex (Date/Duration) -->
-                                            <div v-else-if="input.components" class="w-full flex gap-2">
-                                                <div v-for="(compConfig, compKey) in input.components" :key="compKey" class="flex-1">
-                                                    <el-select v-if="compConfig.type === 'select'" v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey.toUpperCase()">
-                                                        <el-option v-for="opt in resolveOptions(compConfig.options)" :key="opt" :label="opt" :value="opt" />
-                                                    </el-select>
-                                                    <el-input v-else v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey" type="number" />
+                                            <!-- Checkbox Field -->
+                                            <el-form-item 
+                                                v-if="input.type === 'checkbox'" 
+                                                class="mb-2" 
+                                                :error="errors[generateKey(group.heading, input.label)]"
+                                                :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
+                                            >
+                                                <el-checkbox v-model="formData[generateKey(group.heading, input.label)]" :label="input.label" size="large" class="whitespace-normal h-auto py-2" />
+                                            </el-form-item>
+
+                                            <!-- Standard & Complex Fields -->
+                                            <el-form-item 
+                                                v-else 
+                                                :label="input.label + (input.required ? ' *' : '')" 
+                                                class="mb-6"
+                                                :error="errors[generateKey(group.heading, input.label)]"
+                                                :ref="(el) => setItemRef(el, generateKey(group.heading, input.label))"
+                                            >
+                                                <!-- Select -->
+                                                <el-select v-if="input.type === 'select'" v-model="formData[generateKey(group.heading, input.label)]" placeholder="Select..." class="w-full">
+                                                    <el-option v-for="opt in resolveOptions(input.options)" :key="opt" :label="opt" :value="opt" />
+                                                </el-select>
+                                                
+                                                <!-- Complex (Date/Duration) -->
+                                                <div v-else-if="input.components" class="w-full flex gap-2">
+                                                    <div v-for="(compConfig, compKey) in input.components" :key="compKey" class="flex-1">
+                                                        <el-select v-if="compConfig.type === 'select'" v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey.toUpperCase()">
+                                                            <el-option v-for="opt in resolveOptions(compConfig.options)" :key="opt" :label="opt" :value="opt" />
+                                                        </el-select>
+                                                        <el-input v-else v-model="formData[generateKey(group.heading, input.label)][compKey]" :placeholder="compKey" type="number" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <!-- Standard Text/Number -->
-                                            <el-input v-else v-model="formData[generateKey(group.heading, input.label)]" :type="input.type === 'number' ? 'number' : (input.type === 'password' ? 'password' : 'text')" :placeholder="input.format || ''">
-                                                <template #prefix v-if="input.label.includes('Price') || input.label.includes('Payment') || input.label.includes('Income')"><i class="fas fa-dollar-sign"></i></template>
-                                            </el-input>
-                                        </el-form-item>
+                                                
+                                                <!-- Standard Text/Number -->
+                                                <el-input v-else v-model="formData[generateKey(group.heading, input.label)]" :type="input.type === 'number' ? 'number' : (input.type === 'password' ? 'password' : 'text')" :placeholder="input.format || ''">
+                                                    <template #prefix v-if="input.label.includes('Price') || input.label.includes('Payment') || input.label.includes('Income')"><i class="fas fa-dollar-sign"></i></template>
+                                                </el-input>
+                                            </el-form-item>
 
-                                    </el-col>
-                                </el-row>
-                            </el-card>
-                        </div>
-                        <div class="flex flex-col-reverse md:flex-row justify-end gap-4 mt-8 pb-10">
-                            <el-button size="large" @click="store.resetView" class="w-full md:w-auto">Cancel</el-button>
-                            <el-button type="primary" size="large" native-type="submit" class="!px-8 !text-lg w-full md:w-auto">Submit Application <i class="fas fa-paper-plane ml-2"></i></el-button>
-                        </div>
-                    </el-form>
+                                        </el-col>
+                                    </el-row>
+                                </el-card>
+                            </div>
+                            <div class="flex flex-col-reverse md:flex-row justify-end gap-4 mt-8 pb-10">
+                                <el-button size="large" @click="store.resetView" class="w-full md:w-auto">Cancel</el-button>
+                                <el-button type="primary" size="large" native-type="submit" class="!px-8 !text-lg w-full md:w-auto">Submit Application <i class="fas fa-paper-plane ml-2"></i></el-button>
+                            </div>
+                        </el-form>
+                    </div>
                 </div>`,
 			};
 
