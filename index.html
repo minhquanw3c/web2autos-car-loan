@@ -75,6 +75,35 @@
 				padding: 24px;
 			}
 
+			/* Decorative Modal Styles */
+			.custom-message-box {
+				border-radius: 20px !important;
+				padding-bottom: 20px !important;
+				border: none !important;
+				box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+			}
+			.custom-message-box .el-message-box__header {
+				padding-top: 0;
+			}
+			.custom-message-box .el-button--primary {
+				background-color: #4f46e5;
+				border-color: #4f46e5;
+				font-weight: bold;
+				width: 100%;
+				border-radius: 8px;
+				height: 40px;
+			}
+			.custom-message-box .el-button--primary:hover {
+				background-color: #4338ca;
+				border-color: #4338ca;
+			}
+
+			/* Loading Spinner Animation Style */
+			.el-loading-spinner .path {
+				stroke: #4f46e5; /* Indigo-600 */
+				stroke-linecap: round;
+			}
+
 			/* Responsive adjustments for Element Plus on small screens */
 			@media (max-width: 640px) {
 				.el-message-box {
@@ -95,7 +124,7 @@
 		<script>
 			const { createApp, ref, computed, watch, reactive } = Vue;
 			const { defineStore, createPinia } = Pinia;
-			const { ElMessage, ElMessageBox } = ElementPlus;
+			const { ElMessage, ElMessageBox, ElLoading } = ElementPlus;
 
 			// ==========================================
 			// 1. PINIA STORE
@@ -247,9 +276,19 @@
 					window.scrollTo({ top: 0, behavior: "smooth" });
 				};
 
+				const resetCalculator = () => {
+					price.value = 20000;
+					downPayment.value = 1000;
+					tradeIn.value = 0;
+					amountOwed.value = 0;
+					interestRate.value = 7.0;
+					loanTerm.value = 24;
+				};
+
 				const resetView = () => {
 					currentView.value = "calculator";
 					selectedVehicle.value = null;
+					resetCalculator(); // Reset all data to initial
 				};
 
 				return {
@@ -469,7 +508,7 @@
 			const ConsultantForm = {
 				setup() {
 					const store = useLoanStore();
-					const isSubmitted = ref(false); // Track submission state
+					const summaryVisible = ref(false); // Controls Summary Modal
 
 					// 1. Schema
 					const schema = {
@@ -947,6 +986,7 @@
 						return firstErrorKey;
 					};
 
+					// Trigger Validation -> Open Summary Modal
 					const submitForm = () => {
 						const firstErrorKey = checkErrors();
 						if (firstErrorKey) {
@@ -963,23 +1003,106 @@
 								duration: 3000,
 							});
 						} else {
-							// Success -> Show Summary
-							window.scrollTo({ top: 0, behavior: "smooth" });
-							isSubmitted.value = true;
+							// Validation passed, show summary modal
+							summaryVisible.value = true;
 						}
 					};
 
-					const finalConfirm = () => {
-						ElMessageBox.alert(
-							"Your application has been officially received! We will be in touch shortly.",
-							"Success",
-							{
-								confirmButtonText: "Back to Home",
-								callback: () => {
-									store.resetView();
-								},
+					// Confirm -> Call API
+					const confirmSubmission = async () => {
+						// Custom SVG Spinner
+						const svg = `
+                        <path class="path" d="
+                          M 30 15
+                          L 28 17
+                          M 25.61 25.61
+                          A 15 15, 0, 0, 1, 15 30
+                          A 15 15, 0, 1, 1, 27.99 7.5
+                          L 15 15
+                        " style="stroke-width: 4px; fill: none;"/>
+                      `;
+
+						// Start Full Screen Loader
+						const loading = ElLoading.service({
+							lock: true,
+							text: "Processing your secure application...",
+							background: "rgba(0, 0, 0, 0.9)",
+							svg: svg,
+							svgViewBox: "-10, -10, 50, 50",
+						});
+
+						try {
+							// Mimic API Delay
+							await new Promise((resolve) =>
+								setTimeout(resolve, 3000)
+							);
+
+							// Mock Success/Fail (90% success rate)
+							const success = Math.random() > 0.5;
+
+							if (success) {
+								summaryVisible.value = false;
+
+								// Decorative Success Modal
+								await ElMessageBox.alert(
+									`
+                                <div class="text-center">
+                                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 animate-bounce">
+                                        <i class="fas fa-check text-4xl text-green-600"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Success!</h3>
+                                    <p class="text-gray-600">Your application has been securely transmitted. <br>Ref ID: #APP-${Math.floor(
+										Math.random() * 10000
+									)}</p>
+                                </div>
+                                `,
+									{
+										dangerouslyUseHTMLString: true,
+										showConfirmButton: true,
+										confirmButtonText: "Return to Home",
+										confirmButtonClass:
+											"bg-green-600 border-green-600 w-full font-bold hover:bg-green-700",
+										center: true,
+										customClass: "custom-message-box",
+										showClose: false,
+										callback: () => {
+											store.resetView();
+											loading.close();
+										},
+									}
+								);
+							} else {
+								throw new Error(
+									"Network timeout or server error."
+								);
 							}
-						);
+						} catch (e) {
+							// Decorative Error Modal
+							await ElMessageBox.alert(
+								`
+                            <div class="text-center">
+                                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 mb-4">
+                                    <i class="fas fa-exclamation-triangle text-4xl text-red-600"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Submission Failed</h3>
+                                <p class="text-gray-600 text-sm">We couldn't connect to the server. Please try again.</p>
+                            </div>
+                            `,
+								{
+									dangerouslyUseHTMLString: true,
+									showConfirmButton: true,
+									confirmButtonText: "Try Again",
+									confirmButtonClass:
+										"bg-red-600 border-red-600 w-full font-bold hover:bg-red-700",
+									center: true,
+									customClass: "custom-message-box",
+									showClose: false,
+									callback: () => {
+										loading.close();
+									},
+								}
+							);
+						}
 					};
 
 					// Helper to format complex values for summary display
@@ -1008,56 +1131,60 @@
 						formData,
 						schema,
 						errors,
-						isSubmitted,
+						summaryVisible,
 						generateKey,
 						resolveOptions,
 						getResponsiveProps,
 						submitForm,
+						confirmSubmission,
 						setItemRef,
-						finalConfirm,
 						formatValue,
 					};
 				},
 				template: `
                 <div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
                     
-                    <!-- SUMMARY VIEW (Read Only) -->
-                    <div v-if="isSubmitted">
-                        <div class="flex justify-between items-center mb-6 px-2">
-                            <div>
-                                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Review Application</h2>
-                                <p class="text-slate-500 mt-1">Please review your details before final submission.</p>
-                            </div>
+                    <!-- SUMMARY MODAL (NEW) -->
+                    <el-dialog v-model="summaryVisible" title="Review Application" width="90%" class="max-w-4xl" align-center>
+                        <p class="text-slate-500 mb-4">Please review your details below before final submission.</p>
+                        
+                        <div class="h-[60vh] overflow-y-auto pr-2">
+                            <el-card shadow="never" class="mb-4 rounded-xl border border-gray-200" v-for="(group, gIndex) in schema.groups" :key="gIndex">
+                                <template #header>
+                                    <div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
+                                </template>
+                                <el-descriptions :column="1" border>
+                                    <el-descriptions-item 
+                                        v-for="(input, iIndex) in group.inputs" 
+                                        :key="iIndex" 
+                                        :label="input.label"
+                                        label-class-name="font-semibold text-slate-600 bg-slate-50 w-1/3"
+                                    >
+                                        <span v-if="input.type === 'checkbox' && !formData[generateKey(group.heading, input.label)]" class="text-slate-400">No</span>
+                                        <span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"><i class="fas fa-check mr-1"></i> Agreed</span>
+                                        <span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
+                                    </el-descriptions-item>
+                                </el-descriptions>
+                            </el-card>
                         </div>
 
-                        <el-card shadow="hover" class="mb-6 rounded-xl border-0 shadow-sm" v-for="(group, gIndex) in schema.groups" :key="gIndex">
-                            <template #header>
-                                <div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
-                            </template>
-                            <el-descriptions :column="2" border>
-                                <el-descriptions-item 
-                                    v-for="(input, iIndex) in group.inputs" 
-                                    :key="iIndex" 
-                                    :label="input.label"
-                                    label-class-name="font-semibold text-slate-500 bg-slate-50 w-1/3"
+                        <template #footer>
+                            <div class="flex justify-end gap-3 pt-4">
+                                <el-button size="large" @click="summaryVisible = false">Edit Information</el-button>
+                                <el-button 
+                                    type="success" 
+                                    size="large" 
+                                    class="!px-8 !text-lg !font-bold" 
+                                    @click="confirmSubmission"
                                 >
-                                    <span v-if="input.type === 'checkbox' && !formData[generateKey(group.heading, input.label)]" class="text-slate-400">No</span>
-                                    <span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"><i class="fas fa-check mr-1"></i> Agreed</span>
-                                    <span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
-                                </el-descriptions-item>
-                            </el-descriptions>
-                        </el-card>
+                                    Confirm & Submit <i class="fas fa-paper-plane ml-2"></i>
+                                </el-button>
+                            </div>
+                        </template>
+                    </el-dialog>
 
-                        <div class="flex justify-end gap-4 mt-8 pb-10">
-                            <el-button size="large" @click="isSubmitted = false">Edit Information</el-button>
-                            <el-button type="success" size="large" class="!px-8 !text-lg !font-bold" @click="finalConfirm">
-                                Confirm & Finish <i class="fas fa-check-circle ml-2"></i>
-                            </el-button>
-                        </div>
-                    </div>
-
-                    <!-- FORM VIEW (Editable) -->
-                    <div v-else>
+                    <!-- FORM VIEW -->
+                    <div>
                         <div class="flex justify-between items-center mb-6 px-2">
                             <div>
                                 <h2 class="text-2xl md:text-3xl font-bold text-slate-800">{{ schema.formHeading }}</h2>
@@ -1121,7 +1248,7 @@
                             </div>
                             <div class="flex flex-col-reverse md:flex-row justify-end gap-4 mt-8 pb-10">
                                 <el-button size="large" @click="store.resetView" class="w-full md:w-auto">Cancel</el-button>
-                                <el-button type="primary" size="large" native-type="submit" class="!px-8 !text-lg w-full md:w-auto">Submit Application <i class="fas fa-paper-plane ml-2"></i></el-button>
+                                <el-button type="primary" size="large" native-type="submit" class="!px-8 !text-lg w-full md:w-auto">Review Application <i class="fas fa-arrow-right ml-2"></i></el-button>
                             </div>
                         </el-form>
                     </div>
