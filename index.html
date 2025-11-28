@@ -24,24 +24,144 @@
 		<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 
 		<style>
-			/* Shared Styles */
+			/* --- GLOBAL & BACKGROUND --- */
 			body {
-				background-color: #f3f4f6;
 				font-family: "Helvetica Neue", Helvetica, "PingFang SC",
 					"Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial,
 					sans-serif;
+				margin: 0;
+				min-height: 100vh;
+				background-color: #020617; /* Very Dark Slate */
+				overflow-x: hidden;
+				color: #1e293b; /* Default text color for inside cards */
 			}
 
-			/* Overrides for Element Plus to match the desired look */
-			.el-card {
-				border-radius: 12px;
-			}
-			.el-dialog {
-				border-radius: 16px;
+			/* Animated Background Layer */
+			.bg-layer {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+				background: radial-gradient(
+					circle at 50% 50%,
+					#172554 0%,
+					#020617 100%
+				);
 				overflow: hidden;
 			}
+
+			.orb {
+				position: absolute;
+				border-radius: 50%;
+				filter: blur(80px);
+				opacity: 0.6;
+				animation: float 20s infinite ease-in-out;
+			}
+
+			.orb-1 {
+				top: -10%;
+				left: -10%;
+				width: 50vw;
+				height: 50vw;
+				background: radial-gradient(
+					circle,
+					#4f46e5 0%,
+					rgba(79, 70, 229, 0) 70%
+				);
+				animation-delay: 0s;
+			}
+
+			.orb-2 {
+				bottom: -10%;
+				right: -10%;
+				width: 60vw;
+				height: 60vw;
+				background: radial-gradient(
+					circle,
+					#0ea5e9 0%,
+					rgba(14, 165, 233, 0) 70%
+				);
+				animation-delay: -10s;
+			}
+
+			@keyframes float {
+				0% {
+					transform: translate(0, 0) scale(1);
+				}
+				33% {
+					transform: translate(30px, 50px) scale(1.1);
+				}
+				66% {
+					transform: translate(-20px, 20px) scale(0.9);
+				}
+				100% {
+					transform: translate(0, 0) scale(1);
+				}
+			}
+
+			/* --- GLASSMORPHISM STYLES --- */
+
+			/* Default Card Glass Style */
+			.el-card {
+				border-radius: 16px !important;
+				background: rgba(
+					255,
+					255,
+					255,
+					0.9
+				) !important; /* High opacity white for contrast */
+				backdrop-filter: blur(16px);
+				-webkit-backdrop-filter: blur(16px);
+				border: 1px solid rgba(255, 255, 255, 0.5) !important;
+				box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+			}
+
+			/* Summary Card - Dark Glass Accent */
+			.summary-card {
+				background: linear-gradient(
+					135deg,
+					rgba(30, 58, 138, 0.95) 0%,
+					rgba(15, 23, 42, 0.98) 100%
+				) !important;
+				backdrop-filter: blur(12px);
+				border: 1px solid rgba(255, 255, 255, 0.1) !important;
+				color: white;
+			}
+			.summary-card .el-card__body {
+				padding: 24px;
+			}
+
+			/* Vehicle Card Hover Effect */
+			.vehicle-card {
+				transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+			.vehicle-card:hover {
+				transform: translateY(-8px);
+				background: rgba(255, 255, 255, 1) !important;
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+				border-color: #60a5fa !important;
+			}
+
+			/* Modals & Dialogs */
+			.el-dialog {
+				border-radius: 20px;
+				overflow: hidden;
+				background: rgba(255, 255, 255, 0.95) !important;
+				backdrop-filter: blur(10px);
+			}
+
+			/* Element Plus Overrides */
 			.el-slider__button {
 				border-color: #409eff;
+			}
+			.el-card__header {
+				background: transparent !important;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+				padding: 15px 20px;
+				font-weight: 700;
+				color: #1e293b;
 			}
 
 			/* Custom transitions */
@@ -54,33 +174,12 @@
 				opacity: 0;
 			}
 
-			/* Vehicle Card Hover Effect */
-			.vehicle-card {
-				transition: all 0.3s;
-				border: 1px solid transparent;
-			}
-			.vehicle-card:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-				border-color: #c6e2ff;
-			}
-
-			/* Summary Card Customization */
-			.summary-card {
-				background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
-				border: none;
-				color: white;
-			}
-			.summary-card .el-card__body {
-				padding: 24px;
-			}
-
 			/* Decorative Modal Styles */
 			.custom-message-box {
 				border-radius: 20px !important;
 				padding-bottom: 20px !important;
 				border: none !important;
-				box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+				box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
 			}
 			.custom-message-box .el-message-box__header {
 				padding-top: 0;
@@ -117,7 +216,13 @@
 		</style>
 	</head>
 	<body class="p-4 md:p-8">
-		<div id="app" class="max-w-7xl mx-auto">
+		<!-- Background Animation Layer -->
+		<div class="bg-layer">
+			<div class="orb orb-1"></div>
+			<div class="orb orb-2"></div>
+		</div>
+
+		<div id="app" class="max-w-7xl mx-auto relative z-10">
 			<!-- App content renders here -->
 		</div>
 
@@ -330,8 +435,8 @@
 				template: `
                 <el-card shadow="hover" class="mb-6">
                     <template #header>
-                        <div class="flex items-center text-lg font-bold text-gray-800">
-                            <i class="fas fa-calculator text-blue-500 mr-2"></i> 
+                        <div class="flex items-center text-lg font-bold">
+                            <i class="fas fa-calculator text-blue-600 mr-2"></i> 
                             <span>Auto Loan Calculator</span>
                         </div>
                     </template>
@@ -438,8 +543,12 @@
 				},
 				template: `
                 <div class="mt-10">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 px-1 flex items-center"><i class="fas fa-car-side text-blue-500 mr-3"></i> Recommended Vehicles</h3>
-                    <div v-if="store.recommendedVehicles.length === 0"><el-empty description="No vehicles found in this price range. Try adjusting your vehicle price." /></div>
+                    <h3 class="text-2xl font-bold mb-6 px-1 flex items-center text-white drop-shadow-md"><i class="fas fa-car-side mr-3"></i> Recommended Vehicles</h3>
+                    <div v-if="store.recommendedVehicles.length === 0">
+                        <el-card shadow="never" class="border-0">
+                            <el-empty description="No vehicles found in this price range. Try adjusting your vehicle price." />
+                        </el-card>
+                    </div>
                     <el-row :gutter="24" v-else>
                         <el-col v-for="car in store.recommendedVehicles" :key="car.id" :xs="24" :sm="12" :lg="8" class="mb-6">
                             <el-card :body-style="{ padding: '0px' }" shadow="hover" class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
@@ -1197,8 +1306,8 @@
                     <div>
                         <div class="flex justify-between items-center mb-6 px-2">
                             <div>
-                                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">{{ schema.formHeading }}</h2>
-                                <p class="text-slate-500 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{{ schema.formHeading }}</h2>
+                                <p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
                             </div>
                             <el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
                         </div>
