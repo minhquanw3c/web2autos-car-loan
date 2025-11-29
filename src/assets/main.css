@@ -1,35 +1,176 @@
-@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* --- GLOBAL & BACKGROUND --- */
+body {
+	font-family:
+		'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+		'微软雅黑', Arial, sans-serif;
+	margin: 0;
+	min-height: 100vh;
+	background-color: #020617; /* Very Dark Slate */
+	overflow-x: hidden;
+	color: #1e293b; /* Default text color for inside cards */
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* Animated Background Layer */
+.bg-layer {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	background: radial-gradient(circle at 50% 50%, #172554 0%, #020617 100%);
+	overflow: hidden;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+.orb {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(80px);
+	opacity: 0.6;
+	animation: float 20s infinite ease-in-out;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.orb-1 {
+	top: -10%;
+	left: -10%;
+	width: 50vw;
+	height: 50vw;
+	background: radial-gradient(circle, #4f46e5 0%, rgba(79, 70, 229, 0) 70%);
+	animation-delay: 0s;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.orb-2 {
+	bottom: -10%;
+	right: -10%;
+	width: 60vw;
+	height: 60vw;
+	background: radial-gradient(circle, #0ea5e9 0%, rgba(14, 165, 233, 0) 70%);
+	animation-delay: -10s;
+}
+
+@keyframes float {
+	0% {
+		transform: translate(0, 0) scale(1);
+	}
+	33% {
+		transform: translate(30px, 50px) scale(1.1);
+	}
+	66% {
+		transform: translate(-20px, 20px) scale(0.9);
+	}
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+}
+
+/* --- GLASSMORPHISM STYLES --- */
+
+/* Default Card Glass Style */
+.el-card {
+	border-radius: 16px !important;
+	background: rgba(255, 255, 255, 0.9) !important; /* High opacity white for contrast */
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid rgba(255, 255, 255, 0.5) !important;
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Summary Card - Dark Glass Accent */
+.summary-card {
+	background: linear-gradient(
+		135deg,
+		rgba(30, 58, 138, 0.95) 0%,
+		rgba(15, 23, 42, 0.98) 100%
+	) !important;
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	color: white;
+}
+.summary-card .el-card__body {
+	padding: 24px;
+}
+
+/* Vehicle Card Hover Effect */
+.vehicle-card {
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.vehicle-card:hover {
+	transform: translateY(-8px);
+	background: rgba(255, 255, 255, 1) !important;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+	border-color: #60a5fa !important;
+}
+
+/* Modals & Dialogs */
+.el-dialog {
+	border-radius: 20px;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 0.95) !important;
+	backdrop-filter: blur(10px);
+}
+
+/* Element Plus Overrides */
+.el-slider__button {
+	border-color: #409eff;
+}
+.el-card__header {
+	background: transparent !important;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+	padding: 15px 20px;
+	font-weight: 700;
+	color: #1e293b;
+}
+
+/* Custom transitions */
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+
+/* Decorative Modal Styles */
+.custom-message-box {
+	border-radius: 20px !important;
+	padding-bottom: 20px !important;
+	border: none !important;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+.custom-message-box .el-message-box__header {
+	padding-top: 0;
+}
+.custom-message-box .el-button--primary {
+	background-color: #4f46e5;
+	border-color: #4f46e5;
+	font-weight: bold;
+	width: 100%;
+	border-radius: 8px;
+	height: 40px;
+}
+.custom-message-box .el-button--primary:hover {
+	background-color: #4338ca;
+	border-color: #4338ca;
+}
+
+/* Loading Spinner Animation Style */
+.el-loading-spinner .path {
+	stroke: #4f46e5; /* Indigo-600 */
+	stroke-linecap: round;
+}
+
+/* Responsive adjustments for Element Plus on small screens */
+@media (max-width: 640px) {
+	.el-message-box {
+		width: 90% !important;
+		max-width: 400px;
+	}
+	.el-dialog {
+		width: 95% !important;
+	}
 }

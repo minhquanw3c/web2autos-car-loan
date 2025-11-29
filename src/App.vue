@@ -1,47 +1,64 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { useLoanStore } from '@/stores/loan';
+import LoanInputSection from '@/components/LoanInputSection.vue';
+import LoanSummary from '@/components/LoanSummary.vue';
+import VehicleGrid from '@/components/VehicleGrid.vue';
+import VehicleModal from '@/components/VehicleModal.vue';
+import ConsultantForm from '@/components/ConsultantForm.vue';
+
+const store = useLoanStore();
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div class="app-container">
+    <!-- Background Animation Layer -->
+    <div class="bg-layer">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
     </div>
-  </header>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <div class="max-w-7xl mx-auto relative z-10">
+      <transition name="fade" mode="out-in">
+        <div v-if="store.currentView === 'calculator'" key="calc">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 order-1">
+              <LoanInputSection />
+            </div>
+            <div class="lg:col-span-1 order-2 lg:order-2">
+              <div class="lg:sticky lg:top-4">
+                <LoanSummary />
+                <el-alert title="Tip" type="info" description="Click on any vehicle to view details and apply."
+                  show-icon :closable="false" class="mt-6 hidden lg:flex" />
+              </div>
+            </div>
+            <div class="lg:col-span-3 order-3">
+              <VehicleGrid />
+            </div>
+          </div>
+          <VehicleModal />
+        </div>
+        <div v-else-if="store.currentView === 'application'" key="app">
+          <ConsultantForm />
+        </div>
+      </transition>
+
+      <!-- Scroll To Top Button -->
+      <el-backtop :right="30" :bottom="30"
+        class="!bg-indigo-600 !text-white !shadow-xl hover:!bg-indigo-700 transition-colors !w-12 !h-12">
+        <i class="fas fa-arrow-up font-bold text-lg"></i>
+      </el-backtop>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.app-container {
+  padding: 1rem;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+@media (min-width: 768px) {
+  .app-container {
+    padding: 2rem;
   }
 }
 </style>
