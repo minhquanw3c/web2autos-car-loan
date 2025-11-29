@@ -132,9 +132,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	const recommendedVehicles = computed(() => {
 		const targetPrice = price.value
-		return inventory.filter(
-			(v) => v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000,
-		)
+		return inventory.filter((v) => v.price >= targetPrice)
 	})
 
 	const startApplication = () => {

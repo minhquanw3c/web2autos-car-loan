@@ -253,6 +253,7 @@ const confirmSubmission = async () => {
                     showClose: false,
                     callback: () => {
                         store.resetView();
+                        loading.close();
                     }
                 }
             );
@@ -277,10 +278,13 @@ const confirmSubmission = async () => {
                 confirmButtonClass: 'bg-red-600 border-red-600 w-full font-bold hover:bg-red-700',
                 center: true,
                 customClass: 'custom-message-box',
+                showClose: false,
+                callback: () => {
+                    store.resetView();
+                    loading.close();
+                }
             }
         );
-    } finally {
-        loading.close();
     }
 };
 
