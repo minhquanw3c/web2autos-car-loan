@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import type { Vehicle } from '@/types'
 
 export const useLoanStore = defineStore('loan', () => {
@@ -15,86 +15,63 @@ export const useLoanStore = defineStore('loan', () => {
 	const interestRate = ref<number>(7.0)
 	const loanTerm = ref<number>(24)
 
-	// -- Mock Vehicle Data --
-	const inventory: Vehicle[] = [
-		{
-			id: 1,
-			make: 'Toyota',
-			model: 'Camry SE',
-			year: 2021,
-			price: 24500,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Toyota+Camry',
-			desc: 'Reliable sedan with sport tuning and advanced safety features.',
-		},
-		{
-			id: 2,
-			make: 'Honda',
-			model: 'Civic EX',
-			year: 2022,
-			price: 22000,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Honda+Civic',
-			desc: 'Fuel efficient compact car with a spacious interior.',
-		},
-		{
-			id: 3,
-			make: 'Ford',
-			model: 'F-150 XL',
-			year: 2020,
-			price: 32000,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Ford+F-150',
-			desc: 'Powerful work truck with towing capability.',
-		},
-		{
-			id: 4,
-			make: 'Chevrolet',
-			model: 'Malibu',
-			year: 2021,
-			price: 19500,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Chevy+Malibu',
-			desc: 'Comfortable midsize sedan perfect for commuting.',
-		},
-		{
-			id: 5,
-			make: 'Nissan',
-			model: 'Altima',
-			year: 2022,
-			price: 23000,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Nissan+Altima',
-			desc: 'Tech-forward sedan with AWD options.',
-		},
-		{
-			id: 6,
-			make: 'Hyundai',
-			model: 'Elantra',
-			year: 2023,
-			price: 21500,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Hyundai+Elantra',
-			desc: 'Stylish design with excellent warranty coverage.',
-		},
-		{
-			id: 7,
-			make: 'BMW',
-			model: '330i',
-			year: 2019,
-			price: 31000,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=BMW+3+Series',
-			desc: 'Luxury sports sedan with premium interior.',
-		},
-		{
-			id: 8,
-			make: 'Kia',
-			model: 'K5',
-			year: 2022,
-			price: 25000,
-			img: 'https://placehold.co/600x400/1e293b/FFF?text=Kia+K5',
-			desc: 'Bold styling and turbo performance.',
-		},
-	]
+	// -- Inventory Data --
+	const inventory = ref<Vehicle[]>([])
+	const isFetchingVehicles = ref(false)
+	const fetchError = ref<string | null>(null)
 
-	// -- Logic --
+	// -- Pagination State --
+	const currentPage = ref(1)
+	const pageSize = ref(12)
+
+	// -- Actions --
+	const fetchInventory = async () => {
+		if (inventory.value.length > 0) return
+
+		isFetchingVehicles.value = true
+		fetchError.value = null
+
+		try {
+			const response = await fetch('http://localhost:3000/api/vehicles')
+			if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
+			const data: Vehicle[] = await response.json()
+			inventory.value = data
+			console.log(`Loaded ${data.length} vehicles from backend.`)
+		} catch (error) {
+			console.error('Failed to load vehicle inventory:', error)
+			fetchError.value = 'Unable to load vehicles. Please check your connection.'
+		} finally {
+			isFetchingVehicles.value = false
+		}
+	}
+
+	const startApplication = () => {
+		currentView.value = 'application'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+	}
+
+	const resetCalculator = () => {
+		price.value = 20000
+		downPayment.value = 1000
+		tradeIn.value = 0
+		amountOwed.value = 0
+		interestRate.value = 7.0
+		loanTerm.value = 24
+	}
+
+	const resetView = () => {
+		currentView.value = 'calculator'
+		selectedVehicle.value = null
+		resetCalculator()
+	}
+
+	// -- Logic / Watchers --
 	watch(
 		[price, downPayment, tradeIn, amountOwed, interestRate],
 		([newPrice, newDown, newTrade, newOwed, newRate]) => {
+			// Reset page when filter criteria (price) changes
+			currentPage.value = 1
+
 			if (newPrice < 0) price.value = 0
 			if (newDown < 0) downPayment.value = 0
 			if (newTrade < 0) tradeIn.value = 0
@@ -103,6 +80,7 @@ export const useLoanStore = defineStore('loan', () => {
 		},
 	)
 
+	// -- Computed --
 	const netTradeImpact = computed(() => (tradeIn.value || 0) - (amountOwed.value || 0))
 
 	const principal = computed(() => {
@@ -130,32 +108,24 @@ export const useLoanStore = defineStore('loan', () => {
 		return isFinite(payment) ? payment : 0
 	})
 
-	const recommendedVehicles = computed(() => {
+	// 1. All matching vehicles (Filtered)
+	const filteredVehicles = computed(() => {
 		const targetPrice = price.value
-		return inventory.filter((v) => v.price >= targetPrice)
+		return inventory.value.filter((v) => v.price >= targetPrice)
 	})
 
-	const startApplication = () => {
-		currentView.value = 'application'
-		window.scrollTo({ top: 0, behavior: 'smooth' })
-	}
+	// 2. Current Page Slice (Paginated)
+	const paginatedVehicles = computed(() => {
+		const start = (currentPage.value - 1) * pageSize.value
+		const end = start + pageSize.value
+		return filteredVehicles.value.slice(start, end)
+	})
 
-	const resetCalculator = () => {
-		price.value = 20000
-		downPayment.value = 1000
-		tradeIn.value = 0
-		amountOwed.value = 0
-		interestRate.value = 7.0
-		loanTerm.value = 24
-	}
-
-	const resetView = () => {
-		currentView.value = 'calculator'
-		selectedVehicle.value = null
-		resetCalculator()
-	}
+	// 3. Total count for UI
+	const totalVehicles = computed(() => filteredVehicles.value.length)
 
 	return {
+		// State
 		price,
 		downPayment,
 		tradeIn,
@@ -164,12 +134,23 @@ export const useLoanStore = defineStore('loan', () => {
 		loanTerm,
 		currentView,
 		selectedVehicle,
+		inventory,
+		isFetchingVehicles,
+		fetchError,
+		currentPage,
+		pageSize,
+
+		// Computed
 		netTradeImpact,
 		principal,
 		monthlyPayment,
-		recommendedVehicles,
-		inventory,
+		filteredVehicles,
+		paginatedVehicles,
+		totalVehicles,
+
+		// Actions
 		startApplication,
 		resetView,
+		fetchInventory,
 	}
 })

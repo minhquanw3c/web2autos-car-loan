@@ -227,14 +227,22 @@ const confirmSubmission = async () => {
     });
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        const success = Math.random() > 0.1;
+        const response = await fetch('http://localhost:3000/api/application', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
 
-        if (success) {
-            summaryVisible.value = false;
+        const result = await response.json();
 
-            await ElMessageBox.alert(
-                `
+        if (!response.ok) {
+            throw new Error(result.error || "Server rejected request");
+        }
+
+        summaryVisible.value = false;
+
+        await ElMessageBox.alert(
+            `
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 animate-bounce">
                         <i class="fas fa-check text-4xl text-green-600"></i>
@@ -243,23 +251,21 @@ const confirmSubmission = async () => {
                     <p class="text-gray-600">Your application has been securely transmitted. <br>Ref ID: #APP-${Math.floor(Math.random() * 10000)}</p>
                 </div>
                 `,
-                {
-                    dangerouslyUseHTMLString: true,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Return to Home',
-                    confirmButtonClass: 'bg-green-600 border-green-600 w-full font-bold hover:bg-green-700',
-                    center: true,
-                    customClass: 'custom-message-box',
-                    showClose: false,
-                    callback: () => {
-                        store.resetView();
-                        loading.close();
-                    }
+            {
+                dangerouslyUseHTMLString: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Return to Home',
+                confirmButtonClass: 'bg-green-600 border-green-600 w-full font-bold hover:bg-green-700',
+                center: true,
+                customClass: 'custom-message-box',
+                showClose: false,
+                callback: () => {
+                    store.resetView();
+                    loading.close();
                 }
-            );
-        } else {
-            throw new Error("Network timeout or server error.");
-        }
+            }
+        );
+
     } catch (e) {
         await ElMessageBox.alert(
             `
@@ -280,7 +286,6 @@ const confirmSubmission = async () => {
                 customClass: 'custom-message-box',
                 showClose: false,
                 callback: () => {
-                    store.resetView();
                     loading.close();
                 }
             }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { useLoanStore } from '@/stores/loan';
 import LoanInputSection from '@/components/LoanInputSection.vue';
 import LoanSummary from '@/components/LoanSummary.vue';
@@ -7,6 +8,11 @@ import VehicleModal from '@/components/VehicleModal.vue';
 import ConsultantForm from '@/components/ConsultantForm.vue';
 
 const store = useLoanStore();
+
+// Trigger the initial fetch for the "1000 rows" when the app mounts
+onMounted(() => {
+  store.fetchInventory();
+});
 </script>
 
 <template>
@@ -21,9 +27,12 @@ const store = useLoanStore();
       <transition name="fade" mode="out-in">
         <div v-if="store.currentView === 'calculator'" key="calc">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Inputs -->
             <div class="lg:col-span-2 order-1">
               <LoanInputSection />
             </div>
+
+            <!-- Right Column: Summary (Sticky) -->
             <div class="lg:col-span-1 order-2 lg:order-2">
               <div class="lg:sticky lg:top-4">
                 <LoanSummary />
@@ -31,12 +40,20 @@ const store = useLoanStore();
                   show-icon :closable="false" class="mt-6 hidden lg:flex" />
               </div>
             </div>
+
+            <!-- Bottom Section: Vehicle Grid -->
             <div class="lg:col-span-3 order-3">
-              <VehicleGrid />
+              <!-- Optional: Show loading state here or inside grid component -->
+              <div v-if="store.isFetchingVehicles" class="py-10 text-center">
+                <el-skeleton :rows="3" animated />
+                <p class="text-blue-200 mt-4">Loading vehicle inventory...</p>
+              </div>
+              <VehicleGrid v-else />
             </div>
           </div>
           <VehicleModal />
         </div>
+
         <div v-else-if="store.currentView === 'application'" key="app">
           <ConsultantForm />
         </div>
