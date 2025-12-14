@@ -1,11 +1,15 @@
 export interface Vehicle {
-	id: number
-	make: string
-	model: string
-	year: number
-	price: number
-	img: string
-	desc: string
+	id: string;
+	make: string;
+	model: string;
+	year: number;
+	price: number;
+	mediaUrl: string;
+	source: string;
+	miles: number;
+	inventory_type: string;
+	stock_no: string;
+	heading: string;
 }
 
 export interface FormComponentConfig {

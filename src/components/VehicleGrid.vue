@@ -45,7 +45,7 @@ const handlePageChange = (val: number) => {
                     <el-card :body-style="{ padding: '0px' }" shadow="hover"
                         class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
                         <div class="relative h-48 overflow-hidden bg-gray-100">
-                            <img :src="car.img" alt="Car"
+                            <img :src="car.mediaUrl" alt="Car"
                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                             <div
                                 class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">
@@ -58,7 +58,7 @@ const handlePageChange = (val: number) => {
                                 </h4>
                             </div>
                             <div class="text-xl font-extrabold text-blue-600 mb-2">{{ formatCurrency(car.price) }}</div>
-                            <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.desc }}</p>
+                            <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.heading }}</p>
 
                             <div class="mt-auto pt-2">
                                 <el-button type="primary" plain class="w-full">
