@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch, onMounted } from 'vue'
 import type { Vehicle } from '@/types'
+import { sampleVehicles } from '@/constants/vehicles'
 
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
@@ -32,11 +33,21 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError.value = null
 
 		try {
-			const response = await fetch('http://localhost:3000/api/vehicles')
-			if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
-			const data: Vehicle[] = await response.json()
-			inventory.value = data
-			console.log(`Loaded ${data.length} vehicles from backend.`)
+			// For demo purpose
+			inventory.value = sampleVehicles.map((vehicle) => {
+				return {
+					...vehicle,
+					make: 'Test',
+					model: 'Test',
+					year: 2025,
+				}
+			})
+
+			// const response = await fetch('http://localhost:3000/api/vehicles')
+			// if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
+			// const data: Vehicle[] = await response.json()
+			// inventory.value = data
+			// console.log(`Loaded ${data.length} vehicles from backend.`)
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
 			fetchError.value = 'Unable to load vehicles. Please check your connection.'
