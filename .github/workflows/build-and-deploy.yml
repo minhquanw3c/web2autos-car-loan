@@ -1,0 +1,44 @@
+name: Deploy to Production
+
+on:
+    push:
+        branches: ['master']
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy via SSH
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USERNAME }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  script: |
+                      # 2. Navigate to project root
+                      # Adjust 'public_html' if you installed it in a subfolder
+                      cd ${{ secrets.REPOSITORY_PATH }}
+
+                      # 3. Pull latest code (Uses the Deploy Key on server)
+                      echo "⬇️ Pulling latest changes..."
+                      git pull origin master
+
+                      # 4. Install Backend Dependencies
+                      echo "🛠️ Installing Server dependencies..."
+                      npm install
+
+                      # 5. Build Frontend
+                      echo "🏗️ Building Client..."
+                      npm run build
+
+                      echo "Refreshing outdated files"
+                      rm -rf ../../public_html/inventory.web2autos.com/index.html
+                      rm -rf ../../public_html/inventory.web2autos.com/assets
+
+                      # 6. Copy Build to Public Root
+                      # We copy contents of 'dist' to 'public_html' (one level up)
+                      echo "🚀 Deploying to public folder..."
+                      cp -r dist/* ../../public_html/inventory.web2autos.com
+
+                      echo "✅ Deployment Success!"
