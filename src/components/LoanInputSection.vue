@@ -59,7 +59,7 @@ const termOptions: TermOption[] = [
                     <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">{{ store.interestRate
                     }}%</span>
                 </div>
-                <el-slider v-model="store.interestRate" :min="0" :max="20" :step="0.1" show-input size="small"
+                <el-slider v-model="store.interestRate" :min="0" :max="30" :step="0.1" show-input size="small"
                     :show-input-controls="false" />
             </div>
 
