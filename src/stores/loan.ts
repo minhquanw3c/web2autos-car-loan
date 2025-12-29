@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch, onMounted } from 'vue'
 import type { Vehicle } from '@/types'
 import { sampleVehicles } from '@/constants/vehicles'
+import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
@@ -43,7 +44,7 @@ export const useLoanStore = defineStore('loan', () => {
 				}
 			})
 
-			// const response = await fetch('http://localhost:3000/api/vehicles')
+			// const response = await fetch(`${BACKEND_API_URL}/api/vehicles`)
 			// if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
 			// const data: Vehicle[] = await response.json()
 			// inventory.value = data
