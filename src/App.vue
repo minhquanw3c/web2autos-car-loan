@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useLoanStore } from '@/stores/loan';
 import LoanInputSection from '@/components/LoanInputSection.vue';
 import LoanSummary from '@/components/LoanSummary.vue';
@@ -8,11 +8,12 @@ import VehicleModal from '@/components/VehicleModal.vue';
 import ConsultantForm from '@/components/ConsultantForm.vue';
 
 const store = useLoanStore();
-
 // Trigger the initial fetch for the "1000 rows" when the app mounts
 onMounted(() => {
   store.fetchInventory();
 });
+
+const showMobileFilters = ref(false); // Controls mobile sheet visibility
 </script>
 
 <template>
@@ -31,8 +32,8 @@ onMounted(() => {
           <div class="flex flex-col lg:flex-row gap-6 items-start">
 
             <!-- LEFT COLUMN: VEHICLES (Main Content) -->
-            <div class="w-full lg:flex-1 order-1 lg:order-1 pb-[480px] lg:pb-0 min-w-0">
-              <!-- min-w-0 ensures grid children don't overflow flex container -->
+            <!-- pb-24 ensures space for the floating mobile buttons -->
+            <div class="w-full lg:flex-1 order-1 lg:order-1 pb-24 lg:pb-0 min-w-0">
               <VehicleGrid />
             </div>
 
@@ -43,7 +44,7 @@ onMounted(() => {
                             order-2 lg:order-2
                         ">
               <!-- 
-                                Mobile: Fixed Bottom Sheet
+                                Mobile: Fixed Bottom Sheet (Hidden by default)
                                 Desktop: Static / Sticky
                             -->
               <div class="
@@ -54,12 +55,14 @@ onMounted(() => {
                                 rounded-t-3xl lg:rounded-none
                                 border-t border-white/50 lg:border-none
                                 p-4 lg:p-0
-                                transition-transform duration-300 ease-out
+                                transition-transform duration-300 ease-in-out
                                 max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible
                                 lg:sticky lg:top-6
-                            ">
-                <!-- Mobile Drag Handle Visual Cue -->
-                <div class="w-16 h-1.5 bg-gray-300 rounded-full mx-auto mb-6 lg:hidden"></div>
+                                lg:transform-none
+                            " :class="showMobileFilters ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'">
+                <!-- Mobile Drag Handle / Close -->
+                <div class="w-16 h-1.5 bg-gray-300 rounded-full mx-auto mb-6 lg:hidden cursor-pointer"
+                  @click="showMobileFilters = false"></div>
 
                 <div class="space-y-6">
                   <LoanSummary />
@@ -70,6 +73,12 @@ onMounted(() => {
 
                   <el-alert title="Tip" type="info" description="Click on any vehicle to view details and apply."
                     show-icon :closable="false" class="hidden lg:flex" />
+
+                  <!-- Mobile Close Button -->
+                  <button @click="showMobileFilters = false"
+                    class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl lg:hidden mt-4 hover:bg-gray-200 transition-colors">
+                    Close Filters
+                  </button>
                 </div>
               </div>
             </div>
@@ -77,6 +86,13 @@ onMounted(() => {
           </div>
 
           <VehicleModal />
+
+          <!-- Mobile Filter Toggle FAB -->
+          <button @click="showMobileFilters = !showMobileFilters"
+            class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 lg:hidden bg-indigo-600 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center gap-3 active:scale-95 border border-white/20">
+            <i class="fas" :class="showMobileFilters ? 'fa-times' : 'fa-sliders-h'"></i>
+            <span class="font-bold text-sm tracking-wide">{{ showMobileFilters ? 'Close' : 'Filters & Payment' }}</span>
+          </button>
         </div>
 
         <!-- APPLICATION VIEW -->
@@ -86,9 +102,9 @@ onMounted(() => {
       </transition>
 
       <!-- Scroll To Top Button -->
-      <!-- Adjusted bottom position on mobile to be ABOVE the fixed sheet (approx 500px up) -->
-      <el-backtop :right="20" :bottom="520"
-        class="!bg-indigo-600 !text-white !shadow-xl hover:!bg-indigo-700 transition-colors !w-12 !h-12 lg:!bottom-10 lg:!right-10 !z-50">
+      <!-- Positioned higher on mobile to avoid overlapping the Filter button -->
+      <el-backtop :right="20" :bottom="100"
+        class="!bg-indigo-600 !text-white !shadow-xl hover:!bg-indigo-700 transition-colors !w-12 !h-12 lg:!bottom-10 lg:!right-10 !z-40">
         <i class="fas fa-arrow-up font-bold text-lg"></i>
       </el-backtop>
     </div>
@@ -101,7 +117,7 @@ onMounted(() => {
   min-height: 100vh;
 }
 
-/* Custom Scrollbar for the mobile sheet if content overflows */
+/* Custom Scrollbar for the mobile sheet */
 .mobile-bottom-sheet::-webkit-scrollbar {
   width: 6px;
 }

@@ -13,7 +13,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const price = ref<number>(20000)
 	const monthlyBudget = ref<number>(450)
 	const filterMode = ref<'price' | 'budget'>('price')
-	const sortOption = ref<string>('price-asc')
+	const sortOption = ref<string>('price-asc') // NEW: Sort State
 
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
@@ -28,7 +28,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Pagination --
 	const currentPage = ref(1)
-	const pageSize = ref(12)
+	const pageSize = ref(12) // NEW: Page Size State
 
 	// --- HELPER: Dynamic Calculation ---
 	const calculatePaymentForPrice = (targetVehiclePrice: number) => {
@@ -60,6 +60,7 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError.value = null
 
 		try {
+			// Use your backend URL constant
 			const response = await fetch(`${BACKEND_API_URL}/api/vehicles`)
 
 			if (!response.ok) {
@@ -72,6 +73,7 @@ export const useLoanStore = defineStore('loan', () => {
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
 			fetchError.value = 'Unable to load vehicles. Using sample data.'
+			// Fallback to sample data
 			inventory.value = sampleVehicles.map((vehicle) => ({
 				...vehicle,
 			}))
@@ -106,7 +108,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Watchers --
 	watch(
-		// Added pageSize to watcher so pagination resets when page size changes
+		// Added sortOption and pageSize to watcher so pagination resets correctly
 		[
 			price,
 			monthlyBudget,
@@ -157,6 +159,7 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 	})
 
+	// NEW: Sorting Logic
 	const sortedVehicles = computed(() => {
 		const vehicles = [...filteredVehicles.value]
 
