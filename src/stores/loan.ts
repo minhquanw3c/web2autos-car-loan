@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { Vehicle } from '@/types'
 import { sampleVehicles } from '@/constants/vehicles'
 import { BACKEND_API_URL } from '@/constants/utils'
@@ -9,8 +9,12 @@ export const useLoanStore = defineStore('loan', () => {
 	const currentView = ref<'calculator' | 'application'>('calculator')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
-	// -- Calculator State --
+	// -- Calculator Inputs --
 	const price = ref<number>(20000)
+	const monthlyBudget = ref<number>(450)
+	const filterMode = ref<'price' | 'budget'>('price')
+	const sortOption = ref<string>('price-asc') // NEW: Sort State
+
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
 	const amountOwed = ref<number>(0)
@@ -22,9 +26,31 @@ export const useLoanStore = defineStore('loan', () => {
 	const isFetchingVehicles = ref(false)
 	const fetchError = ref<string | null>(null)
 
-	// -- Pagination State --
+	// -- Pagination --
 	const currentPage = ref(1)
 	const pageSize = ref(12)
+
+	// --- HELPER: Dynamic Calculation ---
+	const calculatePaymentForPrice = (targetVehiclePrice: number) => {
+		const A = downPayment.value || 0
+		const C = tradeIn.value || 0
+		const G = amountOwed.value || 0
+		const D = interestRate.value || 0
+		const H = loanTerm.value || 0
+
+		const netTrade = C - G
+		const principalAmount = targetVehiclePrice - A - netTrade
+
+		if (principalAmount <= 0) return 0
+		if (D === 0 && H > 0) return principalAmount / H
+
+		const monthlyRate = D / 1200
+		const numerator = principalAmount * monthlyRate
+		const denominator = 1 - 1 / Math.pow(1 + monthlyRate, H)
+
+		const payment = numerator / denominator
+		return isFinite(payment) ? payment : 0
+	}
 
 	// -- Actions --
 	const fetchInventory = async () => {
@@ -34,24 +60,21 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError.value = null
 
 		try {
-			// For demo purpose
-			inventory.value = sampleVehicles.map((vehicle) => {
-				return {
-					...vehicle,
-					make: 'Test',
-					model: 'Test',
-					year: 2025,
-				}
-			})
+			const response = await fetch(`${BACKEND_API_URL}/api/vehicles`)
 
-			// const response = await fetch(`${BACKEND_API_URL}/api/vehicles`)
-			// if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
-			// const data: Vehicle[] = await response.json()
-			// inventory.value = data
-			// console.log(`Loaded ${data.length} vehicles from backend.`)
+			if (!response.ok) {
+				throw new Error(`API Error: ${response.statusText}`)
+			}
+
+			const data: Vehicle[] = await response.json()
+			inventory.value = data
+			console.log(`Loaded ${data.length} vehicles from backend.`)
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
-			fetchError.value = 'Unable to load vehicles. Please check your connection.'
+			fetchError.value = 'Unable to load vehicles. Using sample data.'
+			inventory.value = sampleVehicles.map((vehicle) => ({
+				...vehicle,
+			}))
 		} finally {
 			isFetchingVehicles.value = false
 		}
@@ -64,11 +87,14 @@ export const useLoanStore = defineStore('loan', () => {
 
 	const resetCalculator = () => {
 		price.value = 20000
+		monthlyBudget.value = 450
 		downPayment.value = 1000
 		tradeIn.value = 0
 		amountOwed.value = 0
 		interestRate.value = 7.0
 		loanTerm.value = 24
+		filterMode.value = 'price'
+		sortOption.value = 'price-asc'
 	}
 
 	const resetView = () => {
@@ -77,18 +103,29 @@ export const useLoanStore = defineStore('loan', () => {
 		resetCalculator()
 	}
 
-	// -- Logic / Watchers --
+	// -- Watchers --
 	watch(
-		[price, downPayment, tradeIn, amountOwed, interestRate],
-		([newPrice, newDown, newTrade, newOwed, newRate]) => {
-			// Reset page when filter criteria (price) changes
+		// Added sortOption to watcher so pagination resets when sorting changes
+		[
+			price,
+			monthlyBudget,
+			downPayment,
+			tradeIn,
+			amountOwed,
+			interestRate,
+			loanTerm,
+			filterMode,
+			sortOption,
+		],
+		() => {
 			currentPage.value = 1
 
-			if (newPrice < 0) price.value = 0
-			if (newDown < 0) downPayment.value = 0
-			if (newTrade < 0) tradeIn.value = 0
-			if (newOwed < 0) amountOwed.value = 0
-			if (newRate < 0) interestRate.value = 0
+			if (price.value < 0) price.value = 0
+			if (monthlyBudget.value < 0) monthlyBudget.value = 0
+			if (downPayment.value < 0) downPayment.value = 0
+			if (tradeIn.value < 0) tradeIn.value = 0
+			if (amountOwed.value < 0) amountOwed.value = 0
+			if (interestRate.value < 0) interestRate.value = 0
 		},
 	)
 
@@ -101,44 +138,55 @@ export const useLoanStore = defineStore('loan', () => {
 	})
 
 	const monthlyPayment = computed(() => {
-		const A = downPayment.value || 0
-		const B = price.value || 0
-		const C = tradeIn.value || 0
-		const D = interestRate.value || 0
-		const G = amountOwed.value || 0
-		const H = loanTerm.value || 0
-
-		const principalAmount = B - A - C + G
-		if (principalAmount <= 0) return 0
-		if (D === 0) return principalAmount / H
-
-		const monthlyRate = D / 1200
-		const numerator = principalAmount * monthlyRate
-		const denominator = 1 - 1 / Math.pow(1 + monthlyRate, H)
-		const payment = numerator / denominator
-
-		return isFinite(payment) ? payment : 0
+		return calculatePaymentForPrice(price.value)
 	})
 
-	// 1. All matching vehicles (Filtered)
 	const filteredVehicles = computed(() => {
-		const targetPrice = price.value
-		return inventory.value.filter((v) => v.price >= targetPrice)
+		if (filterMode.value === 'budget') {
+			return inventory.value.filter((v) => {
+				const estimatedPayment = calculatePaymentForPrice(v.price)
+				return estimatedPayment > 0 && estimatedPayment <= monthlyBudget.value + 10
+			})
+		} else {
+			const targetPrice = price.value
+			return inventory.value.filter(
+				(v) => v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000,
+			)
+		}
 	})
 
-	// 2. Current Page Slice (Paginated)
+	// NEW: Sort logic
+	const sortedVehicles = computed(() => {
+		const vehicles = [...filteredVehicles.value] // Copy to avoid mutation side-effects
+
+		switch (sortOption.value) {
+			case 'price-asc':
+				return vehicles.sort((a, b) => a.price - b.price)
+			case 'price-desc':
+				return vehicles.sort((a, b) => b.price - a.price)
+			case 'year-desc':
+				return vehicles.sort((a, b) => b.year - a.year)
+			case 'year-asc':
+				return vehicles.sort((a, b) => a.year - b.year)
+			default:
+				return vehicles
+		}
+	})
+
+	// Updated to use sortedVehicles
 	const paginatedVehicles = computed(() => {
 		const start = (currentPage.value - 1) * pageSize.value
 		const end = start + pageSize.value
-		return filteredVehicles.value.slice(start, end)
+		return sortedVehicles.value.slice(start, end)
 	})
 
-	// 3. Total count for UI
 	const totalVehicles = computed(() => filteredVehicles.value.length)
 
 	return {
-		// State
 		price,
+		monthlyBudget,
+		filterMode,
+		sortOption,
 		downPayment,
 		tradeIn,
 		amountOwed,
@@ -152,17 +200,17 @@ export const useLoanStore = defineStore('loan', () => {
 		currentPage,
 		pageSize,
 
-		// Computed
 		netTradeImpact,
 		principal,
 		monthlyPayment,
 		filteredVehicles,
+		sortedVehicles,
 		paginatedVehicles,
 		totalVehicles,
 
-		// Actions
 		startApplication,
 		resetView,
 		fetchInventory,
+		calculatePaymentForPrice,
 	}
 })

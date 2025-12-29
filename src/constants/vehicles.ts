@@ -1,4 +1,6 @@
-export const sampleVehicles = [
+import type { Vehicle } from '@/types'
+
+export const sampleVehicles: Array<Vehicle> = [
 	{
 		id: '3N1CN8EV6SL821534-5b9cf6fa-9d28',
 		heading: '2025 Nissan Versa SV',
@@ -1484,4 +1486,11 @@ export const sampleVehicles = [
 		mediaUrl:
 			'https://www.nissanusa.com/content/dam/Nissan/us/assets/2026/armada/2026-nissan-armada-26616-exterior-gaq.png.ximg.m_6_h.smart.png',
 	},
-]
+].map((vehicle) => {
+	return {
+		...vehicle,
+		model: 'Test',
+		make: 'Test',
+		year: 2025,
+	}
+})

@@ -14,7 +14,6 @@ const formatCurrency = (val: number) => {
 
 const handlePageChange = (val: number) => {
     store.currentPage = val;
-    // Optional: Scroll to top of grid when page changes
     const gridTop = document.getElementById('vehicle-grid-anchor');
     if (gridTop) gridTop.scrollIntoView({ behavior: 'smooth' });
 };
@@ -22,19 +21,34 @@ const handlePageChange = (val: number) => {
 
 <template>
     <div class="mt-10" id="vehicle-grid-anchor">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-6 px-1">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-6 px-1 gap-4">
             <h3 class="text-2xl font-bold text-white drop-shadow-md flex items-center">
                 <i class="fas fa-car-side mr-3"></i> Recommended Vehicles
+                <span
+                    class="ml-3 text-xs bg-white/20 px-2 py-1 rounded text-white border border-white/30 hidden sm:inline-block">
+                    {{ store.filterMode === 'budget' ? 'Filtering by Budget' : 'Filtering by Price' }}
+                </span>
             </h3>
-            <span class="text-blue-200 text-sm font-medium mb-1 md:mb-0" v-if="store.totalVehicles > 0">
-                Showing {{ store.paginatedVehicles.length }} of {{ store.totalVehicles }} matches
-            </span>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
+                <!-- Sorting Dropdown -->
+                <el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-48">
+                    <el-option label="Price: Low to High" value="price-asc" />
+                    <el-option label="Price: High to Low" value="price-desc" />
+                    <el-option label="Year: Newest First" value="year-desc" />
+                    <el-option label="Year: Oldest First" value="year-asc" />
+                </el-select>
+
+                <span class="text-blue-200 text-sm font-medium whitespace-nowrap" v-if="store.totalVehicles > 0">
+                    Showing {{ store.paginatedVehicles.length }} of {{ store.totalVehicles }}
+                </span>
+            </div>
         </div>
 
         <!-- Empty State -->
         <div v-if="store.filteredVehicles.length === 0">
             <el-card shadow="never" class="border-0">
-                <el-empty description="No vehicles found in this price range. Try adjusting your vehicle price." />
+                <el-empty description="No vehicles found matching your criteria. Try adjusting the budget or price." />
             </el-card>
         </div>
 
@@ -57,7 +71,15 @@ const handlePageChange = (val: number) => {
                                 <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{ car.model }}
                                 </h4>
                             </div>
-                            <div class="text-xl font-extrabold text-blue-600 mb-2">{{ formatCurrency(car.price) }}</div>
+
+                            <div class="flex items-baseline gap-2 mb-2">
+                                <span class="text-xl font-extrabold text-blue-600">{{ formatCurrency(car.price)
+                                }}</span>
+                                <span class="text-xs text-gray-400 font-semibold" v-if="store.filterMode === 'budget'">
+                                    (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
+                                </span>
+                            </div>
+
                             <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.heading }}</p>
 
                             <div class="mt-auto pt-2">
@@ -81,7 +103,6 @@ const handlePageChange = (val: number) => {
 </template>
 
 <style scoped>
-/* Custom style to make pagination fit the dark glass theme */
 :deep(.glass-pagination .el-pagination__total),
 :deep(.glass-pagination .el-pager li),
 :deep(.glass-pagination .btn-prev),

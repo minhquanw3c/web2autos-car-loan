@@ -15,32 +15,54 @@ const termOptions: TermOption[] = [
     { value: 48, label: '48 Months' },
     { value: 60, label: '60 Months' },
     { value: 72, label: '72 Months' },
-    { value: 84, label: '84 Months' },
 ];
 </script>
 
 <template>
     <el-card shadow="hover" class="mb-6">
         <template #header>
-            <div class="flex items-center text-lg font-bold text-gray-800">
-                <i class="fas fa-calculator text-blue-500 mr-2"></i>
-                <span>Auto Loan Calculator</span>
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center text-lg font-bold text-gray-800">
+                    <i class="fas fa-calculator text-blue-500 mr-2"></i>
+                    <span>Auto Loan Calculator</span>
+                </div>
+                <!-- Mode Toggle -->
+                <el-radio-group v-model="store.filterMode" size="small">
+                    <el-radio-button label="price">By Price</el-radio-button>
+                    <el-radio-button label="budget">By Budget</el-radio-button>
+                </el-radio-group>
             </div>
         </template>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Conditional Input: Price vs Budget -->
             <div class="space-y-1">
                 <div class="flex items-center mb-1">
-                    <span class="text-sm font-semibold text-gray-600 mr-2">Vehicle Selling Price</span>
-                    <el-tooltip content="The total sticker price of the vehicle." placement="top">
+                    <span class="text-sm font-semibold text-gray-600 mr-2">
+                        {{ store.filterMode === 'price' ? 'Vehicle Selling Price' : 'Target Monthly Budget' }}
+                    </span>
+                    <el-tooltip
+                        :content="store.filterMode === 'price' ? 'The total sticker price of the vehicle.' : 'The maximum amount you want to pay per month.'"
+                        placement="top">
                         <i class="fas fa-info-circle text-gray-400 cursor-help"></i>
                     </el-tooltip>
                 </div>
-                <el-input v-model.number="store.price" type="number" placeholder="0.00" size="large">
+
+                <!-- Price Input -->
+                <el-input v-if="store.filterMode === 'price'" v-model.number="store.price" type="number"
+                    placeholder="0.00" size="large">
                     <template #prefix><i class="fas fa-dollar-sign text-gray-400"></i></template>
+                </el-input>
+
+                <!-- Budget Input -->
+                <el-input v-else v-model.number="store.monthlyBudget" type="number" placeholder="0.00" size="large"
+                    class="!text-green-600">
+                    <template #prefix><i class="fas fa-wallet text-green-500"></i></template>
                 </el-input>
             </div>
 
+            <!-- Down Payment -->
             <div class="space-y-1">
                 <div class="flex items-center mb-1">
                     <span class="text-sm font-semibold text-gray-600 mr-2">Cash Down Payment</span>
@@ -53,6 +75,7 @@ const termOptions: TermOption[] = [
                 </el-input>
             </div>
 
+            <!-- Interest Rate -->
             <div class="space-y-1 md:col-span-2 lg:col-span-1">
                 <div class="flex justify-between items-center mb-1">
                     <span class="text-sm font-semibold text-gray-600">Interest Rate (APR)</span>
@@ -63,6 +86,7 @@ const termOptions: TermOption[] = [
                     :show-input-controls="false" />
             </div>
 
+            <!-- Loan Duration -->
             <div class="space-y-1">
                 <div class="flex items-center mb-1">
                     <span class="text-sm font-semibold text-gray-600 mr-2">Loan Duration</span>
@@ -75,6 +99,7 @@ const termOptions: TermOption[] = [
                 </el-select>
             </div>
 
+            <!-- Trade-in Offer -->
             <div class="space-y-1">
                 <div class="flex items-center mb-1">
                     <span class="text-sm font-semibold text-gray-600 mr-2">Trade-in Offer</span>
@@ -87,6 +112,7 @@ const termOptions: TermOption[] = [
                 </el-input>
             </div>
 
+            <!-- Amount Owed -->
             <div class="space-y-1">
                 <div class="flex items-center mb-1">
                     <span class="text-sm font-semibold text-gray-600 mr-2">Amount Owed on Trade-in</span>
