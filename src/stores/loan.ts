@@ -13,7 +13,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const price = ref<number>(20000)
 	const monthlyBudget = ref<number>(450)
 	const filterMode = ref<'price' | 'budget'>('price')
-	const sortOption = ref<string>('price-asc') // NEW: Sort State
+	const sortOption = ref<string>('price-asc')
 
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
@@ -95,6 +95,7 @@ export const useLoanStore = defineStore('loan', () => {
 		loanTerm.value = 24
 		filterMode.value = 'price'
 		sortOption.value = 'price-asc'
+		pageSize.value = 12
 	}
 
 	const resetView = () => {
@@ -105,7 +106,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Watchers --
 	watch(
-		// Added sortOption to watcher so pagination resets when sorting changes
+		// Added pageSize to watcher so pagination resets when page size changes
 		[
 			price,
 			monthlyBudget,
@@ -116,6 +117,7 @@ export const useLoanStore = defineStore('loan', () => {
 			loanTerm,
 			filterMode,
 			sortOption,
+			pageSize,
 		],
 		() => {
 			currentPage.value = 1
@@ -155,9 +157,8 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 	})
 
-	// NEW: Sort logic
 	const sortedVehicles = computed(() => {
-		const vehicles = [...filteredVehicles.value] // Copy to avoid mutation side-effects
+		const vehicles = [...filteredVehicles.value]
 
 		switch (sortOption.value) {
 			case 'price-asc':
@@ -173,7 +174,6 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 	})
 
-	// Updated to use sortedVehicles
 	const paginatedVehicles = computed(() => {
 		const start = (currentPage.value - 1) * pageSize.value
 		const end = start + pageSize.value

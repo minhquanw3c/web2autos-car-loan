@@ -18,6 +18,12 @@ const handlePageChange = (val: number) => {
     const scrollContainer = document.getElementById('vehicle-scroll-container');
     if (scrollContainer) scrollContainer.scrollTop = 0;
 };
+
+// Handled by store watcher automatically, but we can also force scroll to top here if needed
+const handlePageSizeChange = () => {
+    const scrollContainer = document.getElementById('vehicle-scroll-container');
+    if (scrollContainer) scrollContainer.scrollTop = 0;
+};
 </script>
 
 <template>
@@ -35,11 +41,21 @@ const handlePageChange = (val: number) => {
             </h3>
 
             <div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
-                <el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-48">
+                <!-- Sorting -->
+                <el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-40">
                     <el-option label="Price: Low to High" value="price-asc" />
                     <el-option label="Price: High to Low" value="price-desc" />
                     <el-option label="Year: Newest First" value="year-desc" />
                     <el-option label="Year: Oldest First" value="year-asc" />
+                </el-select>
+
+                <!-- NEW: Page Size Filter -->
+                <el-select v-model="store.pageSize" placeholder="Show" size="default" class="w-full sm:w-28"
+                    @change="handlePageSizeChange">
+                    <el-option label="12 / page" :value="12" />
+                    <el-option label="24 / page" :value="24" />
+                    <el-option label="48 / page" :value="48" />
+                    <el-option label="96 / page" :value="96" />
                 </el-select>
 
                 <span class="text-blue-200 text-sm font-medium whitespace-nowrap" v-if="store.totalVehicles > 0">
