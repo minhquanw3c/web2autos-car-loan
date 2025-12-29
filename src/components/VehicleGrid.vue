@@ -14,14 +14,18 @@ const formatCurrency = (val: number) => {
 
 const handlePageChange = (val: number) => {
     store.currentPage = val;
-    const gridTop = document.getElementById('vehicle-grid-anchor');
-    if (gridTop) gridTop.scrollIntoView({ behavior: 'smooth' });
+    // Scroll the internal container to top when page changes
+    const scrollContainer = document.getElementById('vehicle-scroll-container');
+    if (scrollContainer) scrollContainer.scrollTop = 0;
 };
 </script>
 
 <template>
-    <div class="mt-10" id="vehicle-grid-anchor">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-6 px-1 gap-4">
+    <!-- Updated Container: Fixed height relative to viewport to enable internal scrolling -->
+    <div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
+
+        <!-- Header: Fixed at top -->
+        <div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
             <h3 class="text-2xl font-bold text-white drop-shadow-md flex items-center">
                 <i class="fas fa-car-side mr-3"></i> Recommended Vehicles
                 <span
@@ -31,7 +35,6 @@ const handlePageChange = (val: number) => {
             </h3>
 
             <div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
-                <!-- Sorting Dropdown -->
                 <el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-48">
                     <el-option label="Price: Low to High" value="price-asc" />
                     <el-option label="Price: High to Low" value="price-desc" />
@@ -40,60 +43,71 @@ const handlePageChange = (val: number) => {
                 </el-select>
 
                 <span class="text-blue-200 text-sm font-medium whitespace-nowrap" v-if="store.totalVehicles > 0">
-                    Showing {{ store.paginatedVehicles.length }} of {{ store.totalVehicles }}
+                    {{ store.paginatedVehicles.length }} / {{ store.totalVehicles }}
                 </span>
             </div>
         </div>
 
-        <!-- Empty State -->
-        <div v-if="store.filteredVehicles.length === 0">
-            <el-card shadow="never" class="border-0">
-                <el-empty description="No vehicles found matching your criteria. Try adjusting the budget or price." />
-            </el-card>
+        <!-- Content Area: Flexible and Scrollable -->
+        <!-- pb-40 on mobile ensures the last items aren't hidden behind the fixed filter bottom sheet -->
+        <div id="vehicle-scroll-container"
+            class="flex-1 overflow-y-auto overflow-x-hidden pr-2 pb-40 lg:pb-0 custom-scrollbar">
+
+            <!-- Empty State -->
+            <div v-if="store.filteredVehicles.length === 0">
+                <el-card shadow="never" class="border-0">
+                    <el-empty
+                        description="No vehicles found matching your criteria. Try adjusting the budget or price." />
+                </el-card>
+            </div>
+
+            <!-- Vehicle Grid -->
+            <div v-else>
+                <el-row :gutter="24">
+                    <el-col v-for="car in store.paginatedVehicles" :key="car.id" :xs="24" :sm="12" :lg="12" :xl="8"
+                        class="mb-6">
+                        <el-card :body-style="{ padding: '0px' }" shadow="hover"
+                            class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
+                            <div class="relative h-48 overflow-hidden bg-gray-100">
+                                <img :src="car.mediaUrl" alt="Car"
+                                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                                <div
+                                    class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">
+                                    {{ car.year }}
+                                </div>
+                            </div>
+                            <div class="p-5 flex flex-col flex-grow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{
+                                        car.model }}</h4>
+                                </div>
+
+                                <div class="flex items-baseline gap-2 mb-2">
+                                    <span class="text-xl font-extrabold text-blue-600">{{ formatCurrency(car.price)
+                                        }}</span>
+                                    <span class="text-xs text-gray-400 font-semibold"
+                                        v-if="store.filterMode === 'budget'">
+                                        (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
+                                    </span>
+                                </div>
+
+                                <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.heading }}</p>
+
+                                <div class="mt-auto pt-2">
+                                    <el-button type="primary" plain class="w-full">
+                                        View Details
+                                    </el-button>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </div>
         </div>
 
-        <!-- Vehicle Grid -->
-        <div v-else>
-            <el-row :gutter="24">
-                <el-col v-for="car in store.paginatedVehicles" :key="car.id" :xs="24" :sm="12" :lg="8" class="mb-6">
-                    <el-card :body-style="{ padding: '0px' }" shadow="hover"
-                        class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
-                        <div class="relative h-48 overflow-hidden bg-gray-100">
-                            <img :src="car.mediaUrl" alt="Car"
-                                class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                            <div
-                                class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">
-                                {{ car.year }}
-                            </div>
-                        </div>
-                        <div class="p-5 flex flex-col flex-grow">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{ car.model }}
-                                </h4>
-                            </div>
-
-                            <div class="flex items-baseline gap-2 mb-2">
-                                <span class="text-xl font-extrabold text-blue-600">{{ formatCurrency(car.price)
-                                }}</span>
-                                <span class="text-xs text-gray-400 font-semibold" v-if="store.filterMode === 'budget'">
-                                    (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
-                                </span>
-                            </div>
-
-                            <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.heading }}</p>
-
-                            <div class="mt-auto pt-2">
-                                <el-button type="primary" plain class="w-full">
-                                    View Details
-                                </el-button>
-                            </div>
-                        </div>
-                    </el-card>
-                </el-col>
-            </el-row>
-
-            <!-- Pagination Control -->
-            <div class="flex justify-center mt-8 pb-4">
+        <!-- Pagination Control: Fixed at bottom of grid area -->
+        <div class="flex-shrink-0 pt-4" v-if="store.totalVehicles > 0">
+            <div class="flex justify-center bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
                 <el-pagination v-model:current-page="store.currentPage" v-model:page-size="store.pageSize"
                     :total="store.totalVehicles" layout="prev, pager, next" background
                     @current-change="handlePageChange" class="glass-pagination" />
@@ -103,6 +117,25 @@ const handlePageChange = (val: number) => {
 </template>
 
 <style scoped>
+/* Scrollbar Styling */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
 :deep(.glass-pagination .el-pagination__total),
 :deep(.glass-pagination .el-pager li),
 :deep(.glass-pagination .btn-prev),
