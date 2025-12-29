@@ -33,7 +33,7 @@ const showMobileFilters = ref(false); // Controls mobile sheet visibility
 
             <!-- LEFT COLUMN: VEHICLES (Main Content) -->
             <!-- pb-24 ensures space for the floating mobile buttons -->
-            <div class="w-full lg:flex-1 order-1 lg:order-1 pb-24 lg:pb-0 min-w-0">
+            <div class="w-full lg:flex-1 order-1 lg:order-1 lg:pb-0 min-w-0">
               <VehicleGrid />
             </div>
 
@@ -73,12 +73,6 @@ const showMobileFilters = ref(false); // Controls mobile sheet visibility
 
                   <el-alert title="Tip" type="info" description="Click on any vehicle to view details and apply."
                     show-icon :closable="false" class="hidden lg:flex" />
-
-                  <!-- Mobile Close Button -->
-                  <button @click="showMobileFilters = false"
-                    class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl lg:hidden mt-4 hover:bg-gray-200 transition-colors">
-                    Close Filters
-                  </button>
                 </div>
               </div>
             </div>
@@ -89,9 +83,10 @@ const showMobileFilters = ref(false); // Controls mobile sheet visibility
 
           <!-- Mobile Filter Toggle FAB -->
           <button @click="showMobileFilters = !showMobileFilters"
-            class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 lg:hidden bg-indigo-600 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center gap-3 active:scale-95 border border-white/20">
+            class="fixed transform z-50 lg:hidden bg-indigo-600 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center gap-3 active:scale-95 border border-white/20"
+            style="bottom: 6rem; right: 1rem;">
             <i class="fas" :class="showMobileFilters ? 'fa-times' : 'fa-sliders-h'"></i>
-            <span class="font-bold text-sm tracking-wide">{{ showMobileFilters ? 'Close' : 'Filters & Payment' }}</span>
+            <span class="font-bold text-sm tracking-wide">{{ showMobileFilters ? 'Close' : 'Filters' }}</span>
           </button>
         </div>
 

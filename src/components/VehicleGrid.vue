@@ -67,7 +67,7 @@ const handlePageSizeChange = () => {
         <!-- Content Area: Flexible and Scrollable -->
         <!-- pb-40 on mobile ensures the last items aren't hidden behind the fixed filter bottom sheet -->
         <div id="vehicle-scroll-container"
-            class="flex-1 overflow-y-auto overflow-x-hidden pr-2 pb-40 lg:pb-0 custom-scrollbar">
+            class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar">
 
             <!-- Empty State -->
             <div v-if="store.filteredVehicles.length === 0">
@@ -100,7 +100,7 @@ const handlePageSizeChange = () => {
 
                                 <div class="flex items-baseline gap-2 mb-2">
                                     <span class="text-xl font-extrabold text-blue-600">{{ formatCurrency(car.price)
-                                        }}</span>
+                                    }}</span>
                                     <span class="text-xs text-gray-400 font-semibold"
                                         v-if="store.filterMode === 'budget'">
                                         (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
