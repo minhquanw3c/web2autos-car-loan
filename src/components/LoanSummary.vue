@@ -9,7 +9,7 @@ const formatCurrency = (val: number) => {
 </script>
 
 <template>
-    <el-card class="summary-card shadow-xl sticky top-4" :body-style="{ padding: '0px' }">
+    <el-card class="summary-card shadow-xl top-4" :body-style="{ padding: '0px' }">
         <div class="p-6 text-white">
             <p class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-1">Estimated Monthly Payment</p>
             <h2 class="text-4xl md:text-5xl font-bold mb-4">{{ formatCurrency(store.monthlyPayment) }}</h2>
