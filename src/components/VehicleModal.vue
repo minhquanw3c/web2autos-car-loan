@@ -18,12 +18,12 @@ const proceedToConsultant = () => {
     <el-dialog v-model="dialogVisible" width="95%" class="max-w-2xl rounded-2xl" align-center destroy-on-close>
         <div v-if="store.selectedVehicle">
             <div class="relative h-56 md:h-64 -mx-5 -mt-5 mb-5 overflow-hidden">
-                <img :src="store.selectedVehicle.mediaUrl" class="w-full h-full object-cover">
+                <img :src="store.selectedVehicle.mediaUrl" class="w-full h-full object-cover" loading="lazy">
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 pt-12">
                     <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">{{ store.selectedVehicle.year }}
                         {{ store.selectedVehicle.make }} {{ store.selectedVehicle.model }}</h2>
                     <p class="text-blue-200 font-medium text-sm md:text-base">Stock #{{ store.selectedVehicle.stock_no
-                        }}
+                    }}
                     </p>
                 </div>
             </div>

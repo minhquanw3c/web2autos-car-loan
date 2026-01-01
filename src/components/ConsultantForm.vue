@@ -238,14 +238,19 @@ const confirmSubmission = async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 ...formData,
-                // Include vehicle data if it exists
                 selected_vehicle: store.selectedVehicle ? {
-                    id: store.selectedVehicle.id,
-                    make: store.selectedVehicle.make,
-                    model: store.selectedVehicle.model,
-                    year: store.selectedVehicle.year,
-                    price: store.selectedVehicle.price
-                } : null
+                    ...store.selectedVehicle
+                } : null,
+                loan_calculator_data: {
+                    vehicle_selling_price: store.price,
+                    down_payment: store.downPayment,
+                    interest_rate: store.interestRate,
+                    loan_term: store.loanTerm,
+                    trade_in_offer: store.tradeIn,
+                    amount_owed_on_trade_in: store.amountOwed,
+                    target_monthly_budget: store.filterMode === 'budget' ? store.monthlyBudget : null,
+                    filter_mode: store.filterMode
+                }
             })
         });
 

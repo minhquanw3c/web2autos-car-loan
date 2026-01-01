@@ -1,15 +1,20 @@
 export interface Vehicle {
-	id: string;
-	make: string;
-	model: string;
-	year: number;
-	price: number;
-	mediaUrl: string;
-	source: string;
-	miles: number;
-	inventory_type: string;
-	stock_no: string;
-	heading: string;
+	id: string
+	make: string
+	model: string
+	year: number
+	price: number
+	mediaUrl: string
+	source: string
+	miles: number
+	inventory_type: string
+	stock_no: string
+	heading: string
+	referenceUrl: string
+	dealer: {
+		name: string
+		street: string
+	}
 }
 
 export interface FormComponentConfig {
@@ -19,7 +24,7 @@ export interface FormComponentConfig {
 
 export interface FormInput {
 	label: string
-	type: string // 'text', 'email', 'number', 'password', 'select', 'checkbox'
+	type: string
 	required?: boolean
 	default?: any
 	options?: string[] | string

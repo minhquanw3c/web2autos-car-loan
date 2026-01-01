@@ -85,7 +85,7 @@ const handlePageSizeChange = () => {
                         <el-card :body-style="{ padding: '0px' }" shadow="hover"
                             class="vehicle-card h-full flex flex-col cursor-pointer" @click="openModal(car)">
                             <div class="relative h-48 overflow-hidden bg-gray-100">
-                                <img :src="car.mediaUrl" alt="Car"
+                                <img :src="car.mediaUrl" alt="Car" loading="lazy"
                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                                 <div
                                     class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm">
@@ -94,8 +94,7 @@ const handlePageSizeChange = () => {
                             </div>
                             <div class="p-5 flex flex-col flex-grow">
                                 <div class="flex justify-between items-start mb-2">
-                                    <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.make }} {{
-                                        car.model }}</h4>
+                                    <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.heading }}</h4>
                                 </div>
 
                                 <div class="flex items-baseline gap-2 mb-2">
@@ -106,8 +105,6 @@ const handlePageSizeChange = () => {
                                         (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
                                     </span>
                                 </div>
-
-                                <p class="text-gray-500 text-xs mb-4 line-clamp-2 leading-relaxed">{{ car.heading }}</p>
 
                                 <div class="mt-auto pt-2">
                                     <el-button type="primary" plain class="w-full">

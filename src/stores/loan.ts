@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { Vehicle } from '@/types'
-import { sampleVehicles } from '@/constants/vehicles'
 import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
@@ -13,7 +12,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const price = ref<number>(20000)
 	const monthlyBudget = ref<number>(450)
 	const filterMode = ref<'price' | 'budget'>('price')
-	const sortOption = ref<string>('price-asc') // NEW: Sort State
+	const sortOption = ref<string>('price-desc')
 
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
@@ -28,7 +27,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Pagination --
 	const currentPage = ref(1)
-	const pageSize = ref(12) // NEW: Page Size State
+	const pageSize = ref(12)
 
 	// --- HELPER: Dynamic Calculation ---
 	const calculatePaymentForPrice = (targetVehiclePrice: number) => {
@@ -73,10 +72,6 @@ export const useLoanStore = defineStore('loan', () => {
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
 			fetchError.value = 'Unable to load vehicles. Using sample data.'
-			// Fallback to sample data
-			inventory.value = sampleVehicles.map((vehicle) => ({
-				...vehicle,
-			}))
 		} finally {
 			isFetchingVehicles.value = false
 		}
@@ -153,13 +148,10 @@ export const useLoanStore = defineStore('loan', () => {
 			})
 		} else {
 			const targetPrice = price.value
-			return inventory.value.filter(
-				(v) => v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000,
-			)
+			return inventory.value.filter((v) => v.price <= targetPrice)
 		}
 	})
 
-	// NEW: Sorting Logic
 	const sortedVehicles = computed(() => {
 		const vehicles = [...filteredVehicles.value]
 
