@@ -10,7 +10,6 @@ const dialogVisible = computed({
 });
 
 const proceedToConsultant = () => {
-    store.selectedVehicle = null;
     store.startApplication();
 };
 </script>

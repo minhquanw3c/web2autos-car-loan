@@ -3,9 +3,15 @@ import { ref, reactive } from 'vue';
 import { useLoanStore } from '@/stores/loan';
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus';
 import type { FormSchema, FormInput } from '@/types';
+import { BACKEND_API_URL } from '@/constants/utils';
 
 const store = useLoanStore();
 const summaryVisible = ref(false);
+
+// Helper for currency formatting
+const formatCurrency = (val: number) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
+};
 
 // 1. Schema
 const schema: FormSchema = {
@@ -227,10 +233,20 @@ const confirmSubmission = async () => {
     });
 
     try {
-        const response = await fetch('http://localhost:3000/api/application', {
+        const response = await fetch(`${BACKEND_API_URL}/api/application`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+                ...formData,
+                // Include vehicle data if it exists
+                selected_vehicle: store.selectedVehicle ? {
+                    id: store.selectedVehicle.id,
+                    make: store.selectedVehicle.make,
+                    model: store.selectedVehicle.model,
+                    year: store.selectedVehicle.year,
+                    price: store.selectedVehicle.price
+                } : null
+            })
         });
 
         const result = await response.json();
@@ -313,7 +329,59 @@ const formatValue = (key: string, input: FormInput) => {
         <el-dialog v-model="summaryVisible" title="Review Application" width="90%" class="max-w-4xl" align-center>
             <p class="text-slate-500 mb-4">Please review your details below before final submission.</p>
 
-            <div class="h-[60vh] overflow-y-auto pr-2">
+            <!-- SELECTED VEHICLE SUMMARY -->
+            <div v-if="store.selectedVehicle" class="mb-6">
+                <el-card shadow="never" class="border border-blue-100 bg-blue-50/50 rounded-xl overflow-hidden"
+                    :body-style="{ padding: '0' }">
+                    <div class="flex flex-col sm:flex-row">
+                        <div class="w-full sm:w-1/3 h-48 sm:h-auto relative bg-gray-200">
+                            <!-- Updated to use mediaUrl to match VehicleGrid -->
+                            <img :src="store.selectedVehicle.mediaUrl" class="w-full h-full object-cover" alt="Vehicle">
+                        </div>
+                        <div class="p-6 flex flex-col justify-center w-full sm:w-2/3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Selected
+                                        Vehicle</div>
+                                    <h3 class="text-2xl font-bold text-slate-800 mb-1">
+                                        {{ store.selectedVehicle.year }} {{ store.selectedVehicle.make }} {{
+                                            store.selectedVehicle.model }}
+                                    </h3>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs text-slate-500 uppercase font-bold">Total Price</div>
+                                    <div class="text-xl font-extrabold text-slate-700">
+                                        {{ formatCurrency(store.selectedVehicle.price) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NEW: Monthly Payment & Loan Details -->
+                            <div class="mt-4 pt-4 border-t border-blue-200/60 grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-xs text-slate-500 mb-1">Est. Monthly Payment</div>
+                                    <div class="text-2xl font-extrabold text-blue-600">
+                                        {{
+                                            formatCurrency(store.calculatePaymentForPrice(store.selectedVehicle.price))
+                                        }}
+                                        <span class="text-sm font-normal text-slate-500">/mo</span>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-slate-600 space-y-1">
+                                    <div class="flex justify-between"><span>Down Pmt:</span> <span class="font-bold">{{
+                                        formatCurrency(store.downPayment) }}</span></div>
+                                    <div class="flex justify-between"><span>Term:</span> <span class="font-bold">{{
+                                        store.loanTerm }} mos</span></div>
+                                    <div class="flex justify-between"><span>Rate:</span> <span class="font-bold">{{
+                                        store.interestRate }}%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+
+            <div class="h-[50vh] overflow-y-auto pr-2">
                 <el-card shadow="never" class="mb-4 rounded-xl border border-gray-200"
                     v-for="(group, gIndex) in schema.groups" :key="gIndex">
                     <template #header>
