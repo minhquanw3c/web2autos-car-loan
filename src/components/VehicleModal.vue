@@ -46,7 +46,7 @@ const proceedToConsultant = () => {
             <div class="flex flex-col md:flex-row gap-3">
                 <el-button @click="dialogVisible = false" size="large" class="w-full md:w-auto">Cancel</el-button>
                 <el-button type="primary" @click="proceedToConsultant" size="large" class="w-full md:flex-1">
-                    <i class="fas fa-user-tie mr-2"></i> Get Consultant
+                    <i class="fas fa-user-tie mr-2"></i> APPLY NOW
                 </el-button>
             </div>
         </template>
