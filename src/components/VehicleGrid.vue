@@ -93,13 +93,14 @@ const handlePageSizeChange = () => {
                                 </div>
                             </div>
                             <div class="p-5 flex flex-col flex-grow">
-                                <div class="flex justify-between items-start mb-2">
+                                <div class="flex flex-col items-start mb-2">
+                                    <h4 class="text-lg text-gray-800 leading-tight">{{ car.dealer.name }}</h4>
                                     <h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.heading }}</h4>
                                 </div>
 
                                 <div class="flex items-baseline gap-2 mb-2">
                                     <span class="text-xl font-extrabold text-blue-600">{{ formatCurrency(car.price)
-                                    }}</span>
+                                        }}</span>
                                     <span class="text-xs text-gray-400 font-semibold"
                                         v-if="store.filterMode === 'budget'">
                                         (~{{ formatCurrency(store.calculatePaymentForPrice(car.price)) }}/mo)
