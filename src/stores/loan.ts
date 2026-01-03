@@ -9,7 +9,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// -- Calculator Inputs --
-	const price = ref<number>(100000)
+	const price = ref<number>(25000)
 	const monthlyBudget = ref<number>(5000)
 	const filterMode = ref<'price' | 'budget'>('price')
 	const sortOption = ref<string>('price-desc')
@@ -18,7 +18,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const tradeIn = ref<number>(0)
 	const amountOwed = ref<number>(0)
 	const interestRate = ref<number>(7.0)
-	const loanTerm = ref<number>(24)
+	const loanTerm = ref<number>(60)
 
 	// -- Inventory Data --
 	const inventory = ref<Vehicle[]>([])
@@ -114,7 +114,7 @@ export const useLoanStore = defineStore('loan', () => {
 			loanTerm,
 			filterMode,
 			sortOption,
-			pageSize,
+			pageSize
 		],
 		() => {
 			currentPage.value = 1
@@ -125,7 +125,7 @@ export const useLoanStore = defineStore('loan', () => {
 			if (tradeIn.value < 0) tradeIn.value = 0
 			if (amountOwed.value < 0) amountOwed.value = 0
 			if (interestRate.value < 0) interestRate.value = 0
-		},
+		}
 	)
 
 	// -- Computed --
@@ -206,6 +206,6 @@ export const useLoanStore = defineStore('loan', () => {
 		startApplication,
 		resetView,
 		fetchInventory,
-		calculatePaymentForPrice,
+		calculatePaymentForPrice
 	}
 })
