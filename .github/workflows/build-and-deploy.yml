@@ -22,6 +22,7 @@ jobs:
 
                       # 3. Pull latest code (Uses the Deploy Key on server)
                       echo "⬇️ Pulling latest changes..."
+                      git checkout .
                       git pull origin master
 
                       # 4. Install Backend Dependencies
