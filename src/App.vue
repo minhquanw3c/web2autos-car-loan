@@ -30,8 +30,7 @@
 				<div v-if="store.currentView === 'calculator'" key="calc">
 					<div class="flex flex-col lg:flex-row gap-6 items-start">
 						<!-- LEFT COLUMN: VEHICLES (Main Content) -->
-						<!-- pb-32 ensures the last car isn't hidden behind the fixed mobile buttons -->
-						<div class="w-full lg:flex-1 order-1 lg:order-1 pb-32 lg:pb-0 min-w-0">
+						<div class="w-full lg:flex-1 order-1 lg:order-1 lg:pb-0 min-w-0">
 							<VehicleGrid />
 						</div>
 
