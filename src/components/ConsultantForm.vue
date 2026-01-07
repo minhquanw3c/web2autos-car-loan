@@ -455,7 +455,7 @@
 						<div class="w-full sm:w-1/3 h-48 sm:h-auto relative bg-gray-200">
 							<!-- Updated to use mediaUrl to match VehicleGrid -->
 							<img
-								:src="store.selectedVehicle.mediaUrl"
+								:src="store.selectedVehicle.mediaUrls.length ? store.selectedVehicle.mediaUrls[0] : ''"
 								class="w-full h-full object-cover"
 								alt="Vehicle"
 							/>
