@@ -106,7 +106,7 @@
 						>
 							<div class="relative h-48 overflow-hidden bg-gray-100">
 								<img
-									:src="car.mediaUrl"
+									:src="car.mediaUrls.length ? car.mediaUrls[0] : ''"
 									alt="Car"
 									loading="lazy"
 									class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
