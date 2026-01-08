@@ -21,8 +21,17 @@
 			</div>
 		</template>
 
-		<!-- Changed to Vertical Layout (Stack) -->
 		<div class="flex flex-col gap-6 p-2">
+			<!-- --- BASIC INFO --- -->
+
+			<!-- Dealership (NEW) -->
+			<div class="space-y-1">
+				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Dealership</label>
+				<el-select v-model="store.filters.dealer" placeholder="All Dealers" clearable class="w-full">
+					<el-option v-for="dealer in store.uniqueDealers" :key="dealer" :label="dealer" :value="dealer" />
+				</el-select>
+			</div>
+
 			<!-- Make -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Make</label>
@@ -44,6 +53,35 @@
 					<el-option v-for="model in store.uniqueModels" :key="model" :label="model" :value="model" />
 				</el-select>
 			</div>
+
+			<!-- Trim -->
+			<div class="space-y-1">
+				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Trim</label>
+				<el-select
+					v-model="store.filters.trim"
+					placeholder="Any Trim"
+					clearable
+					class="w-full"
+					:disabled="!store.filters.model"
+				>
+					<el-option v-for="trim in store.uniqueTrims" :key="trim" :label="trim" :value="trim" />
+				</el-select>
+			</div>
+
+			<!-- Inventory Type -->
+			<div class="space-y-1">
+				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Condition</label>
+				<el-select v-model="store.filters.inventoryType" placeholder="New / Used" clearable class="w-full">
+					<el-option
+						v-for="type in store.uniqueInventoryTypes"
+						:key="type"
+						:label="type.toUpperCase()"
+						:value="type"
+					/>
+				</el-select>
+			</div>
+
+			<!-- --- RANGES --- -->
 
 			<!-- Year Range -->
 			<div class="space-y-2">
@@ -75,11 +113,29 @@
 				/>
 			</div>
 
+			<!-- --- SPECS --- -->
+
 			<!-- Body Type -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Body Type</label>
 				<el-select v-model="store.filters.bodyType" placeholder="Any" clearable class="w-full">
 					<el-option v-for="type in store.uniqueBodyTypes" :key="type" :label="type" :value="type" />
+				</el-select>
+			</div>
+
+			<!-- Transmission -->
+			<div class="space-y-1">
+				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Transmission</label>
+				<el-select v-model="store.filters.transmission" placeholder="Any" clearable class="w-full">
+					<el-option v-for="trans in store.uniqueTransmissions" :key="trans" :label="trans" :value="trans" />
+				</el-select>
+			</div>
+
+			<!-- Drivetrain -->
+			<div class="space-y-1">
+				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Drivetrain</label>
+				<el-select v-model="store.filters.drivetrain" placeholder="Any" clearable class="w-full">
+					<el-option v-for="drive in store.uniqueDrivetrains" :key="drive" :label="drive" :value="drive" />
 				</el-select>
 			</div>
 

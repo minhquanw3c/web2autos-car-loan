@@ -29,7 +29,12 @@ export const useLoanStore = defineStore('loan', () => {
 		yearRange: [2010, 2026] as [number, number],
 		mileageRange: [0, 200000] as [number, number],
 		fuelType: '',
-		exteriorColor: ''
+		exteriorColor: '',
+		inventoryType: '',
+		transmission: '',
+		drivetrain: '',
+		trim: '',
+		dealer: '' // NEW: Dealership Filter
 	})
 
 	// -- Inventory Data --
@@ -104,7 +109,12 @@ export const useLoanStore = defineStore('loan', () => {
 			yearRange: [2010, 2026],
 			mileageRange: [0, 200000],
 			fuelType: '',
-			exteriorColor: ''
+			exteriorColor: '',
+			inventoryType: '',
+			transmission: '',
+			drivetrain: '',
+			trim: '',
+			dealer: ''
 		}
 	}
 
@@ -191,6 +201,13 @@ export const useLoanStore = defineStore('loan', () => {
 			if (filters.value.fuelType && v.fuel_type !== filters.value.fuelType) return false
 			if (filters.value.exteriorColor && v.exterior_color !== filters.value.exteriorColor) return false
 
+			// New Filters
+			if (filters.value.inventoryType && v.inventory_type !== filters.value.inventoryType) return false
+			if (filters.value.transmission && v.transmission !== filters.value.transmission) return false
+			if (filters.value.drivetrain && v.drivetrain !== filters.value.drivetrain) return false
+			if (filters.value.trim && v.trim !== filters.value.trim) return false
+			if (filters.value.dealer && v.dealer.name !== filters.value.dealer) return false
+
 			// Range Checks
 			if (v.year < filters.value.yearRange[0] || v.year > filters.value.yearRange[1]) return false
 			if (v.miles != null && (v.miles < filters.value.mileageRange[0] || v.miles > filters.value.mileageRange[1]))
@@ -216,6 +233,26 @@ export const useLoanStore = defineStore('loan', () => {
 	const uniqueColors = computed(() =>
 		[...new Set(inventory.value.map((v) => v.exterior_color).filter(Boolean))].sort()
 	)
+	const uniqueInventoryTypes = computed(() =>
+		[...new Set(inventory.value.map((v) => v.inventory_type).filter(Boolean))].sort()
+	)
+	const uniqueTransmissions = computed(() =>
+		[...new Set(inventory.value.map((v) => v.transmission).filter(Boolean))].sort()
+	)
+	const uniqueDrivetrains = computed(() =>
+		[...new Set(inventory.value.map((v) => v.drivetrain).filter(Boolean))].sort()
+	)
+	const uniqueDealers = computed(() =>
+		[...new Set(inventory.value.map((v) => v.dealer?.name).filter(Boolean))].sort()
+	)
+
+	const uniqueTrims = computed(() => {
+		let list = inventory.value
+		if (filters.value.model) {
+			list = list.filter((v) => v.model === filters.value.model)
+		}
+		return [...new Set(list.map((v) => v.trim).filter(Boolean))].sort()
+	})
 
 	// --- Sorting ---
 	const sortedVehicles = computed(() => {
@@ -261,7 +298,7 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError,
 		currentPage,
 		pageSize,
-		filters, // Export new filters state
+		filters,
 
 		// Computed
 		netTradeImpact,
@@ -276,6 +313,11 @@ export const useLoanStore = defineStore('loan', () => {
 		uniqueBodyTypes,
 		uniqueFuelTypes,
 		uniqueColors,
+		uniqueInventoryTypes,
+		uniqueTransmissions,
+		uniqueDrivetrains,
+		uniqueTrims,
+		uniqueDealers,
 
 		// Actions
 		startApplication,
