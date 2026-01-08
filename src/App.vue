@@ -6,9 +6,11 @@
 	import VehicleGrid from '@/components/VehicleGrid.vue'
 	import VehicleModal from '@/components/VehicleModal.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
+	import VehicleFilters from '@/components/VehicleFilters.vue'
 
 	const store = useLoanStore()
-	const showMobileFilters = ref(false) // Controls mobile sheet visibility
+	const showMobileLoanCalc = ref(false)
+	const showMobileVehFilters = ref(false)
 
 	// Trigger the initial fetch for the "1000 rows" when the app mounts
 	onMounted(() => {
@@ -27,7 +29,7 @@
 		<!-- HEADER -->
 		<header class="header-glass sticky top-0 z-40 border-b border-white/10">
 			<div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-				<!-- Logo Area (Updated to PNG) -->
+				<!-- Logo Area -->
 				<div class="flex items-center gap-3 cursor-pointer group" @click="store.resetView">
 					<a href="https://web2autos.com" target="_blank">
 						<img
@@ -43,12 +45,11 @@
 					<div class="flex flex-col items-end mr-2">
 						<span class="text-[10px] text-gray-400 uppercase font-bold">Sales Hotline</span>
 						<span
-							class="text-white font-bold tracking-wide text-sm hover:text-indigo-400 transition-colors cursor-pointer"
+							class="text-white tracking-wide text-sm hover:text-indigo-400 transition-colors cursor-pointer"
 						>
 							<i class="fas fa-phone-alt mr-1 text-xs"></i> (844) 922-7227
 						</span>
 					</div>
-					<!-- Hamburger removed in favor of Bottom Nav on mobile -->
 				</div>
 			</div>
 		</header>
@@ -59,23 +60,29 @@
 				<!-- CALCULATOR VIEW -->
 				<div v-if="store.currentView === 'calculator'" key="calc">
 					<div class="flex flex-col lg:flex-row gap-6 items-start">
-						<!-- LEFT COLUMN: VEHICLES (Main Content) -->
-						<div class="w-full lg:flex-1 order-1 lg:order-1 lg:pb-0 min-w-0">
+						<!-- LEFT COLUMN: FILTERS & VEHICLES -->
+						<div class="w-full lg:flex-1 order-1 lg:order-1 pb-32 lg:pb-0 min-w-0">
+							<!-- Desktop Vehicle Filters (Hidden on Mobile) -->
+							<div class="hidden lg:block mb-6">
+								<VehicleFilters />
+							</div>
+
 							<VehicleGrid />
 						</div>
 
-						<!-- RIGHT COLUMN: FILTERS & SUMMARY (Sidebar) -->
+						<!-- RIGHT COLUMN: LOAN CALCULATOR SUMMARY (Sidebar) -->
 						<div
 							class="sidebar-container w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 order-2 lg:order-2"
 						>
+							<!-- Mobile Sheet: LOAN CALCULATOR settings -->
 							<div
-								class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none shadow-[0_-8px_30px_rgba(0,0,0,0.15)] lg:shadow-none rounded-t-3xl lg:rounded-none border-t border-white/50 lg:border-none p-4 lg:p-0 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible lg:sticky lg:top-24 lg:transform-none"
-								:class="showMobileFilters ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'"
+								class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none shadow-[0_-8px_30px_rgba(0,0,0,0.15)] lg:shadow-none rounded-t-3xl lg:rounded-none border-t border-white/50 lg:border-none p-4 lg:p-0 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible lg:sticky lg:top-6 lg:transform-none"
+								:class="showMobileLoanCalc ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'"
 							>
 								<!-- Mobile Drag Handle / Close -->
 								<div
 									class="w-16 h-1.5 bg-gray-300 rounded-full mx-auto mb-6 lg:hidden cursor-pointer"
-									@click="showMobileFilters = false"
+									@click="showMobileLoanCalc = false"
 								></div>
 
 								<div class="space-y-6">
@@ -96,10 +103,10 @@
 
 									<!-- Mobile Close Button -->
 									<button
-										@click="showMobileFilters = false"
+										@click="showMobileLoanCalc = false"
 										class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl lg:hidden mt-4 hover:bg-gray-200 transition-colors"
 									>
-										Close Filters
+										Close Loan Settings
 									</button>
 								</div>
 							</div>
@@ -108,17 +115,46 @@
 
 					<VehicleModal />
 
-					<!-- Mobile Filter Toggle FAB -->
-					<button
-						@click="showMobileFilters = !showMobileFilters"
-						class="fixed transform z-40 lg:hidden bg-indigo-600 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center gap-3 active:scale-95 border border-white/20"
-						style="bottom: 6rem; right: 1rem"
+					<!-- Mobile Sheet: VEHICLE FILTERS (Separate Sheet) -->
+					<div
+						class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-[60] bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] rounded-t-3xl border-t border-white/50 p-4 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto lg:hidden"
+						:class="showMobileVehFilters ? 'translate-y-0' : 'translate-y-full'"
 					>
-						<i class="fas" :class="showMobileFilters ? 'fa-times' : 'fa-sliders-h'"></i>
-						<span class="font-bold text-sm tracking-wide">{{
-							showMobileFilters ? 'Close' : 'Filters'
-						}}</span>
-					</button>
+						<div
+							class="w-16 h-1.5 bg-gray-300 rounded-full mx-auto mb-6 cursor-pointer"
+							@click="showMobileVehFilters = false"
+						></div>
+
+						<VehicleFilters />
+
+						<button
+							@click="showMobileVehFilters = false"
+							class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl mt-4 hover:bg-indigo-700 transition-colors"
+						>
+							View Results ({{ store.filteredVehicles.length }})
+						</button>
+					</div>
+
+					<!-- MOBILE FLOATING BUTTONS (Dual) -->
+					<div class="fixed bottom-6 left-0 right-0 z-40 lg:hidden px-4 flex gap-3 justify-center">
+						<!-- 1. Toggle Vehicle Filters -->
+						<button
+							@click="showMobileVehFilters = !showMobileVehFilters"
+							class="flex-1 bg-slate-800 text-white px-4 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
+						>
+							<i class="fas fa-filter"></i>
+							<span class="font-bold text-sm">Filters</span>
+						</button>
+
+						<!-- 2. Toggle Loan Calc -->
+						<button
+							@click="showMobileLoanCalc = !showMobileLoanCalc"
+							class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
+						>
+							<i class="fas fa-calculator"></i>
+							<span class="font-bold text-sm">Loan Calc</span>
+						</button>
+					</div>
 				</div>
 
 				<!-- APPLICATION VIEW -->
@@ -126,16 +162,6 @@
 					<ConsultantForm />
 				</div>
 			</transition>
-
-			<!-- Scroll To Top Button -->
-			<!-- Positioned higher (160px) on mobile to sit above your Filter button -->
-			<el-backtop
-				:right="20"
-				:bottom="160"
-				class="!bg-indigo-600 !text-white !shadow-xl hover:!bg-indigo-700 transition-colors !w-12 !h-12 lg:!bottom-10 lg:!right-10 !z-30"
-			>
-				<i class="fas fa-arrow-up font-bold text-lg"></i>
-			</el-backtop>
 		</main>
 
 		<!-- FOOTER -->
@@ -244,7 +270,7 @@
 
 	/* Glass Header Background */
 	.header-glass {
-		background: rgba(15, 23, 42, 0.6); /* Slate-900 with opacity */
+		background: rgba(15, 23, 42, 0.6);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.05);

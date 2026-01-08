@@ -21,11 +21,11 @@ export interface Vehicle {
 	transmission: string
 	drivetrain: string
 	fuel_type: string
-	engine: string
-	engine_size: string
-	engine_block: string
+	engine: string | undefined
+	engine_size: string | undefined
+	engine_block: string | undefined
 	doors: number
-	cylinders: number
+	cylinders: number | undefined
 	overall_height: string
 	overall_width: string
 	std_seating: string

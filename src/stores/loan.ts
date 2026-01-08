@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { Vehicle } from '@/types'
+import { sampleVehicles } from '@/constants/vehicles'
 import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
@@ -9,16 +10,27 @@ export const useLoanStore = defineStore('loan', () => {
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// -- Calculator Inputs --
-	const price = ref<number>(25000)
-	const monthlyBudget = ref<number>(5000)
+	const price = ref<number>(20000)
+	const monthlyBudget = ref<number>(450)
 	const filterMode = ref<'price' | 'budget'>('price')
-	const sortOption = ref<string>('price-desc')
+	const sortOption = ref<string>('price-asc')
 
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
 	const amountOwed = ref<number>(0)
 	const interestRate = ref<number>(7.0)
-	const loanTerm = ref<number>(60)
+	const loanTerm = ref<number>(24)
+
+	// -- Advanced Filters State --
+	const filters = ref({
+		make: '',
+		model: '',
+		bodyType: '',
+		yearRange: [2010, 2026] as [number, number],
+		mileageRange: [0, 200000] as [number, number],
+		fuelType: '',
+		exteriorColor: ''
+	})
 
 	// -- Inventory Data --
 	const inventory = ref<Vehicle[]>([])
@@ -59,7 +71,6 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError.value = null
 
 		try {
-			// Use your backend URL constant
 			const response = await fetch(`${BACKEND_API_URL}/api/vehicles`)
 
 			if (!response.ok) {
@@ -72,6 +83,9 @@ export const useLoanStore = defineStore('loan', () => {
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
 			fetchError.value = 'Unable to load vehicles. Using sample data.'
+			inventory.value = sampleVehicles.map((vehicle) => ({
+				...vehicle
+			})) as Vehicle[]
 		} finally {
 			isFetchingVehicles.value = false
 		}
@@ -80,6 +94,18 @@ export const useLoanStore = defineStore('loan', () => {
 	const startApplication = () => {
 		currentView.value = 'application'
 		window.scrollTo({ top: 0, behavior: 'smooth' })
+	}
+
+	const resetFilters = () => {
+		filters.value = {
+			make: '',
+			model: '',
+			bodyType: '',
+			yearRange: [2010, 2026],
+			mileageRange: [0, 200000],
+			fuelType: '',
+			exteriorColor: ''
+		}
 	}
 
 	const resetCalculator = () => {
@@ -93,6 +119,7 @@ export const useLoanStore = defineStore('loan', () => {
 		filterMode.value = 'price'
 		sortOption.value = 'price-asc'
 		pageSize.value = 12
+		resetFilters()
 	}
 
 	const resetView = () => {
@@ -103,7 +130,6 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Watchers --
 	watch(
-		// Added sortOption and pageSize to watcher so pagination resets correctly
 		[
 			price,
 			monthlyBudget,
@@ -114,7 +140,8 @@ export const useLoanStore = defineStore('loan', () => {
 			loanTerm,
 			filterMode,
 			sortOption,
-			pageSize
+			pageSize,
+			filters
 		],
 		() => {
 			currentPage.value = 1
@@ -125,7 +152,8 @@ export const useLoanStore = defineStore('loan', () => {
 			if (tradeIn.value < 0) tradeIn.value = 0
 			if (amountOwed.value < 0) amountOwed.value = 0
 			if (interestRate.value < 0) interestRate.value = 0
-		}
+		},
+		{ deep: true }
 	)
 
 	// -- Computed --
@@ -140,18 +168,56 @@ export const useLoanStore = defineStore('loan', () => {
 		return calculatePaymentForPrice(price.value)
 	})
 
+	// --- FILTER LOGIC ---
 	const filteredVehicles = computed(() => {
+		// 1. Apply Base Calculator Constraints (Budget or Price Range)
+		let matches: Vehicle[] = []
+
 		if (filterMode.value === 'budget') {
-			return inventory.value.filter((v) => {
+			matches = inventory.value.filter((v) => {
 				const estimatedPayment = calculatePaymentForPrice(v.price)
 				return estimatedPayment > 0 && estimatedPayment <= monthlyBudget.value + 10
 			})
 		} else {
 			const targetPrice = price.value
-			return inventory.value.filter((v) => v.price <= targetPrice)
+			matches = inventory.value.filter((v) => v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000)
 		}
+
+		// 2. Apply Advanced Filters
+		return matches.filter((v) => {
+			if (filters.value.make && v.make !== filters.value.make) return false
+			if (filters.value.model && v.model !== filters.value.model) return false
+			if (filters.value.bodyType && v.body_type !== filters.value.bodyType) return false
+			if (filters.value.fuelType && v.fuel_type !== filters.value.fuelType) return false
+			if (filters.value.exteriorColor && v.exterior_color !== filters.value.exteriorColor) return false
+
+			// Range Checks
+			if (v.year < filters.value.yearRange[0] || v.year > filters.value.yearRange[1]) return false
+			if (v.miles != null && (v.miles < filters.value.mileageRange[0] || v.miles > filters.value.mileageRange[1]))
+				return false
+
+			return true
+		})
 	})
 
+	// --- Dynamic Options for Dropdowns ---
+	const uniqueMakes = computed(() => [...new Set(inventory.value.map((v) => v.make))].sort())
+
+	const uniqueModels = computed(() => {
+		let list = inventory.value
+		if (filters.value.make) {
+			list = list.filter((v) => v.make === filters.value.make)
+		}
+		return [...new Set(list.map((v) => v.model))].sort()
+	})
+
+	const uniqueBodyTypes = computed(() => [...new Set(inventory.value.map((v) => v.body_type).filter(Boolean))].sort())
+	const uniqueFuelTypes = computed(() => [...new Set(inventory.value.map((v) => v.fuel_type).filter(Boolean))].sort())
+	const uniqueColors = computed(() =>
+		[...new Set(inventory.value.map((v) => v.exterior_color).filter(Boolean))].sort()
+	)
+
+	// --- Sorting ---
 	const sortedVehicles = computed(() => {
 		const vehicles = [...filteredVehicles.value]
 
@@ -178,6 +244,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const totalVehicles = computed(() => filteredVehicles.value.length)
 
 	return {
+		// State
 		price,
 		monthlyBudget,
 		filterMode,
@@ -194,7 +261,9 @@ export const useLoanStore = defineStore('loan', () => {
 		fetchError,
 		currentPage,
 		pageSize,
+		filters, // Export new filters state
 
+		// Computed
 		netTradeImpact,
 		principal,
 		monthlyPayment,
@@ -202,10 +271,17 @@ export const useLoanStore = defineStore('loan', () => {
 		sortedVehicles,
 		paginatedVehicles,
 		totalVehicles,
+		uniqueMakes,
+		uniqueModels,
+		uniqueBodyTypes,
+		uniqueFuelTypes,
+		uniqueColors,
 
+		// Actions
 		startApplication,
 		resetView,
 		fetchInventory,
-		calculatePaymentForPrice
+		calculatePaymentForPrice,
+		resetFilters
 	}
 })
