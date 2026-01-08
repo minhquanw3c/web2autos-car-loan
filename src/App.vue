@@ -227,7 +227,7 @@
 					</div>
 				</div>
 
-				<div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+				<div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-center items-center gap-4">
 					<p>&copy; {{ new Date().getFullYear() }} Web2Autos Inc. All rights reserved.</p>
 				</div>
 			</div>
