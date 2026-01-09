@@ -10,8 +10,8 @@ export const useLoanStore = defineStore('loan', () => {
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// -- Calculator Inputs --
-	const price = ref<number>(20000)
-	const monthlyBudget = ref<number>(450)
+	const price = ref<number>(25000)
+	const monthlyBudget = ref<number>(2000)
 	const filterMode = ref<'price' | 'budget'>('price')
 	const sortOption = ref<string>('price-asc')
 
