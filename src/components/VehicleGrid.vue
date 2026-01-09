@@ -116,6 +116,12 @@
 								>
 									{{ car.year }}
 								</div>
+								<div
+									style="top: 0.5rem; right: 3.5rem"
+									class="absolute bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-blue-600 shadow-sm"
+								>
+									{{ car.inventory_type.toLocaleUpperCase() }}
+								</div>
 							</div>
 							<div class="p-5 flex flex-col flex-grow">
 								<div class="flex flex-col items-start mb-2">
