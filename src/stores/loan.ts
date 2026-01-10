@@ -119,8 +119,8 @@ export const useLoanStore = defineStore('loan', () => {
 	}
 
 	const resetCalculator = () => {
-		price.value = 20000
-		monthlyBudget.value = 450
+		price.value = 25000
+		monthlyBudget.value = 2000
 		downPayment.value = 1000
 		tradeIn.value = 0
 		amountOwed.value = 0
@@ -129,13 +129,13 @@ export const useLoanStore = defineStore('loan', () => {
 		filterMode.value = 'price'
 		sortOption.value = 'price-asc'
 		pageSize.value = 12
-		resetFilters()
 	}
 
 	const resetView = () => {
 		currentView.value = 'calculator'
 		selectedVehicle.value = null
-		resetCalculator()
+		// resetCalculator()
+		// resetFilters()
 	}
 
 	// -- Watchers --
@@ -190,7 +190,7 @@ export const useLoanStore = defineStore('loan', () => {
 			})
 		} else {
 			const targetPrice = price.value
-			matches = inventory.value.filter((v) => v.price >= targetPrice - 10000 && v.price <= targetPrice + 10000)
+			matches = inventory.value.filter((v) => v.price <= targetPrice)
 		}
 
 		// 2. Apply Advanced Filters

@@ -8,6 +8,9 @@
 	const store = useLoanStore()
 	const summaryVisible = ref(false)
 
+	// Check env variable for seeding (default to false if not present)
+	const shouldSeed = import.meta.env.VITE_SEED_FORM_DATA === 'true'
+
 	// Helper for currency formatting
 	const formatCurrency = (val: number) => {
 		return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0)
@@ -210,39 +213,51 @@
 				if (input.components) {
 					Object.keys(input.components).forEach((compKey) => {
 						let val: any = ''
-						// Seeding complex
-						if (key.includes('dateofbirth')) {
-							if (compKey === 'mm') val = '5'
-							if (compKey === 'dd') val = '15'
-							if (compKey === 'yy') val = '1990'
-						} else if (key.includes('time')) {
-							if (compKey === 'year') val = 2
-							if (compKey === 'month') val = 6
+
+						// Seeding complex data only if env var is true
+						if (shouldSeed) {
+							if (key.includes('dateofbirth')) {
+								if (compKey === 'mm') val = '5'
+								if (compKey === 'dd') val = '15'
+								if (compKey === 'yy') val = '1990'
+							} else if (key.includes('time')) {
+								if (compKey === 'year') val = 2
+								if (compKey === 'month') val = 6
+							}
 						}
+
 						formData[key][compKey] = val
 					})
 				}
 			} else {
 				let val: any = ''
-				// Seeding standard
-				if (input.label.includes('First Name')) val = 'John'
-				else if (input.label.includes('Last Name')) val = 'Doe'
-				else if (input.label.includes('SSN')) val = '123456789'
-				else if (input.label.includes('Email')) val = 'john.doe@example.com'
-				else if (input.label.includes('Phone') && !input.label.includes('Work')) val = '(555) 123-4567'
-				else if (input.label.includes('Current Address')) val = '123 Maple Street'
-				else if (input.label.includes('Address Line 1')) val = 'Apt 4B'
-				else if (input.label.includes('City')) val = 'New York'
-				else if (input.label.includes('State')) val = 'NY'
-				else if (input.label.includes('Zip Code')) val = '10001'
-				else if (input.label.includes('Housing Status')) val = 'Rent'
-				else if (input.label.includes('Monthly Payment')) val = 1500
-				else if (input.label.includes('Employment Status')) val = 'Employed'
-				else if (input.label.includes('Company Name')) val = 'Tech Corp'
-				else if (input.label.includes('Occupation')) val = 'Software Engineer'
-				else if (input.label.includes('Income')) val = 8500
-				else if (input.label.includes('Down Payment')) val = store.downPayment
-				else if (input.type === 'checkbox' && input.required) val = true
+
+				if (input.type === 'checkbox') val = false
+
+				if (shouldSeed) {
+					if (input.label.includes('First Name')) val = 'John'
+					else if (input.label.includes('Last Name')) val = 'Doe'
+					else if (input.label.includes('SSN')) val = '123456789'
+					else if (input.label.includes('Email')) val = 'john.doe@example.com'
+					else if (input.label.includes('Phone') && !input.label.includes('Work')) val = '(555) 123-4567'
+					else if (input.label.includes('Current Address')) val = '123 Maple Street'
+					else if (input.label.includes('Address Line 1')) val = 'Apt 4B'
+					else if (input.label.includes('City')) val = 'New York'
+					else if (input.label.includes('State')) val = 'NY'
+					else if (input.label.includes('Zip Code')) val = '10001'
+					else if (input.label.includes('Housing Status')) val = 'Rent'
+					else if (input.label.includes('Monthly Payment')) val = 1500
+					else if (input.label.includes('Employment Status')) val = 'Employed'
+					else if (input.label.includes('Company Name')) val = 'Tech Corp'
+					else if (input.label.includes('Occupation')) val = 'Software Engineer'
+					else if (input.label.includes('Income')) val = 8500
+					else if (input.type === 'checkbox' && input.required) val = true
+				}
+
+				// Always populate Down Payment from store if available
+				if (input.label.includes('Down Payment')) {
+					val = store.downPayment
+				}
 
 				formData[key] = val
 			}
