@@ -18,8 +18,8 @@ export const useLoanStore = defineStore('loan', () => {
 	const downPayment = ref<number>(1000)
 	const tradeIn = ref<number>(0)
 	const amountOwed = ref<number>(0)
-	const interestRate = ref<number>(7.0)
-	const loanTerm = ref<number>(24)
+	const interestRate = ref<number>(16.95)
+	const loanTerm = ref<number>(72)
 
 	// -- Advanced Filters State --
 	const filters = ref({
@@ -124,8 +124,8 @@ export const useLoanStore = defineStore('loan', () => {
 		downPayment.value = 1000
 		tradeIn.value = 0
 		amountOwed.value = 0
-		interestRate.value = 7.0
-		loanTerm.value = 24
+		interestRate.value = 16.95
+		loanTerm.value = 72
 		filterMode.value = 'price'
 		sortOption.value = 'price-asc'
 		pageSize.value = 12
@@ -162,6 +162,7 @@ export const useLoanStore = defineStore('loan', () => {
 			if (tradeIn.value < 0) tradeIn.value = 0
 			if (amountOwed.value < 0) amountOwed.value = 0
 			if (interestRate.value < 0) interestRate.value = 0
+			interestRate.value = Math.round(interestRate.value * 100) / 100
 		},
 		{ deep: true }
 	)

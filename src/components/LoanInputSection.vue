@@ -101,11 +101,11 @@
 				<el-slider
 					v-model="store.interestRate"
 					:min="0"
-					:max="30"
-					:step="0.1"
-					show-input
+					:max="30.0"
+					:step="0.01"
 					size="small"
-					:show-input-controls="false"
+					show-input
+					:show-input-controls="true"
 				/>
 			</div>
 
