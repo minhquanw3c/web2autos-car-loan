@@ -11,7 +11,7 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// -- Calculator Inputs --
 	const price = ref<number>(25000)
-	const monthlyBudget = ref<number>(2000)
+	const monthlyBudget = ref<number>(500)
 	const filterMode = ref<'price' | 'budget'>('price')
 	const sortOption = ref<string>('price-asc')
 
@@ -187,7 +187,7 @@ export const useLoanStore = defineStore('loan', () => {
 		if (filterMode.value === 'budget') {
 			matches = inventory.value.filter((v) => {
 				const estimatedPayment = calculatePaymentForPrice(v.price)
-				return estimatedPayment > 0 && estimatedPayment <= monthlyBudget.value + 10
+				return estimatedPayment > 0 && estimatedPayment > monthlyBudget.value - 25
 			})
 		} else {
 			const targetPrice = price.value
