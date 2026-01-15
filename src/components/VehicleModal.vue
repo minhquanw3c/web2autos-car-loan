@@ -50,14 +50,13 @@
 		align-center
 		destroy-on-close
 		:show-close="true"
+		append-to-body
 	>
 		<div
 			v-if="store.selectedVehicle"
 			class="flex flex-col lg:flex-row h-full lg:h-[80vh] overflow-hidden -m-4 sm:-m-6"
 		>
-			<!-- LEFT COLUMN: IMAGE GALLERY -->
 			<div class="w-full lg:w-3/5 bg-gray-900 flex flex-col h-[40vh] lg:h-full relative group">
-				<!-- Main Image Stage -->
 				<div class="flex-1 relative overflow-hidden flex items-center justify-center bg-black">
 					<img
 						v-if="store.selectedVehicle.mediaUrls && store.selectedVehicle.mediaUrls.length > 0"
@@ -69,7 +68,6 @@
 						<span>No Image Available</span>
 					</div>
 
-					<!-- Gallery Navigation Overlays -->
 					<div
 						class="absolute inset-0 flex items-center justify-between p-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
 					>
@@ -100,7 +98,6 @@
 					</div>
 				</div>
 
-				<!-- Thumbnails Strip -->
 				<div
 					v-if="store.selectedVehicle.mediaUrls && store.selectedVehicle.mediaUrls.length > 1"
 					class="h-20 bg-gray-900 border-t border-gray-800 p-2 flex gap-2 overflow-x-auto custom-scrollbar flex-shrink-0"
@@ -121,9 +118,7 @@
 				</div>
 			</div>
 
-			<!-- RIGHT COLUMN: DETAILS TABS -->
 			<div class="w-full lg:w-2/5 flex flex-col bg-white h-auto lg:h-full overflow-hidden">
-				<!-- Sticky Header Inside Modal -->
 				<div class="p-6 border-b border-gray-100 flex-shrink-0">
 					<div class="flex justify-between items-start mb-2">
 						<div>
@@ -160,13 +155,10 @@
 					</div>
 				</div>
 
-				<!-- Scrollable Content Area -->
 				<div class="flex-1 overflow-y-auto custom-content-scroll bg-gray-50/50">
 					<el-tabs v-model="activeTab" class="custom-tabs px-6">
-						<!-- TAB 1: OVERVIEW -->
 						<el-tab-pane label="Overview" name="overview">
 							<div class="py-4 space-y-6">
-								<!-- Key Details Grid -->
 								<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
 									<h3
 										class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center"
@@ -214,7 +206,6 @@
 									</div>
 								</div>
 
-								<!-- Colors -->
 								<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
 									<h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">
 										Colors
@@ -253,10 +244,8 @@
 							</div>
 						</el-tab-pane>
 
-						<!-- TAB 2: MARKET & SPECS -->
 						<el-tab-pane label="Market & Specs" name="specs">
 							<div class="py-4 space-y-6">
-								<!-- Market Info -->
 								<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
 									<h3
 										class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center"
@@ -285,7 +274,6 @@
 									</div>
 								</div>
 
-								<!-- Detailed Specs -->
 								<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
 									<h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">
 										Technical Specs
@@ -330,7 +318,6 @@
 									</div>
 								</div>
 
-								<!-- Dealer Info -->
 								<div class="bg-indigo-50 p-5 rounded-xl border border-indigo-100">
 									<h3 class="text-sm font-bold text-indigo-900 uppercase tracking-wider mb-2">
 										Dealer Information
@@ -355,7 +342,6 @@
 					</el-tabs>
 				</div>
 
-				<!-- Sticky Footer Inside Modal -->
 				<div class="p-6 bg-white border-t border-gray-100 flex-shrink-0 flex flex-col sm:flex-row gap-4">
 					<button
 						@click="dialogVisible = false"
