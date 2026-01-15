@@ -29,9 +29,7 @@
 </script>
 
 <template>
-	<!-- Updated Container: Fixed height relative to viewport to enable internal scrolling -->
 	<div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
-		<!-- Header: Fixed at top -->
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
 			<h3 class="text-2xl font-bold text-white drop-shadow-md flex items-center">
 				<i class="fas fa-car-side mr-3"></i> Recommended Vehicles
@@ -43,7 +41,6 @@
 			</h3>
 
 			<div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
-				<!-- Sorting -->
 				<el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-40">
 					<el-option label="Price: Low to High" value="price-asc" />
 					<el-option label="Price: High to Low" value="price-desc" />
@@ -51,7 +48,6 @@
 					<el-option label="Year: Oldest First" value="year-asc" />
 				</el-select>
 
-				<!-- NEW: Page Size Filter -->
 				<el-select
 					v-model="store.pageSize"
 					placeholder="Show"
@@ -71,13 +67,10 @@
 			</div>
 		</div>
 
-		<!-- Content Area: Flexible and Scrollable -->
-		<!-- pb-40 on mobile ensures the last items aren't hidden behind the fixed filter bottom sheet -->
 		<div
 			id="vehicle-scroll-container"
-			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar"
+			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
 		>
-			<!-- Empty State -->
 			<div v-if="store.filteredVehicles.length === 0">
 				<el-card shadow="never" class="border-0">
 					<el-empty
@@ -86,7 +79,6 @@
 				</el-card>
 			</div>
 
-			<!-- Vehicle Grid -->
 			<div v-else>
 				<el-row :gutter="24">
 					<el-col
@@ -151,9 +143,13 @@
 			</div>
 		</div>
 
-		<!-- Pagination Control: Fixed at bottom of grid area -->
-		<div class="flex-shrink-0 pt-4" v-if="store.totalVehicles > 0">
-			<div class="flex justify-center bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
+		<div
+			class="flex-shrink-0 fixed bottom-24 left-0 right-0 z-50 flex justify-center pointer-events-none lg:static lg:pointer-events-auto lg:pt-4"
+			v-if="store.totalVehicles > 0"
+		>
+			<div
+				class="flex justify-center bg-slate-900/90 backdrop-blur-xl rounded-full p-2 border border-white/20 shadow-2xl pointer-events-auto lg:bg-white/10 lg:backdrop-blur-sm lg:rounded-xl lg:border-white/20 lg:shadow-none"
+			>
 				<el-pagination
 					v-model:current-page="store.currentPage"
 					v-model:page-size="store.pageSize"
@@ -188,6 +184,7 @@
 		background: rgba(255, 255, 255, 0.5);
 	}
 
+	/* Updated pagination styling to look good in both Dark Mode (Floating) and Light Mode (Desktop) */
 	:deep(.glass-pagination .el-pagination__total),
 	:deep(.glass-pagination .el-pager li),
 	:deep(.glass-pagination .btn-prev),
@@ -196,10 +193,12 @@
 		border: none;
 		color: #1e3a8a;
 		font-weight: bold;
+		border-radius: 50%;
+		margin: 0 2px;
 	}
 
 	:deep(.glass-pagination .el-pager li.is-active) {
-		background-color: #2563eb !important;
+		background-color: #4f46e5 !important; /* Indigo-600 */
 		color: white;
 	}
 </style>
