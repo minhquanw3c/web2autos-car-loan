@@ -1,4 +1,5 @@
 <script setup lang="ts">
+	import { computed } from 'vue' // Added computed
 	import { useLoanStore } from '@/stores/loan'
 	import type { Vehicle } from '@/types'
 
@@ -14,14 +15,24 @@
 		)
 	}
 
+	// Dynamic Header Text Logic
+	const headerText = computed(() => {
+		const count = store.paginatedVehicles.length
+		const total = store.totalVehicles
+
+		if (store.filterMode === 'price') {
+			return `Showing ${count}/${total} vehicles under ${formatCurrency(store.price)}`
+		} else {
+			return `Showing ${count}/${total} vehicles fitting ${formatCurrency(store.monthlyBudget)}/mo budget`
+		}
+	})
+
 	const handlePageChange = (val: number) => {
 		store.currentPage = val
-		// Scroll the internal container to top when page changes
 		const scrollContainer = document.getElementById('vehicle-scroll-container')
 		if (scrollContainer) scrollContainer.scrollTop = 0
 	}
 
-	// Handled by store watcher automatically, but we can also force scroll to top here if needed
 	const handlePageSizeChange = () => {
 		const scrollContainer = document.getElementById('vehicle-scroll-container')
 		if (scrollContainer) scrollContainer.scrollTop = 0
@@ -31,16 +42,12 @@
 <template>
 	<div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
-			<h3 class="text-2xl font-bold text-white drop-shadow-md flex items-center">
-				<i class="fas fa-car-side mr-3"></i> Recommended Vehicles
-				<span
-					class="ml-3 text-xs bg-white/20 px-2 py-1 rounded text-white border border-white/30 hidden sm:inline-block"
-				>
-					{{ store.filterMode === 'budget' ? 'Filtering by Budget' : 'Filtering by Price' }}
-				</span>
+			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
+				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>
+				{{ headerText }}
 			</h3>
 
-			<div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
+			<div class="hidden sm:flex flex-col sm:flex-row gap-4 items-end sm:items-center w-full md:w-auto">
 				<el-select v-model="store.sortOption" placeholder="Sort by" size="default" class="w-full sm:w-40">
 					<el-option label="Price: Low to High" value="price-asc" />
 					<el-option label="Price: High to Low" value="price-desc" />
@@ -165,7 +172,6 @@
 </template>
 
 <style scoped>
-	/* Scrollbar Styling */
 	.custom-scrollbar::-webkit-scrollbar {
 		width: 6px;
 	}
@@ -184,7 +190,6 @@
 		background: rgba(255, 255, 255, 0.5);
 	}
 
-	/* Updated pagination styling to look good in both Dark Mode (Floating) and Light Mode (Desktop) */
 	:deep(.glass-pagination .el-pagination__total),
 	:deep(.glass-pagination .el-pager li),
 	:deep(.glass-pagination .btn-prev),
@@ -198,7 +203,7 @@
 	}
 
 	:deep(.glass-pagination .el-pager li.is-active) {
-		background-color: #4f46e5 !important; /* Indigo-600 */
+		background-color: #4f46e5 !important;
 		color: white;
 	}
 </style>

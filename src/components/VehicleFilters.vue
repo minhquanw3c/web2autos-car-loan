@@ -22,9 +22,28 @@
 		</template>
 
 		<div class="flex flex-col gap-6 p-2">
-			<!-- --- BASIC INFO --- -->
+			<div class="block sm:hidden space-y-4 border-b border-gray-200 pb-4">
+				<div class="space-y-1">
+					<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Sort Results</label>
+					<el-select v-model="store.sortOption" placeholder="Sort by" class="w-full">
+						<el-option label="Price: Low to High" value="price-asc" />
+						<el-option label="Price: High to Low" value="price-desc" />
+						<el-option label="Year: Newest First" value="year-desc" />
+						<el-option label="Year: Oldest First" value="year-asc" />
+					</el-select>
+				</div>
 
-			<!-- Dealership (NEW) -->
+				<div class="space-y-1">
+					<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Items Per Page</label>
+					<el-select v-model="store.pageSize" placeholder="Show" class="w-full">
+						<el-option label="12 / page" :value="12" />
+						<el-option label="24 / page" :value="24" />
+						<el-option label="48 / page" :value="48" />
+						<el-option label="96 / page" :value="96" />
+					</el-select>
+				</div>
+			</div>
+
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Dealership</label>
 				<el-select v-model="store.filters.dealer" placeholder="All Dealers" clearable class="w-full">
@@ -32,7 +51,6 @@
 				</el-select>
 			</div>
 
-			<!-- Make -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Make</label>
 				<el-select v-model="store.filters.make" placeholder="All Makes" clearable class="w-full" size="default">
@@ -40,7 +58,6 @@
 				</el-select>
 			</div>
 
-			<!-- Model -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Model</label>
 				<el-select
@@ -54,7 +71,6 @@
 				</el-select>
 			</div>
 
-			<!-- Trim -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Trim</label>
 				<el-select
@@ -68,7 +84,6 @@
 				</el-select>
 			</div>
 
-			<!-- Inventory Type -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Condition</label>
 				<el-select v-model="store.filters.inventoryType" placeholder="New / Used" clearable class="w-full">
@@ -81,9 +96,6 @@
 				</el-select>
 			</div>
 
-			<!-- --- RANGES --- -->
-
-			<!-- Year Range -->
 			<div class="space-y-2">
 				<div class="flex justify-between text-xs font-bold text-gray-500 uppercase tracking-wide">
 					<span>Year</span>
@@ -94,7 +106,6 @@
 				<el-slider v-model="store.filters.yearRange" range :min="2010" :max="2026" :step="1" size="small" />
 			</div>
 
-			<!-- Mileage Range -->
 			<div class="space-y-2">
 				<div class="flex justify-between text-xs font-bold text-gray-500 uppercase tracking-wide">
 					<span>Mileage</span>
@@ -113,9 +124,6 @@
 				/>
 			</div>
 
-			<!-- --- SPECS --- -->
-
-			<!-- Body Type -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Body Type</label>
 				<el-select v-model="store.filters.bodyType" placeholder="Any" clearable class="w-full">
@@ -123,7 +131,6 @@
 				</el-select>
 			</div>
 
-			<!-- Transmission -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Transmission</label>
 				<el-select v-model="store.filters.transmission" placeholder="Any" clearable class="w-full">
@@ -131,7 +138,6 @@
 				</el-select>
 			</div>
 
-			<!-- Drivetrain -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Drivetrain</label>
 				<el-select v-model="store.filters.drivetrain" placeholder="Any" clearable class="w-full">
@@ -139,7 +145,6 @@
 				</el-select>
 			</div>
 
-			<!-- Fuel Type -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Fuel Type</label>
 				<el-select v-model="store.filters.fuelType" placeholder="Any" clearable class="w-full">
@@ -147,7 +152,6 @@
 				</el-select>
 			</div>
 
-			<!-- Exterior Color -->
 			<div class="space-y-1">
 				<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Exterior Color</label>
 				<el-select v-model="store.filters.exteriorColor" placeholder="Any" clearable class="w-full">
