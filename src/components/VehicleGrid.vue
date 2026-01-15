@@ -69,7 +69,7 @@
 
 		<div
 			id="vehicle-scroll-container"
-			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
+			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0 overscroll-contain"
 		>
 			<div v-if="store.filteredVehicles.length === 0">
 				<el-card shadow="never" class="border-0">
