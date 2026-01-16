@@ -33,7 +33,7 @@ export const useLoanStore = defineStore('loan', () => {
 		transmission: '',
 		drivetrain: '',
 		trim: '',
-		dealer: '' // NEW: Dealership Filter
+		dealer: ''
 	})
 
 	// -- Inventory Data --
@@ -68,8 +68,9 @@ export const useLoanStore = defineStore('loan', () => {
 	}
 
 	// -- Actions --
-	const fetchInventory = async () => {
-		if (inventory.value.length > 0) return
+	const fetchInventory = async (force = false) => {
+		// If we have data and we aren't forcing a reload, do nothing.
+		if (!force && inventory.value.length > 0) return
 
 		isFetchingVehicles.value = true
 		fetchError.value = null
@@ -86,7 +87,8 @@ export const useLoanStore = defineStore('loan', () => {
 			console.log(`Loaded ${data.length} vehicles from backend.`)
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
-			fetchError.value = 'Unable to load vehicles. Using sample data.'
+			fetchError.value = 'Unable to connect to the server. Please try again.'
+			inventory.value = []
 		} finally {
 			isFetchingVehicles.value = false
 		}

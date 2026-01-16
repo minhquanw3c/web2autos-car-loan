@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { computed } from 'vue' // Added computed
+	import { computed } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
 	import type { Vehicle } from '@/types'
 
@@ -42,7 +42,7 @@
 <template>
 	<div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
-			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
+			<h3 class="text-xl md:text-2xl font-bold text-white drop-shadow-md flex items-center leading-tight">
 				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>
 				{{ headerText }}
 			</h3>
@@ -78,7 +78,18 @@
 			id="vehicle-scroll-container"
 			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0 overscroll-contain"
 		>
-			<div v-if="store.filteredVehicles.length === 0">
+			<div v-if="store.fetchError" class="flex flex-col items-center justify-center py-20">
+				<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
+					<i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+				</div>
+				<h3 class="text-xl font-bold text-white mb-2">Connection Error</h3>
+				<p class="text-gray-300 mb-6 text-center max-w-md">{{ store.fetchError }}</p>
+				<el-button type="primary" size="large" @click="store.fetchInventory(true)">
+					<i class="fas fa-sync-alt mr-2"></i> Reload Inventory
+				</el-button>
+			</div>
+
+			<div v-else-if="store.filteredVehicles.length === 0">
 				<el-card shadow="never" class="border-0">
 					<el-empty
 						description="No vehicles found matching your criteria. Try adjusting the budget or price."

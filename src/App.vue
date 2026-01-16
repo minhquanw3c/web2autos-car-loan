@@ -25,6 +25,19 @@
 
 <template>
 	<div class="app-layout">
+		<div
+			v-if="store.isFetchingVehicles && store.inventory.length === 0"
+			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
+		>
+			<div class="animate-pulse mb-6">
+				<img src="/logo.png" alt="Web2Autos" class="h-24 w-auto object-contain opacity-80" />
+			</div>
+			<div class="flex items-center gap-3">
+				<div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+				<span class="text-white font-medium tracking-wide">Loading Inventory...</span>
+			</div>
+		</div>
+
 		<div class="bg-layer">
 			<div class="orb orb-1"></div>
 			<div class="orb orb-2"></div>
