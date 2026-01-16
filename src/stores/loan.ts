@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { Vehicle } from '@/types'
-import { sampleVehicles } from '@/constants/vehicles'
 import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
@@ -88,9 +87,6 @@ export const useLoanStore = defineStore('loan', () => {
 		} catch (error) {
 			console.error('Failed to load vehicle inventory:', error)
 			fetchError.value = 'Unable to load vehicles. Using sample data.'
-			inventory.value = sampleVehicles.map((vehicle) => ({
-				...vehicle
-			})) as Vehicle[]
 		} finally {
 			isFetchingVehicles.value = false
 		}
