@@ -42,7 +42,7 @@
 <template>
 	<div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
-			<h3 class="text-xl md:text-2xl font-bold text-white drop-shadow-md flex items-center leading-tight">
+			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
 				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>
 				{{ headerText }}
 			</h3>
