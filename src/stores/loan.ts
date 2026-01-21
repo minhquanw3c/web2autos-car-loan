@@ -90,7 +90,9 @@ export const useLoanStore = defineStore('loan', () => {
 			fetchError.value = 'Unable to connect to the server. Please try again.'
 			inventory.value = []
 		} finally {
-			isFetchingVehicles.value = false
+			setTimeout(() => {
+				isFetchingVehicles.value = false
+			}, 1500)
 		}
 	}
 
