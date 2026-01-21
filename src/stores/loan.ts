@@ -92,7 +92,7 @@ export const useLoanStore = defineStore('loan', () => {
 		} finally {
 			setTimeout(() => {
 				isFetchingVehicles.value = false
-			}, 1500)
+			}, 2000)
 		}
 	}
 

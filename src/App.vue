@@ -30,7 +30,7 @@
 			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
 		>
 			<div class="animate-pulse mb-6">
-				<img src="/logo.png" alt="Web2Autos" class="h-24 w-auto object-contain opacity-80" />
+				<img src="/logo_01.png" alt="Web2Autos" class="h-24 w-auto object-contain opacity-80" />
 			</div>
 			<div class="flex items-center gap-3">
 				<div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
@@ -48,7 +48,7 @@
 				<div class="flex items-center gap-3 cursor-pointer group" @click="store.resetView">
 					<a href="https://web2autos.com" target="_blank">
 						<img
-							src="/logo.png"
+							src="/logo_01.png"
 							alt="Web2Autos Logo"
 							class="h-16 w-auto object-contain transform transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
 						/>
@@ -174,7 +174,7 @@
 					<div class="col-span-1 md:col-span-1">
 						<div class="flex items-center gap-2 mb-4 text-white">
 							<a href="https://web2autos.com" target="_blank">
-								<img src="/logo.png" alt="Web2Autos" class="h-16 w-auto object-contain" />
+								<img src="/logo_01.png" alt="Web2Autos" class="h-16 w-auto object-contain" />
 							</a>
 						</div>
 						<p class="leading-relaxed mb-4">
