@@ -192,6 +192,20 @@
 		'San Jose'
 	]
 
+	const mockVehicle = {
+		heading: 'Pre-approval form.',
+		price: 0,
+		stock_no: 'Pre-approval form.',
+		dealer: {
+			name: 'Pre-approval form.',
+			street: 'Pre-approval form.'
+		},
+		referenceUrl: 'Pre-approval form.',
+		year: 0,
+		make: 'Pre-approval form.',
+		model: 'Pre-approval form.'
+	}
+
 	const generateKey = (groupHeading: string, label: string) => {
 		const prefix = groupHeading.replace(/\s+/g, '').toLowerCase()
 		const suffix = label.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
@@ -367,7 +381,7 @@
 						? {
 								...store.selectedVehicle
 							}
-						: null,
+						: { ...mockVehicle },
 					loan_calculator_data: {
 						vehicle_selling_price: store.price,
 						down_payment: store.downPayment,
@@ -456,7 +470,14 @@
 
 <template>
 	<div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
-		<el-dialog v-model="summaryVisible" title="Review Application" width="90%" class="max-w-4xl" align-center>
+		<el-dialog
+			v-model="summaryVisible"
+			title="Review Application"
+			width="90%"
+			class="max-w-4xl"
+			align-center
+			append-to-body
+		>
 			<p class="text-slate-500 mb-4">Please review your details below before final submission.</p>
 
 			<div v-if="store.selectedVehicle" class="mb-6">
@@ -568,9 +589,16 @@
 			</div>
 
 			<template #footer>
-				<div class="flex justify-end gap-3 pt-4">
-					<el-button size="large" @click="summaryVisible = false">Edit Information</el-button>
-					<el-button type="success" size="large" class="!px-8 !text-lg !font-bold" @click="confirmSubmission">
+				<div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+					<el-button size="large" @click="summaryVisible = false" class="w-full sm:w-auto">
+						Edit Information
+					</el-button>
+					<el-button
+						type="success"
+						size="large"
+						class="!px-8 !text-lg !font-bold w-full sm:w-auto"
+						@click="confirmSubmission"
+					>
 						Confirm & Submit <i class="fas fa-paper-plane ml-2"></i>
 					</el-button>
 				</div>
