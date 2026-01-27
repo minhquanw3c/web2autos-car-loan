@@ -7,9 +7,7 @@
 
 	const store = useLoanStore()
 	const summaryVisible = ref(false)
-
-	// Check env variable for seeding (default to false if not present)
-	const shouldSeed = import.meta.env.VITE_SEED_FORM_DATA === 'true'
+	const isDev = import.meta.env.DEV // Check for Dev environment
 
 	// Helper for currency formatting
 	const formatCurrency = (val: number) => {
@@ -124,7 +122,7 @@
 		]
 	}
 
-	// 2. State & Seeding
+	// 2. State
 	const formData = reactive<Record<string, any>>({})
 	const errors = reactive<Record<string, string>>({})
 	const itemRefs = reactive<Record<string, any>>({})
@@ -204,38 +202,45 @@
 		if (el) itemRefs[key] = el
 	}
 
-	// Init & Seed Data
+	// Init Data
 	schema.groups.forEach((group) => {
 		group.inputs.forEach((input) => {
 			const key = generateKey(group.heading, input.label)
 			if (input.components) {
 				formData[key] = {}
-				if (input.components) {
-					Object.keys(input.components).forEach((compKey) => {
-						let val: any = ''
-
-						// Seeding complex data only if env var is true
-						if (shouldSeed) {
-							if (key.includes('dateofbirth')) {
-								if (compKey === 'mm') val = '5'
-								if (compKey === 'dd') val = '15'
-								if (compKey === 'yy') val = '1990'
-							} else if (key.includes('time')) {
-								if (compKey === 'year') val = 2
-								if (compKey === 'month') val = 6
-							}
-						}
-
-						formData[key][compKey] = val
-					})
-				}
+				Object.keys(input.components).forEach((compKey) => {
+					formData[key][compKey] = ''
+				})
 			} else {
 				let val: any = ''
-
 				if (input.type === 'checkbox') val = false
+				// Always populate Down Payment from store if available
+				if (input.label.includes('Down Payment')) {
+					val = store.downPayment
+				}
+				formData[key] = val
+			}
+		})
+	})
 
-				if (shouldSeed) {
-					if (input.label.includes('First Name')) val = 'John'
+	// NEW: Manual Fill Function (Dev Only)
+	const fillTestData = () => {
+		schema.groups.forEach((group) => {
+			group.inputs.forEach((input) => {
+				const key = generateKey(group.heading, input.label)
+				if (input.components) {
+					if (key.includes('dateofbirth')) {
+						formData[key].mm = '5'
+						formData[key].dd = '15'
+						formData[key].yy = '1990'
+					} else if (key.includes('time')) {
+						formData[key].year = 2
+						formData[key].month = 6
+					}
+				} else {
+					let val: any = ''
+					if (input.type === 'checkbox' && input.required) val = true
+					else if (input.label.includes('First Name')) val = 'John'
 					else if (input.label.includes('Last Name')) val = 'Doe'
 					else if (input.label.includes('SSN')) val = '123456789'
 					else if (input.label.includes('Email')) val = 'john.doe@example.com'
@@ -251,18 +256,14 @@
 					else if (input.label.includes('Company Name')) val = 'Tech Corp'
 					else if (input.label.includes('Occupation')) val = 'Software Engineer'
 					else if (input.label.includes('Income')) val = 8500
-					else if (input.type === 'checkbox' && input.required) val = true
-				}
+					else if (input.label.includes('Down Payment')) val = store.downPayment || 1000
 
-				// Always populate Down Payment from store if available
-				if (input.label.includes('Down Payment')) {
-					val = store.downPayment
+					if (val !== '') formData[key] = val
 				}
-
-				formData[key] = val
-			}
+			})
 		})
-	})
+		ElMessage.success('Test data filled!')
+	}
 
 	const resolveOptions = (optionsStr: string | string[] | undefined) => {
 		if (!optionsStr) return []
@@ -455,11 +456,9 @@
 
 <template>
 	<div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
-		<!-- SUMMARY MODAL (NEW) -->
 		<el-dialog v-model="summaryVisible" title="Review Application" width="90%" class="max-w-4xl" align-center>
 			<p class="text-slate-500 mb-4">Please review your details below before final submission.</p>
 
-			<!-- SELECTED VEHICLE SUMMARY -->
 			<div v-if="store.selectedVehicle" class="mb-6">
 				<el-card
 					shadow="never"
@@ -468,7 +467,6 @@
 				>
 					<div class="flex flex-col sm:flex-row">
 						<div class="w-full sm:w-1/3 h-48 sm:h-auto relative bg-gray-200">
-							<!-- Updated to use mediaUrl to match VehicleGrid -->
 							<img
 								:src="store.selectedVehicle.mediaUrls.length ? store.selectedVehicle.mediaUrls[0] : ''"
 								class="w-full h-full object-cover"
@@ -494,7 +492,6 @@
 								</div>
 							</div>
 
-							<!-- NEW: Monthly Payment & Loan Details -->
 							<div class="mt-4 pt-4 border-t border-blue-200/60 grid grid-cols-2 gap-4">
 								<div>
 									<div class="text-xs text-slate-500 mb-1">Est. Monthly Payment</div>
@@ -518,6 +515,22 @@
 									</div>
 								</div>
 							</div>
+						</div>
+					</div>
+				</el-card>
+			</div>
+
+			<div v-else class="mb-6">
+				<el-card shadow="never" class="border border-gray-200 bg-gray-50 rounded-xl p-6">
+					<div class="flex items-center gap-4">
+						<div class="p-4 bg-indigo-100 rounded-full text-indigo-600">
+							<i class="fas fa-file-signature text-2xl"></i>
+						</div>
+						<div>
+							<h3 class="text-xl font-bold text-gray-800">General Financing Application</h3>
+							<p class="text-gray-500 text-sm">
+								You are applying for a pre-approval amount without a specific vehicle selected.
+							</p>
 						</div>
 					</div>
 				</el-card>
@@ -564,14 +577,19 @@
 			</template>
 		</el-dialog>
 
-		<!-- FORM VIEW -->
 		<div>
 			<div class="flex justify-between items-center mb-6 px-2">
 				<div>
 					<h2 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{{ schema.formHeading }}</h2>
 					<p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
 				</div>
-				<el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
+				<div class="flex items-center gap-3">
+					<el-button v-if="isDev" type="warning" plain size="default" @click="fillTestData">
+						<i class="fas fa-flask mr-2"></i> Fill Test Data
+					</el-button>
+
+					<el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
+				</div>
 			</div>
 
 			<el-form label-position="top" @submit.prevent="submitForm">
@@ -589,7 +607,6 @@
 								:key="iIndex"
 								v-bind="getResponsiveProps(input)"
 							>
-								<!-- Checkbox Field -->
 								<el-form-item
 									v-if="input.type === 'checkbox'"
 									class="mb-2"
@@ -604,7 +621,6 @@
 									/>
 								</el-form-item>
 
-								<!-- Standard & Complex Fields -->
 								<el-form-item
 									v-else
 									:label="input.label + (input.required ? ' *' : '')"
@@ -612,7 +628,6 @@
 									:error="errors[generateKey(group.heading, input.label)]"
 									:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
 								>
-									<!-- Select -->
 									<el-select
 										v-if="input.type === 'select'"
 										v-model="formData[generateKey(group.heading, input.label)]"
@@ -627,7 +642,6 @@
 										/>
 									</el-select>
 
-									<!-- Complex (Date/Duration) -->
 									<div v-else-if="input.components" class="w-full flex gap-2">
 										<div
 											v-for="(compConfig, compKey) in input.components"
@@ -655,7 +669,6 @@
 										</div>
 									</div>
 
-									<!-- Standard Text/Number -->
 									<el-input
 										v-else
 										v-model="formData[generateKey(group.heading, input.label)]"

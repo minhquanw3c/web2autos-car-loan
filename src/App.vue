@@ -20,6 +20,12 @@
 
 	onMounted(() => {
 		store.fetchInventory()
+
+		// NEW: Check URL for direct application access
+		const urlParams = new URLSearchParams(window.location.search)
+		if (urlParams.get('showApplication') === 'true') {
+			store.startApplication()
+		}
 	})
 </script>
 
@@ -55,7 +61,15 @@
 					</a>
 				</div>
 
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-6">
+					<button
+						v-if="store.currentView !== 'application'"
+						@click="store.startApplication()"
+						class="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-indigo-500/20"
+					>
+						<i class="fas fa-file-signature"></i> Apply for Financing
+					</button>
+
 					<div class="flex flex-col items-end mr-2">
 						<span class="text-[10px] text-gray-400 uppercase font-bold">Sales Hotline</span>
 						<span
