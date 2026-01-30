@@ -21,7 +21,7 @@
 	onMounted(() => {
 		store.fetchInventory()
 
-		// NEW: Check URL for direct application access
+		// Check URL for direct application access
 		const urlParams = new URLSearchParams(window.location.search)
 		if (urlParams.get('showApplication') === 'true') {
 			store.startApplication()
@@ -40,7 +40,7 @@
 			</div>
 			<div class="flex items-center gap-3">
 				<div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-				<span class="text-white font-medium tracking-wide">Loading Inventory...</span>
+				<span class="text-white font-medium tracking-wide">{{ store.loadingMessage }}</span>
 			</div>
 		</div>
 

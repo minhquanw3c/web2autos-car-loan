@@ -8,6 +8,9 @@ export const useLoanStore = defineStore('loan', () => {
 	const currentView = ref<'calculator' | 'application'>('calculator')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
+	// NEW: Dynamic Loading Message
+	const loadingMessage = ref('Loading Inventory...')
+
 	// -- Calculator Inputs --
 	const price = ref<number>(100000)
 	const monthlyBudget = ref<number>(500)
@@ -67,10 +70,31 @@ export const useLoanStore = defineStore('loan', () => {
 		return isFinite(payment) ? payment : 0
 	}
 
+	// --- DEEP LINK LOGIC ---
+	const processDeepLink = () => {
+		const urlParams = new URLSearchParams(window.location.search)
+		const vehicleId = urlParams.get('vehicle_id')
+
+		if (vehicleId && inventory.value.length > 0) {
+			const found = inventory.value.find((v) => v.id === vehicleId)
+			if (found) {
+				selectedVehicle.value = found
+				console.log(`Deep linked to vehicle ID: ${vehicleId}`)
+				window.history.replaceState({}, '', window.location.pathname)
+			}
+		}
+	}
+
 	// -- Actions --
 	const fetchInventory = async (force = false) => {
-		// If we have data and we aren't forcing a reload, do nothing.
 		if (!force && inventory.value.length > 0) return
+
+		const urlParams = new URLSearchParams(window.location.search)
+		if (urlParams.get('vehicle_id')) {
+			loadingMessage.value = 'Locating your vehicle...'
+		} else {
+			loadingMessage.value = 'Loading Inventory...'
+		}
 
 		isFetchingVehicles.value = true
 		fetchError.value = null
@@ -92,7 +116,8 @@ export const useLoanStore = defineStore('loan', () => {
 		} finally {
 			setTimeout(() => {
 				isFetchingVehicles.value = false
-			}, 2000)
+				processDeepLink()
+			}, 500)
 		}
 	}
 
@@ -134,8 +159,6 @@ export const useLoanStore = defineStore('loan', () => {
 	const resetView = () => {
 		currentView.value = 'calculator'
 		selectedVehicle.value = null
-		// resetCalculator()
-		// resetFilters()
 	}
 
 	// -- Watchers --
@@ -181,7 +204,6 @@ export const useLoanStore = defineStore('loan', () => {
 
 	// --- FILTER LOGIC ---
 	const filteredVehicles = computed(() => {
-		// 1. Apply Base Calculator Constraints (Budget or Price Range)
 		let matches: Vehicle[] = []
 
 		if (filterMode.value === 'budget') {
@@ -194,22 +216,17 @@ export const useLoanStore = defineStore('loan', () => {
 			matches = inventory.value.filter((v) => v.price <= targetPrice)
 		}
 
-		// 2. Apply Advanced Filters
 		return matches.filter((v) => {
 			if (filters.value.make && v.make !== filters.value.make) return false
 			if (filters.value.model && v.model !== filters.value.model) return false
 			if (filters.value.bodyType && v.body_type !== filters.value.bodyType) return false
 			if (filters.value.fuelType && v.fuel_type !== filters.value.fuelType) return false
 			if (filters.value.exteriorColor && v.exterior_color !== filters.value.exteriorColor) return false
-
-			// New Filters
 			if (filters.value.inventoryType && v.inventory_type !== filters.value.inventoryType) return false
 			if (filters.value.transmission && v.transmission !== filters.value.transmission) return false
 			if (filters.value.drivetrain && v.drivetrain !== filters.value.drivetrain) return false
 			if (filters.value.trim && v.trim !== filters.value.trim) return false
 			if (filters.value.dealer && v.dealer.name !== filters.value.dealer) return false
-
-			// Range Checks
 			if (v.year < filters.value.yearRange[0] || v.year > filters.value.yearRange[1]) return false
 			if (v.miles != null && (v.miles < filters.value.mileageRange[0] || v.miles > filters.value.mileageRange[1]))
 				return false
@@ -296,6 +313,7 @@ export const useLoanStore = defineStore('loan', () => {
 		selectedVehicle,
 		inventory,
 		isFetchingVehicles,
+		loadingMessage, // NEW: Exported State
 		fetchError,
 		currentPage,
 		pageSize,

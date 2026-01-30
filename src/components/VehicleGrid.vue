@@ -1,6 +1,7 @@
 <script setup lang="ts">
 	import { computed } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
+	import { ElMessage } from 'element-plus' // Added ElMessage
 	import type { Vehicle } from '@/types'
 
 	const store = useLoanStore()
@@ -13,6 +14,23 @@
 		return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
 			val
 		)
+	}
+
+	// NEW: Share Function
+	const copyLink = (vehicle: Vehicle) => {
+		const url = `${window.location.origin}${window.location.pathname}?vehicle_id=${vehicle.id}`
+		navigator.clipboard
+			.writeText(url)
+			.then(() => {
+				ElMessage({
+					message: 'Vehicle link copied to clipboard!',
+					type: 'success',
+					duration: 2000
+				})
+			})
+			.catch(() => {
+				ElMessage.error('Failed to copy link')
+			})
 	}
 
 	// Dynamic Header Text Logic
@@ -151,8 +169,18 @@
 									</span>
 								</div>
 
-								<div class="mt-auto pt-2">
-									<el-button type="primary" plain class="w-full"> View Details </el-button>
+								<div class="mt-auto pt-2 flex gap-2">
+									<el-button type="primary" plain class="flex-1"> View Details </el-button>
+
+									<el-button
+										@click.stop="copyLink(car)"
+										type="primary"
+										plain
+										class="!px-3"
+										title="Share Link"
+									>
+										<i class="fas fa-share-alt"></i> Share
+									</el-button>
 								</div>
 							</div>
 						</el-card>
