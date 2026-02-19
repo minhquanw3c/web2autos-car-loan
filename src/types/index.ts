@@ -41,6 +41,7 @@ export interface Vehicle {
 	dom: number
 	mediaUrls: string[]
 	referenceUrl: string
+	vin: string
 }
 
 export interface FormComponentConfig {

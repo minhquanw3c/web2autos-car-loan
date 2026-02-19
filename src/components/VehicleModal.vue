@@ -203,6 +203,12 @@
 												store.selectedVehicle.std_seating
 											}}</span>
 										</div>
+										<div>
+											<span class="block text-gray-400 text-xs mb-0.5">VIN</span>
+											<span class="font-semibold text-gray-800">{{
+												store.selectedVehicle.vin
+											}}</span>
+										</div>
 									</div>
 								</div>
 
@@ -314,6 +320,10 @@
 												>{{ store.selectedVehicle.overall_height }}" H x
 												{{ store.selectedVehicle.overall_width }}" W</span
 											>
+										</div>
+										<div class="col-span-2 sm:col-span-1">
+											<span class="text-gray-400 mr-2">VIN:</span>
+											<span class="font-medium capitalize">{{ store.selectedVehicle.vin }}</span>
 										</div>
 									</div>
 								</div>
