@@ -8,6 +8,8 @@
 
 	const openModal = (vehicle: Vehicle) => {
 		store.selectedVehicle = vehicle
+		const url = `${window.location.origin}?vehicle_id=${vehicle.id}`
+		window.history.replaceState({}, '', url)
 	}
 
 	const formatCurrency = (val: number) => {

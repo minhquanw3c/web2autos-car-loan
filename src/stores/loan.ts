@@ -80,7 +80,6 @@ export const useLoanStore = defineStore('loan', () => {
 			if (found) {
 				selectedVehicle.value = found
 				console.log(`Deep linked to vehicle ID: ${vehicleId}`)
-				window.history.replaceState({}, '', window.location.pathname)
 			}
 		}
 	}

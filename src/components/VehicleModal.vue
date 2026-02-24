@@ -9,7 +9,11 @@
 	const dialogVisible = computed({
 		get: () => !!store.selectedVehicle,
 		set: (val) => {
-			if (!val) store.selectedVehicle = null
+			if (!val) {
+				store.selectedVehicle = null
+				const url = `${window.location.origin}`
+				window.history.replaceState({}, '', url)
+			}
 		}
 	})
 
