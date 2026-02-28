@@ -1,20 +1,16 @@
 <script setup lang="ts">
 	import { ref, onMounted } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
-	import LoanInputSection from '@/components/LoanInputSection.vue'
-	import LoanSummary from '@/components/LoanSummary.vue'
 	import VehicleGrid from '@/components/VehicleGrid.vue'
 	import VehicleModal from '@/components/VehicleModal.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
 	import VehicleFilters from '@/components/VehicleFilters.vue'
 
 	const store = useLoanStore()
-	const showMobileLoanCalc = ref(false)
 	const showMobileVehFilters = ref(false)
 
 	// Helper to close any open mobile modal
 	const closeMobileModals = () => {
-		showMobileLoanCalc.value = false
 		showMobileVehFilters.value = false
 	}
 
@@ -86,68 +82,29 @@
 			<transition name="fade" mode="out-in">
 				<div v-if="store.currentView === 'calculator'" key="calc">
 					<div class="flex flex-col lg:flex-row gap-6 items-start">
-						<aside class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24">
+						<aside
+							class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24 h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar rounded-xl"
+						>
 							<VehicleFilters />
 						</aside>
 
-						<div class="w-full flex-1 order-1 lg:order-1 pb-32 lg:pb-0 min-w-0">
+						<div class="w-full flex-1 pb-32 lg:pb-0 min-w-0">
 							<VehicleGrid />
 						</div>
-
-						<aside
-							class="sidebar-container w-full lg:w-[380px] xl:w-[400px] flex-shrink-0 order-2 lg:order-2"
-						>
-							<div
-								class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none shadow-[0_-8px_30px_rgba(0,0,0,0.15)] lg:shadow-none rounded-t-3xl lg:rounded-none border-t border-white/50 lg:border-none p-4 lg:p-0 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible lg:sticky lg:top-24 lg:transform-none"
-								:class="showMobileLoanCalc ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'"
-							>
-								<div
-									class="w-16 h-1.5 bg-gray-300 rounded-full mx-auto mb-6 lg:hidden cursor-pointer"
-									@click="showMobileLoanCalc = false"
-								></div>
-
-								<div class="space-y-6">
-									<LoanSummary />
-
-									<div class="filter-scroll-area">
-										<LoanInputSection />
-									</div>
-
-									<el-alert
-										title="Tip"
-										type="info"
-										description="Click on any vehicle to view details and apply."
-										show-icon
-										:closable="false"
-										class="hidden lg:flex"
-									/>
-
-									<div class="h-16 lg:hidden"></div>
-								</div>
-							</div>
-						</aside>
 					</div>
 
 					<VehicleModal />
 
 					<div
-						v-if="!showMobileLoanCalc && !showMobileVehFilters"
+						v-if="!showMobileVehFilters"
 						class="fixed bottom-6 left-0 right-0 z-[60] xl:hidden px-4 flex gap-3 justify-center"
 					>
 						<button
-							@click="showMobileVehFilters = !showMobileVehFilters"
-							class="flex-1 bg-slate-800 text-white px-4 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
+							@click="showMobileVehFilters = true"
+							class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
 						>
 							<i class="fas fa-filter"></i>
 							<span class="font-bold text-sm">Filters</span>
-						</button>
-
-						<button
-							@click="showMobileLoanCalc = !showMobileLoanCalc"
-							class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-full shadow-2xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20 lg:hidden"
-						>
-							<i class="fas fa-calculator"></i>
-							<span class="font-bold text-sm">Loan Calc</span>
 						</button>
 					</div>
 
@@ -308,5 +265,23 @@
 		.app-container {
 			padding: 2rem;
 		}
+	}
+
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 3px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.2);
+		border-radius: 3px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.3);
 	}
 </style>

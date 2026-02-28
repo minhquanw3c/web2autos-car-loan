@@ -1,10 +1,13 @@
 <script setup lang="ts">
-	import { computed } from 'vue'
+	import { computed, ref } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
+	import LoanInputSection from '@/components/LoanInputSection.vue'
+	import LoanSummary from '@/components/LoanSummary.vue'
 	import { ElMessage } from 'element-plus' // Added ElMessage
 	import type { Vehicle } from '@/types'
 
 	const store = useLoanStore()
+	const isCalcCollapsed = ref(false)
 
 	const openModal = (vehicle: Vehicle) => {
 		store.selectedVehicle = vehicle
@@ -60,7 +63,7 @@
 </script>
 
 <template>
-	<div class="flex flex-col h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]" id="vehicle-grid-anchor">
+	<div class="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)]" id="vehicle-grid-anchor">
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
 			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
 				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>
@@ -98,6 +101,51 @@
 			id="vehicle-scroll-container"
 			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0 overscroll-contain"
 		>
+			<!-- Sticky Calculator Section -->
+			<div class="sticky top-0 z-30 mb-6 -mx-2 px-2">
+				<div
+					class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden transition-all duration-300"
+				>
+					<div
+						class="flex justify-between items-center p-4 cursor-pointer hover:bg-white/5 group"
+						@click="isCalcCollapsed = !isCalcCollapsed"
+					>
+						<div class="flex items-center gap-3">
+							<i class="fas fa-calculator text-indigo-400"></i>
+							<span class="font-bold text-white">Loan Calculator</span>
+							<span
+								v-if="isCalcCollapsed"
+								class="text-sm text-gray-400 ml-2 border-l border-gray-600 pl-3"
+							>
+								Est. {{ formatCurrency(store.monthlyPayment) }}/mo
+							</span>
+						</div>
+						<div class="flex items-center gap-2 text-gray-400 group-hover:text-white transition-colors">
+							<span class="text-xs font-bold uppercase tracking-wider">{{
+								isCalcCollapsed ? 'Show' : 'Hide'
+							}}</span>
+							<i
+								:class="[
+									'fas transition-transform duration-300',
+									isCalcCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'
+								]"
+							></i>
+						</div>
+					</div>
+
+					<div v-show="!isCalcCollapsed" class="p-4 border-t border-white/10 bg-slate-800/50">
+						<div class="flex flex-col lg:flex-row gap-6">
+							<div class="w-full lg:w-1/3 xl:w-1/4">
+								<LoanSummary />
+							</div>
+							<div class="w-full lg:w-2/3 xl:w-3/4">
+								<LoanInputSection />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div v-if="store.fetchError" class="flex flex-col items-center justify-center py-20">
 				<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
 					<i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
