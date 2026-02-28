@@ -316,47 +316,6 @@
 		{ immediate: true }
 	)
 
-	// NEW: Manual Fill Function (Dev Only)
-	const fillTestData = () => {
-		schema.groups.forEach((group) => {
-			group.inputs.forEach((input) => {
-				const key = generateKey(group.heading, input.label)
-				if (input.components) {
-					if (key.includes('dateofbirth')) {
-						formData[key].mm = '5'
-						formData[key].dd = '15'
-						formData[key].yy = '1990'
-					} else if (key.includes('time')) {
-						formData[key].year = 2
-						formData[key].month = 6
-					}
-				} else {
-					let val: any = ''
-					if (input.type === 'checkbox' && input.required) val = true
-					else if (input.label.includes('First Name')) val = 'John'
-					else if (input.label.includes('Last Name')) val = 'Doe'
-					else if (input.label.includes('SSN')) val = '123456789'
-					else if (input.label.includes('Email')) val = 'john.doe@example.com'
-					else if (input.label.includes('Phone') && !input.label.includes('Work')) val = '(555) 123-4567'
-					else if (input.label.includes('Address Line 1')) val = 'Apt 4B'
-					else if (input.label.includes('City')) val = 'New York'
-					else if (input.label.includes('State')) val = 'NY'
-					else if (input.label.includes('Zip Code')) val = '10001'
-					else if (input.label.includes('Housing Status')) val = 'Rent'
-					else if (input.label.includes('Monthly Payment')) val = 1500
-					else if (input.label.includes('Employment Status')) val = 'Employed'
-					else if (input.label.includes('Company Name')) val = 'Tech Corp'
-					else if (input.label.includes('Occupation')) val = 'Software Engineer'
-					else if (input.label.includes('Income')) val = 8500
-					else if (input.label.includes('Down Payment')) val = store.downPayment || 1000
-
-					if (val !== '') formData[key] = val
-				}
-			})
-		})
-		ElMessage.success('Test data filled!')
-	}
-
 	const resolveOptions = (optionsStr: string | string[] | undefined) => {
 		if (!optionsStr) return []
 		if (Array.isArray(optionsStr)) return optionsStr
@@ -394,7 +353,7 @@
 				if (input.required) {
 					if (input.components) {
 						const parts = formData[key]
-						if (Object.values(parts).some((val) => !val))
+						if (Object.values(parts).some((val) => !val && val !== 0))
 							errorMsg = `Please complete the ${input.label.toLowerCase()}.`
 					} else {
 						const val = formData[key]
@@ -414,6 +373,145 @@
 			})
 		})
 		return firstErrorKey
+	}
+
+	const testDataSets = [
+		{
+			name: 'Employed (Stable)',
+			data: {
+				personalinformation_firstname: 'John',
+				personalinformation_lastname: 'Doe',
+				personalinformation_ssn: '123456789',
+				personalinformation_dateofbirth: { mm: '5', dd: '15', yy: '1985' },
+				personalinformation_phone: '(555) 123-4567',
+				personalinformation_email: 'john.doe@example.com',
+				residence_addressline1: '123 Maple Ave',
+				residence_city: 'Springfield',
+				residence_state: 'IL',
+				residence_zipcode: '62704',
+				residence_housingstatus: 'Own',
+				residence_monthlypaymentyourportion: 1200,
+				residence_timeatcurrentaddress: { year: 5, month: 0 },
+				employment_employmentstatus: 'Employed',
+				employment_companyname: 'Acme Corp',
+				workaddress_addressline1: '456 Tech Blvd',
+				workaddress_city: 'Springfield',
+				workaddress_state: 'IL',
+				workaddress_zipcode: '62704',
+				workaddress_occupationjobtitle: 'Manager',
+				workaddress_timeofcurrentemployment: { year: 4, month: 2 },
+				workaddress_totalmonthlyincomeorannually: 6000,
+				finaldetails_howmuchofdownpayment: 2000
+			}
+		},
+		{
+			name: 'Self-Employed (Moving)',
+			data: {
+				personalinformation_firstname: 'Jane',
+				personalinformation_lastname: 'Smith',
+				personalinformation_ssn: '987654321',
+				personalinformation_dateofbirth: { mm: '8', dd: '22', yy: '1992' },
+				personalinformation_phone: '(555) 987-6543',
+				personalinformation_email: 'jane.smith@example.com',
+				residence_addressline1: '789 Oak St',
+				residence_city: 'Chicago',
+				residence_state: 'IL',
+				residence_zipcode: '60601',
+				residence_housingstatus: 'Rent',
+				residence_monthlypaymentyourportion: 1800,
+				residence_timeatcurrentaddress: { year: 0, month: 6 },
+				previousresidence_addressline1: '321 Pine Ln',
+				previousresidence_city: 'Evanston',
+				previousresidence_state: 'IL',
+				previousresidence_zipcode: '60201',
+				previousresidence_timeatpreviousaddress: { year: 2, month: 0 },
+				employment_employmentstatus: 'Self-employed',
+				employment_companyname: 'Smith Designs',
+				workaddress_addressline1: '789 Oak St',
+				workaddress_city: 'Chicago',
+				workaddress_state: 'IL',
+				workaddress_zipcode: '60601',
+				workaddress_occupationjobtitle: 'Designer',
+				workaddress_timeofcurrentemployment: { year: 0, month: 8 },
+				workaddress_totalmonthlyincomeorannually: 5000,
+				previousworkaddress_companyname: 'Agency X',
+				previousworkaddress_addressline1: '101 Creative Way',
+				previousworkaddress_city: 'Chicago',
+				previousworkaddress_state: 'IL',
+				previousworkaddress_zipcode: '60610',
+				previousworkaddress_occupationjobtitle: 'Junior Designer',
+				previousworkaddress_timeatpreviousemployment: { year: 3, month: 0 },
+				finaldetails_howmuchofdownpayment: 1500
+			}
+		},
+		{
+			name: 'Retired',
+			data: {
+				personalinformation_firstname: 'Robert',
+				personalinformation_lastname: 'Brown',
+				personalinformation_ssn: '456123789',
+				personalinformation_dateofbirth: { mm: '12', dd: '10', yy: '1955' },
+				personalinformation_phone: '(555) 456-7890',
+				personalinformation_email: 'robert.brown@example.com',
+				residence_addressline1: '555 Palm Dr',
+				residence_city: 'Miami',
+				residence_state: 'FL',
+				residence_zipcode: '33101',
+				residence_housingstatus: 'Own',
+				residence_monthlypaymentyourportion: 0,
+				residence_timeatcurrentaddress: { year: 15, month: 0 },
+				employment_employmentstatus: 'Retired',
+				finaldetails_howmuchofdownpayment: 5000
+			}
+		}
+	]
+
+	const currentTestIndex = ref(0)
+
+	// NEW: Manual Fill Function (Dev Only)
+	const fillTestData = () => {
+		const testCase = testDataSets[currentTestIndex.value]
+		if (!testCase) {
+			return
+		}
+
+		const data: any = testCase.data
+
+		schema.groups.forEach((group) => {
+			group.inputs.forEach((input) => {
+				const key = generateKey(group.heading, input.label)
+
+				// Reset field
+				if (input.components) {
+					Object.keys(input.components).forEach((k) => (formData[key][k] = ''))
+				} else {
+					formData[key] = input.type === 'checkbox' ? false : ''
+				}
+
+				if (data[key] !== undefined) {
+					if (input.components && typeof data[key] === 'object') {
+						Object.assign(formData[key], data[key])
+					} else {
+						formData[key] = data[key]
+					}
+				} else {
+					// Default required checkboxes
+					if (input.type === 'checkbox' && input.required) {
+						formData[key] = true
+					}
+					// Default down payment if not in test data
+					if (input.label.includes('Down Payment') && !data[key]) {
+						formData[key] = store.downPayment || 1000
+					}
+				}
+			})
+		})
+
+		// Validate immediately to clear any existing errors and ensure logic runs
+		checkErrors()
+
+		ElMessage.success(`Test data filled: ${testCase.name}`)
+		currentTestIndex.value = (currentTestIndex.value + 1) % testDataSets.length
 	}
 
 	const submitForm = () => {
@@ -778,7 +876,11 @@
 													v-model="formData[generateKey(group.heading, input.label)][compKey]"
 													:placeholder="compKey"
 													type="number"
-												/>
+												>
+													<template #prepend v-if="compKey === 'year' || compKey === 'month'">
+														{{ compKey === 'year' ? 'Year' : 'Month' }}
+													</template>
+												</el-input>
 											</div>
 										</div>
 
