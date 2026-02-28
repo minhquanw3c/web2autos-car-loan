@@ -5,7 +5,7 @@ import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
-	const currentView = ref<'calculator' | 'application'>('calculator')
+	const currentView = ref<'onboarding' | 'calculator' | 'application'>('onboarding')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// NEW: Dynamic Loading Message
@@ -123,6 +123,23 @@ export const useLoanStore = defineStore('loan', () => {
 	const startApplication = () => {
 		currentView.value = 'application'
 		window.scrollTo({ top: 0, behavior: 'smooth' })
+	}
+
+	const skipOnboarding = () => {
+		currentView.value = 'calculator'
+	}
+
+	const applyOnboarding = (budget: number | null, make: string, condition: string) => {
+		resetCalculator()
+		resetFilters()
+
+		if (budget && budget > 0) {
+			price.value = budget
+			filterMode.value = 'price'
+		}
+		if (make) filters.value.make = make
+		if (condition) filters.value.inventoryType = condition
+		currentView.value = 'calculator'
 	}
 
 	const resetFilters = () => {
@@ -340,6 +357,8 @@ export const useLoanStore = defineStore('loan', () => {
 		// Actions
 		startApplication,
 		resetView,
+		skipOnboarding,
+		applyOnboarding,
 		fetchInventory,
 		calculatePaymentForPrice,
 		resetFilters

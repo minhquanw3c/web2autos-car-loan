@@ -5,6 +5,7 @@
 	import VehicleModal from '@/components/VehicleModal.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
 	import VehicleFilters from '@/components/VehicleFilters.vue'
+	import OnboardingForm from '@/components/OnboardingForm.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -28,7 +29,7 @@
 <template>
 	<div class="app-layout">
 		<div
-			v-if="store.isFetchingVehicles && store.inventory.length === 0"
+			v-if="store.isFetchingVehicles && store.inventory.length === 0 && store.currentView !== 'onboarding'"
 			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
 		>
 			<div class="animate-pulse mb-6">
@@ -80,7 +81,11 @@
 
 		<main class="flex-grow w-full max-w-[1900px] mx-auto relative z-10 p-4 sm:p-6 lg:p-8">
 			<transition name="fade" mode="out-in">
-				<div v-if="store.currentView === 'calculator'" key="calc">
+				<div v-if="store.currentView === 'onboarding'" key="onboarding">
+					<OnboardingForm />
+				</div>
+
+				<div v-else-if="store.currentView === 'calculator'" key="calc">
 					<div class="flex flex-col lg:flex-row gap-6 items-start">
 						<aside
 							class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24 h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar rounded-xl"
