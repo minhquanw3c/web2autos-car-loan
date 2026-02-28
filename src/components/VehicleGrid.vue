@@ -7,7 +7,7 @@
 	import type { Vehicle } from '@/types'
 
 	const store = useLoanStore()
-	const isCalcCollapsed = ref(false)
+	const isCalcCollapsed = ref(true)
 
 	const openModal = (vehicle: Vehicle) => {
 		store.selectedVehicle = vehicle
