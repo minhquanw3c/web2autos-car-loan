@@ -176,12 +176,12 @@
 
 									<el-button
 										@click.stop="copyLink(car)"
-										type="primary"
+										type="success"
 										plain
 										class="!px-3"
-										title="Share Link"
+										title="Copy Link"
 									>
-										<i class="fas fa-share-alt"></i> Share
+										<i class="fas fa-link mr-1"></i> Copy Link
 									</el-button>
 								</div>
 							</div>
