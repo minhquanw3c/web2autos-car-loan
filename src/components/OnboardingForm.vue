@@ -13,8 +13,12 @@
 	})
 
 	const handleRecommend = () => {
-		if (!form.budget || form.budget <= 0) {
-			ElMessage.error('Please enter a valid budget to continue.')
+		const hasBudget = form.budget && form.budget > 0
+		const hasMake = !!form.make
+		const hasCondition = !!form.condition
+
+		if (!hasBudget && !hasMake && !hasCondition) {
+			ElMessage.error('Please enter at least one preference to continue.')
 			return
 		}
 
