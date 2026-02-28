@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, reactive } from 'vue'
+	import { ref, reactive, watch } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
 	import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 	import type { FormSchema, FormInput } from '@/types'
@@ -15,7 +15,7 @@
 	}
 
 	// 1. Schema
-	const schema: FormSchema = {
+	const schema = reactive<FormSchema>({
 		formHeading: 'Finance application',
 		formDescription:
 			'Please complete the details below securely. A dedicated consultant will review your information and contact you shortly.',
@@ -44,7 +44,6 @@
 			{
 				heading: 'Residence',
 				inputs: [
-					{ label: 'Current Address', type: 'text', required: true },
 					{ label: 'Address Line 1', type: 'text', required: true },
 					{ label: 'Address Line 2', type: 'text', required: false },
 					{ label: 'City', type: 'select', required: true, options: 'US cities' },
@@ -67,6 +66,23 @@
 				]
 			},
 			{
+				heading: 'Previous Residence',
+				inputs: [
+					{ label: 'Address Line 1', type: 'text', required: true },
+					{ label: 'Address Line 2', type: 'text', required: false },
+					{ label: 'City', type: 'select', required: true, options: 'US cities' },
+					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'Zip Code', type: 'text', required: true },
+					{
+						label: 'Time at previous address',
+						type: 'text',
+						required: true,
+						format: '() years, () months',
+						components: { year: { type: 'number' }, month: { type: 'number' } }
+					}
+				]
+			},
+			{
 				heading: 'Employment',
 				inputs: [
 					{
@@ -81,9 +97,8 @@
 			{
 				heading: 'Work Address',
 				inputs: [
-					{ label: 'Address', type: 'text', required: true },
-					{ label: 'Company Name', type: 'text', required: true },
 					{ label: 'Address Line 1', type: 'text', required: true },
+					{ label: 'Address Line 2', type: 'text', required: false },
 					{ label: 'City', type: 'select', required: true, options: 'US cities' },
 					{ label: 'State', type: 'select', required: true, options: 'US states' },
 					{ label: 'Zip Code', type: 'text', required: true },
@@ -97,6 +112,25 @@
 						components: { year: { type: 'number' }, month: { type: 'number' } }
 					},
 					{ label: 'Total Monthly Income or Annually', type: 'number', required: true }
+				]
+			},
+			{
+				heading: 'Previous Work Address',
+				inputs: [
+					{ label: 'Company Name', type: 'text', required: true },
+					{ label: 'Address Line 1', type: 'text', required: true },
+					{ label: 'Address Line 2', type: 'text', required: false },
+					{ label: 'City', type: 'select', required: true, options: 'US cities' },
+					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'Zip Code', type: 'text', required: true },
+					{ label: 'Occupation/Job Title', type: 'text', required: true },
+					{
+						label: 'Time at previous employment',
+						type: 'text',
+						required: true,
+						format: '() years, () months',
+						components: { year: { type: 'number' }, month: { type: 'number' } }
+					}
 				]
 			},
 			{
@@ -120,7 +154,7 @@
 				]
 			}
 		]
-	}
+	})
 
 	// 2. State
 	const formData = reactive<Record<string, any>>({})
@@ -216,6 +250,37 @@
 		if (el) itemRefs[key] = el
 	}
 
+	const shouldShowGroup = (group: any) => {
+		if (group.heading === 'Previous Residence') {
+			const timeKey = 'residence_timeatcurrentaddress'
+			const timeData = formData[timeKey]
+			const year = timeData && timeData.year !== '' ? Number(timeData.year) : 0
+			return year < 1
+		}
+		const status = formData['employment_employmentstatus']
+		const isEmployed = status === 'Employed' || status === 'Self-employed'
+
+		if (group.heading === 'Work Address') {
+			return isEmployed
+		}
+		if (group.heading === 'Previous Work Address') {
+			if (!isEmployed) return false
+			const timeKey = 'workaddress_timeofcurrentemployment'
+			const timeData = formData[timeKey]
+			const year = timeData && timeData.year !== '' ? Number(timeData.year) : 0
+			return year < 1
+		}
+		return true
+	}
+
+	const shouldShowInput = (group: any, input: any) => {
+		if (group.heading === 'Employment' && input.label === 'Company Name') {
+			const status = formData['employment_employmentstatus']
+			return status === 'Employed' || status === 'Self-employed'
+		}
+		return true
+	}
+
 	// Init Data
 	schema.groups.forEach((group) => {
 		group.inputs.forEach((input) => {
@@ -236,6 +301,20 @@
 			}
 		})
 	})
+
+	// Watch Employment Status to toggle Company Name requirement
+	watch(
+		() => formData['employment_employmentstatus'],
+		(newVal) => {
+			const isEmployed = newVal === 'Employed' || newVal === 'Self-employed'
+			const empGroup = schema.groups.find((g) => g.heading === 'Employment')
+			const compInput = empGroup?.inputs.find((i) => i.label === 'Company Name')
+			if (compInput) {
+				compInput.required = isEmployed
+			}
+		},
+		{ immediate: true }
+	)
 
 	// NEW: Manual Fill Function (Dev Only)
 	const fillTestData = () => {
@@ -259,7 +338,6 @@
 					else if (input.label.includes('SSN')) val = '123456789'
 					else if (input.label.includes('Email')) val = 'john.doe@example.com'
 					else if (input.label.includes('Phone') && !input.label.includes('Work')) val = '(555) 123-4567'
-					else if (input.label.includes('Current Address')) val = '123 Maple Street'
 					else if (input.label.includes('Address Line 1')) val = 'Apt 4B'
 					else if (input.label.includes('City')) val = 'New York'
 					else if (input.label.includes('State')) val = 'NY'
@@ -307,7 +385,9 @@
 		let firstErrorKey: string | null = null
 
 		schema.groups.forEach((group) => {
+			if (!shouldShowGroup(group)) return
 			group.inputs.forEach((input) => {
+				if (!shouldShowInput(group, input)) return
 				const key = generateKey(group.heading, input.label)
 				let errorMsg: string | null = null
 
@@ -353,15 +433,15 @@
 
 	const confirmSubmission = async () => {
 		const svg = `
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: none;"/>
-      `
+	       <path class="path" d="
+	         M 30 15
+	         L 28 17
+	         M 25.61 25.61
+	         A 15 15, 0, 0, 1, 15 30
+	         A 15 15, 0, 1, 1, 27.99 7.5
+	         L 15 15
+	       " style="stroke-width: 4px; fill: none;"/>
+	     `
 
 		const loading = ElLoading.service({
 			lock: true,
@@ -405,14 +485,14 @@
 
 			await ElMessageBox.alert(
 				`
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 animate-bounce">
-                        <i class="fas fa-check text-4xl text-green-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Success!</h3>
-                    <p class="text-gray-600">Your application has been securely transmitted. <br>Ref ID: #APP-${Math.floor(Math.random() * 10000)}</p>
-                </div>
-                `,
+	               <div class="text-center">
+	                   <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 animate-bounce">
+	                       <i class="fas fa-check text-4xl text-green-600"></i>
+	                   </div>
+	                   <h3 class="text-2xl font-bold text-gray-800 mb-2">Success!</h3>
+	                   <p class="text-gray-600">Your application has been securely transmitted. <br>Ref ID: #APP-${Math.floor(Math.random() * 10000)}</p>
+	               </div>
+	               `,
 				{
 					dangerouslyUseHTMLString: true,
 					showConfirmButton: true,
@@ -430,14 +510,14 @@
 		} catch (e) {
 			await ElMessageBox.alert(
 				`
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 mb-4">
-                    <i class="fas fa-exclamation-triangle text-4xl text-red-600"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Submission Failed</h3>
-                <p class="text-gray-600 text-sm">We couldn't connect to the server. Please try again.</p>
-            </div>
-            `,
+	           <div class="text-center">
+	               <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 mb-4">
+	                   <i class="fas fa-exclamation-triangle text-4xl text-red-600"></i>
+	               </div>
+	               <h3 class="text-xl font-bold text-gray-800 mb-2">Submission Failed</h3>
+	               <p class="text-gray-600 text-sm">We couldn't connect to the server. Please try again.</p>
+	           </div>
+	           `,
 				{
 					dangerouslyUseHTMLString: true,
 					showConfirmButton: true,
@@ -558,34 +638,37 @@
 			</div>
 
 			<div class="h-[50vh] overflow-y-auto pr-2">
-				<el-card
-					shadow="never"
-					class="mb-4 rounded-xl border border-gray-200"
-					v-for="(group, gIndex) in schema.groups"
-					:key="gIndex"
-				>
-					<template #header>
-						<div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
-					</template>
-					<el-descriptions :column="1" border>
-						<el-descriptions-item
-							v-for="(input, iIndex) in group.inputs"
-							:key="iIndex"
-							:label="input.label"
-							label-class-name="font-semibold text-slate-600 bg-slate-50 w-1/3"
-						>
-							<span
-								v-if="input.type === 'checkbox' && !formData[generateKey(group.heading, input.label)]"
-								class="text-slate-400"
-								>No</span
+				<template v-for="(group, gIndex) in schema.groups" :key="gIndex">
+					<el-card
+						shadow="never"
+						class="mb-4 rounded-xl border border-gray-200"
+						v-if="shouldShowGroup(group)"
+					>
+						<template #header>
+							<div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
+						</template>
+						<el-descriptions :column="1" border>
+							<el-descriptions-item
+								v-for="(input, iIndex) in group.inputs"
+								:key="iIndex"
+								:label="input.label"
+								label-class-name="font-semibold text-slate-600 bg-slate-50 w-1/3"
 							>
-							<span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"
-								><i class="fas fa-check mr-1"></i> Agreed</span
-							>
-							<span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
-						</el-descriptions-item>
-					</el-descriptions>
-				</el-card>
+								<span
+									v-if="
+										input.type === 'checkbox' && !formData[generateKey(group.heading, input.label)]
+									"
+									class="text-slate-400"
+									>No</span
+								>
+								<span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"
+									><i class="fas fa-check mr-1"></i> Agreed</span
+								>
+								<span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
+							</el-descriptions-item>
+						</el-descriptions>
+					</el-card>
+				</template>
 			</div>
 
 			<template #footer>
@@ -621,7 +704,12 @@
 			</div>
 
 			<el-form label-position="top" @submit.prevent="submitForm">
-				<div v-for="(group, gIndex) in schema.groups" :key="gIndex" class="mb-6">
+				<div
+					v-for="(group, gIndex) in schema.groups"
+					:key="gIndex"
+					class="mb-6"
+					v-show="shouldShowGroup(group)"
+				>
 					<el-card shadow="hover" class="rounded-xl border-0 shadow-sm" :body-style="{ padding: '16px' }">
 						<template #header>
 							<div class="flex items-center">
@@ -630,97 +718,95 @@
 						</template>
 
 						<el-row :gutter="24">
-							<el-col
-								v-for="(input, iIndex) in group.inputs"
-								:key="iIndex"
-								v-bind="getResponsiveProps(input)"
-							>
-								<el-form-item
-									v-if="input.type === 'checkbox'"
-									class="mb-2"
-									:error="errors[generateKey(group.heading, input.label)]"
-									:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
-								>
-									<el-checkbox
-										v-model="formData[generateKey(group.heading, input.label)]"
-										:label="input.label"
-										size="large"
-										class="whitespace-normal h-auto py-2"
-									/>
-								</el-form-item>
-
-								<el-form-item
-									v-else
-									:label="input.label + (input.required ? ' *' : '')"
-									class="mb-6"
-									:error="errors[generateKey(group.heading, input.label)]"
-									:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
-								>
-									<el-select
-										v-if="input.type === 'select'"
-										v-model="formData[generateKey(group.heading, input.label)]"
-										placeholder="Select..."
-										class="w-full"
+							<template v-for="(input, iIndex) in group.inputs" :key="iIndex">
+								<el-col v-bind="getResponsiveProps(input)" v-if="shouldShowInput(group, input)">
+									<el-form-item
+										v-if="input.type === 'checkbox'"
+										class="mb-2"
+										:error="errors[generateKey(group.heading, input.label)]"
+										:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
 									>
-										<el-option
-											v-for="opt in resolveOptions(input.options)"
-											:key="opt"
-											:label="opt"
-											:value="opt"
+										<el-checkbox
+											v-model="formData[generateKey(group.heading, input.label)]"
+											:label="input.label"
+											size="large"
+											class="whitespace-normal h-auto py-2"
 										/>
-									</el-select>
+									</el-form-item>
 
-									<div v-else-if="input.components" class="w-full flex gap-2">
-										<div
-											v-for="(compConfig, compKey) in input.components"
-											:key="compKey"
-											class="flex-1"
-										>
-											<el-select
-												v-if="compConfig.type === 'select'"
-												v-model="formData[generateKey(group.heading, input.label)][compKey]"
-												:placeholder="compKey.toUpperCase()"
-											>
-												<el-option
-													v-for="opt in resolveOptions(compConfig.options)"
-													:key="opt"
-													:label="opt"
-													:value="opt"
-												/>
-											</el-select>
-											<el-input
-												v-else
-												v-model="formData[generateKey(group.heading, input.label)][compKey]"
-												:placeholder="compKey"
-												type="number"
-											/>
-										</div>
-									</div>
-
-									<el-input
+									<el-form-item
 										v-else
-										v-model="formData[generateKey(group.heading, input.label)]"
-										:type="
-											input.type === 'number'
-												? 'number'
-												: input.type === 'password'
-													? 'password'
-													: 'text'
-										"
-										:placeholder="input.format || ''"
+										:label="input.label + (input.required ? ' *' : '')"
+										class="mb-6"
+										:error="errors[generateKey(group.heading, input.label)]"
+										:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
 									>
-										<template
-											#prefix
-											v-if="
-												input.label.includes('Price') ||
-												input.label.includes('Payment') ||
-												input.label.includes('Income')
+										<el-select
+											v-if="input.type === 'select'"
+											v-model="formData[generateKey(group.heading, input.label)]"
+											placeholder="Select..."
+											class="w-full"
+										>
+											<el-option
+												v-for="opt in resolveOptions(input.options)"
+												:key="opt"
+												:label="opt"
+												:value="opt"
+											/>
+										</el-select>
+
+										<div v-else-if="input.components" class="w-full flex gap-2">
+											<div
+												v-for="(compConfig, compKey) in input.components"
+												:key="compKey"
+												class="flex-1"
+											>
+												<el-select
+													v-if="compConfig.type === 'select'"
+													v-model="formData[generateKey(group.heading, input.label)][compKey]"
+													:placeholder="compKey.toUpperCase()"
+												>
+													<el-option
+														v-for="opt in resolveOptions(compConfig.options)"
+														:key="opt"
+														:label="opt"
+														:value="opt"
+													/>
+												</el-select>
+												<el-input
+													v-else
+													v-model="formData[generateKey(group.heading, input.label)][compKey]"
+													:placeholder="compKey"
+													type="number"
+												/>
+											</div>
+										</div>
+
+										<el-input
+											v-else
+											v-model="formData[generateKey(group.heading, input.label)]"
+											:type="
+												input.type === 'number'
+													? 'number'
+													: input.type === 'password'
+														? 'password'
+														: 'text'
 											"
-											><i class="fas fa-dollar-sign"></i
-										></template>
-									</el-input>
-								</el-form-item>
-							</el-col>
+											:placeholder="input.format || ''"
+										>
+											<template
+												#prefix
+												v-if="
+													input.label.includes('Price') ||
+													input.label.includes('Payment') ||
+													input.label.includes('Income')
+												"
+												><i class="fas fa-dollar-sign"></i
+											></template>
+										</el-input>
+									</el-form-item>
+								</el-col>
+							</template>
 						</el-row>
 					</el-card>
 				</div>
