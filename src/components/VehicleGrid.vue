@@ -40,11 +40,43 @@
 		const count = store.paginatedVehicles.length
 		const total = store.totalVehicles
 
-		if (store.filterMode === 'price') {
-			return `Showing ${count}/${total} vehicles under ${formatCurrency(store.price)}`
-		} else {
-			return `Showing ${count}/${total} vehicles fitting ${formatCurrency(store.monthlyBudget)}/mo budget`
+		// 1. Build primary description (e.g. "Used Toyota Camry vehicles")
+		const descParts: string[] = []
+		if (store.filters.inventoryType) descParts.push(store.filters.inventoryType)
+		if (store.filters.yearRange[0] > 2010 || store.filters.yearRange[1] < 2026) {
+			descParts.push(`${store.filters.yearRange[0]}-${store.filters.yearRange[1]}`)
 		}
+		if (store.filters.make) descParts.push(store.filters.make)
+		if (store.filters.model) descParts.push(store.filters.model)
+		if (store.filters.trim) descParts.push(store.filters.trim)
+		if (store.filters.bodyType) descParts.push(store.filters.bodyType)
+
+		const vehicleNoun = descParts.length > 0 ? descParts.join(' ') + ' vehicles' : 'vehicles'
+
+		let text = `Showing ${count}/${total} ${vehicleNoun}`
+
+		if (store.searchQuery && store.searchQuery.trim()) {
+			text += ` matching "${store.searchQuery}"`
+		}
+
+		// 2. Build secondary attributes (e.g. "with Red paint, AWD")
+		const secondary: string[] = []
+		if (store.filters.fuelType) secondary.push(store.filters.fuelType)
+		if (store.filters.transmission) secondary.push(store.filters.transmission)
+		if (store.filters.drivetrain) secondary.push(store.filters.drivetrain)
+		if (store.filters.exteriorColor) secondary.push(`${store.filters.exteriorColor} paint`)
+		if (store.filters.dealer) secondary.push(`at ${store.filters.dealer}`)
+
+		if (secondary.length > 0) {
+			text += ` with ${secondary.join(', ')}`
+		}
+
+		if (store.filterMode === 'price') {
+			text += ` under ${formatCurrency(store.price)}`
+		} else {
+			text += ` fitting ${formatCurrency(store.monthlyBudget)}/mo budget`
+		}
+		return text
 	})
 
 	const handlePageChange = (val: number) => {
@@ -61,6 +93,33 @@
 
 <template>
 	<div class="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)]" id="vehicle-grid-anchor">
+		<div class="mb-6 relative z-30 flex-shrink-0">
+			<div class="flex items-center mb-2 ml-1">
+				<i class="fas fa-search text-indigo-400 mr-2"></i>
+				<label class="text-blue-100 font-bold text-sm uppercase tracking-wider">Search Inventory</label>
+			</div>
+			<div class="relative group">
+				<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+					<i
+						class="fas fa-search text-indigo-400 text-lg group-focus-within:text-indigo-300 transition-colors"
+					></i>
+				</div>
+				<input
+					type="text"
+					v-model="store.searchQuery"
+					class="block w-full pl-12 pr-10 py-4 border border-white/10 rounded-xl leading-5 bg-slate-900/80 text-white placeholder-slate-400 focus:outline-none focus:bg-slate-900/95 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-lg transition-all backdrop-blur-md shadow-lg"
+					placeholder="Search vehicles by make, model, year..."
+				/>
+				<div
+					v-if="store.searchQuery"
+					class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer"
+					@click="store.searchQuery = ''"
+				>
+					<i class="fas fa-times text-slate-500 hover:text-white transition-colors"></i>
+				</div>
+			</div>
+		</div>
+
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
 			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
 				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>

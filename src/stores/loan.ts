@@ -24,6 +24,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const loanTerm = ref<number>(72)
 
 	// -- Advanced Filters State --
+	const searchQuery = ref('')
 	const filters = ref({
 		make: '',
 		model: '',
@@ -149,6 +150,7 @@ export const useLoanStore = defineStore('loan', () => {
 	}
 
 	const resetFilters = () => {
+		searchQuery.value = ''
 		filters.value = {
 			make: '',
 			model: '',
@@ -201,7 +203,8 @@ export const useLoanStore = defineStore('loan', () => {
 			filterMode,
 			sortOption,
 			pageSize,
-			filters
+			filters,
+			searchQuery
 		],
 		() => {
 			currentPage.value = 1
@@ -241,6 +244,20 @@ export const useLoanStore = defineStore('loan', () => {
 		} else {
 			const targetPrice = price.value
 			matches = inventory.value.filter((v) => v.price <= targetPrice)
+		}
+
+		if (searchQuery.value) {
+			const query = searchQuery.value.toLowerCase().trim()
+			if (query) {
+				matches = matches.filter(
+					(v) =>
+						(v.heading && v.heading.toLowerCase().includes(query)) ||
+						(v.make && v.make.toLowerCase().includes(query)) ||
+						(v.model && v.model.toLowerCase().includes(query)) ||
+						(v.year && v.year.toString().includes(query)) ||
+						(v.trim && v.trim.toLowerCase().includes(query))
+				)
+			}
 		}
 
 		return matches.filter((v) => {
@@ -345,6 +362,7 @@ export const useLoanStore = defineStore('loan', () => {
 		currentPage,
 		pageSize,
 		filters,
+		searchQuery,
 
 		// Computed
 		netTradeImpact,
