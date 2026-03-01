@@ -123,6 +123,12 @@ export const useLoanStore = defineStore('loan', () => {
 	const startApplication = () => {
 		currentView.value = 'application'
 		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		if (url.searchParams.get('showApplication') !== 'true') {
+			url.searchParams.set('showApplication', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
 	}
 
 	const skipOnboarding = () => {
@@ -175,6 +181,11 @@ export const useLoanStore = defineStore('loan', () => {
 	const resetView = () => {
 		currentView.value = 'calculator'
 		selectedVehicle.value = null
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('vehicle_id')
+		window.history.pushState({}, '', url.toString())
 	}
 
 	// -- Watchers --
