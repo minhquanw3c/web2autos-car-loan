@@ -9,6 +9,8 @@
 	import LoanSummary from '@/components/LoanSummary.vue'
 	import LendingPartners from '@/components/LendingPartners.vue'
 	import BannerSlider from '@/components/BannerSlider.vue'
+	import CustomerReviews from '@/components/CustomerReviews.vue'
+	import VideoPlayer from '@/components/VideoPlayer.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -88,6 +90,8 @@
 				<div v-if="store.currentView === 'calculator'" key="calc">
 					<BannerSlider />
 					<LendingPartners />
+					<CustomerReviews />
+					<VideoPlayer />
 					<div class="mb-24">
 						<div
 							class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden p-6"
