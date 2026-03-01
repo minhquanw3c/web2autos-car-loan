@@ -8,6 +8,7 @@
 	import LoanInputSection from '@/components/LoanInputSection.vue'
 	import LoanSummary from '@/components/LoanSummary.vue'
 	import LendingPartners from '@/components/LendingPartners.vue'
+	import BannerSlider from '@/components/BannerSlider.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -85,6 +86,7 @@
 		<main class="flex-grow w-full max-w-[1900px] mx-auto relative z-10 p-4 sm:p-6 lg:p-8">
 			<transition name="fade" mode="out-in">
 				<div v-if="store.currentView === 'calculator'" key="calc">
+					<BannerSlider />
 					<LendingPartners />
 					<div class="mb-24">
 						<div
