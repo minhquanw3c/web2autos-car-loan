@@ -253,13 +253,8 @@
 			</div>
 		</div>
 
-		<div
-			class="flex-shrink-0 fixed bottom-24 left-0 right-0 z-50 flex justify-center pointer-events-none lg:static lg:pointer-events-auto lg:pt-4"
-			v-if="store.totalVehicles > 0"
-		>
-			<div
-				class="flex justify-center bg-slate-900/90 backdrop-blur-xl rounded-full p-2 border border-white/20 shadow-2xl pointer-events-auto lg:bg-white/10 lg:backdrop-blur-sm lg:rounded-xl lg:border-white/20 lg:shadow-none"
-			>
+		<div class="flex-shrink-0 flex justify-center pt-4" v-if="store.totalVehicles > 0">
+			<div class="flex justify-center bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
 				<el-pagination
 					v-model:current-page="store.currentPage"
 					v-model:page-size="store.pageSize"
