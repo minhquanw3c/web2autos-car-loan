@@ -11,6 +11,7 @@
 	import BannerSlider from '@/components/BannerSlider.vue'
 	import CustomerReviews from '@/components/CustomerReviews.vue'
 	import VideoPlayer from '@/components/VideoPlayer.vue'
+	import StepsSection from '@/components/StepsSection.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -92,7 +93,8 @@
 					<LendingPartners />
 					<CustomerReviews />
 					<VideoPlayer />
-					<div class="mb-24">
+					<StepsSection />
+					<div class="mb-10">
 						<div
 							class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden p-6"
 						>
