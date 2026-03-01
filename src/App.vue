@@ -50,12 +50,13 @@
 		<header class="header-glass sticky top-0 z-40 border-b border-white/10">
 			<div class="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 				<div class="flex items-center gap-3 cursor-pointer group" @click="store.resetView">
-					<a href="https://web2autos.com" target="_blank">
+					<a href="https://web2autos.com" target="_blank" class="relative overflow-hidden rounded-lg">
 						<img
 							src="/logo_01.png"
 							alt="Web2Autos Logo"
-							class="h-16 w-auto object-contain transform transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
+							class="h-16 w-auto object-contain transform transition-transform duration-300 group-hover:scale-105 drop-shadow-md relative z-10"
 						/>
+						<div class="logo-shine"></div>
 					</a>
 				</div>
 
@@ -160,8 +161,17 @@
 				<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
 					<div class="col-span-1 md:col-span-1">
 						<div class="flex items-center gap-2 mb-4 text-white">
-							<a href="https://web2autos.com" target="_blank">
-								<img src="/logo_01.png" alt="Web2Autos" class="h-16 w-auto object-contain" />
+							<a
+								href="https://web2autos.com"
+								target="_blank"
+								class="relative overflow-hidden rounded-lg group"
+							>
+								<img
+									src="/logo_01.png"
+									alt="Web2Autos"
+									class="h-16 w-auto object-contain relative z-10 transform transition-transform duration-300 group-hover:scale-105"
+								/>
+								<div class="logo-shine"></div>
 							</a>
 						</div>
 						<p class="leading-relaxed mb-4">
@@ -299,5 +309,34 @@
 
 	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
 		background: rgba(255, 255, 255, 0.3);
+	}
+
+	.logo-shine {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			135deg,
+			rgba(255, 255, 255, 0) 40%,
+			rgba(255, 255, 255, 0.5) 50%,
+			rgba(255, 255, 255, 0) 60%
+		);
+		transform: translate(-100%, -100%);
+		animation: shine 5s infinite;
+		z-index: 20;
+		pointer-events: none;
+	}
+
+	@keyframes shine {
+		0%,
+		20% {
+			transform: translate(-100%, -100%);
+		}
+		50%,
+		100% {
+			transform: translate(100%, 100%);
+		}
 	}
 </style>
