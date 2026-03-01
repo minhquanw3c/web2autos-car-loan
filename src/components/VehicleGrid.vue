@@ -101,13 +101,13 @@
 			<div class="relative group">
 				<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 					<i
-						class="fas fa-search text-indigo-400 text-lg group-focus-within:text-indigo-300 transition-colors"
+						class="fas fa-search text-gray-400 text-lg group-focus-within:text-indigo-500 transition-colors"
 					></i>
 				</div>
 				<input
 					type="text"
 					v-model="store.searchQuery"
-					class="block w-full pl-12 pr-10 py-4 border border-white/10 rounded-xl leading-5 bg-slate-900/80 text-white placeholder-slate-400 focus:outline-none focus:bg-slate-900/95 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-lg transition-all backdrop-blur-md shadow-lg"
+					class="block w-full pl-12 pr-10 py-4 border border-gray-200 rounded-xl leading-5 bg-white text-slate-900 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-lg transition-all shadow-lg"
 					placeholder="Search vehicles by make, model, year..."
 				/>
 				<div
@@ -115,7 +115,7 @@
 					class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer"
 					@click="store.searchQuery = ''"
 				>
-					<i class="fas fa-times text-slate-500 hover:text-white transition-colors"></i>
+					<i class="fas fa-times text-gray-400 hover:text-gray-600 transition-colors"></i>
 				</div>
 			</div>
 		</div>
