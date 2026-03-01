@@ -5,7 +5,8 @@
 	import VehicleModal from '@/components/VehicleModal.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
 	import VehicleFilters from '@/components/VehicleFilters.vue'
-	import OnboardingForm from '@/components/OnboardingForm.vue'
+	import LoanInputSection from '@/components/LoanInputSection.vue'
+	import LoanSummary from '@/components/LoanSummary.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -81,11 +82,21 @@
 
 		<main class="flex-grow w-full max-w-[1900px] mx-auto relative z-10 p-4 sm:p-6 lg:p-8">
 			<transition name="fade" mode="out-in">
-				<div v-if="store.currentView === 'onboarding'" key="onboarding">
-					<OnboardingForm />
-				</div>
-
-				<div v-else-if="store.currentView === 'calculator'" key="calc">
+				<div v-if="store.currentView === 'calculator'" key="calc">
+					<div class="mb-6">
+						<div
+							class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden p-6"
+						>
+							<div class="flex flex-col lg:flex-row gap-6">
+								<div class="w-full lg:w-1/3 xl:w-1/4">
+									<LoanSummary />
+								</div>
+								<div class="w-full lg:w-2/3 xl:w-3/4">
+									<LoanInputSection />
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="flex flex-col lg:flex-row gap-6 items-start">
 						<aside
 							class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24 h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar rounded-xl"

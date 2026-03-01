@@ -5,7 +5,7 @@ import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
-	const currentView = ref<'onboarding' | 'calculator' | 'application'>('onboarding')
+	const currentView = ref<'onboarding' | 'calculator' | 'application'>('calculator')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// NEW: Dynamic Loading Message
