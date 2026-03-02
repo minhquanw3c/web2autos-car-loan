@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { computed } from 'vue'
+	import { computed, ref } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
 	import { ElMessage } from 'element-plus' // Added ElMessage
 	import type { Vehicle } from '@/types'
@@ -91,10 +91,20 @@
 		const scrollContainer = document.getElementById('vehicle-scroll-container')
 		if (scrollContainer) scrollContainer.scrollTop = 0
 	}
+
+	const showScrollHint = ref(true)
+	const handleScroll = (e: Event) => {
+		const target = e.target as HTMLElement
+		if (target.scrollTop > 20) {
+			showScrollHint.value = false
+		} else {
+			showScrollHint.value = true
+		}
+	}
 </script>
 
 <template>
-	<div class="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)]" id="vehicle-grid-anchor">
+	<div class="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)] relative" id="vehicle-grid-anchor">
 		<div class="mb-6 relative z-30 flex-shrink-0">
 			<div class="flex items-center mb-2 ml-1">
 				<i class="fas fa-search text-indigo-400 mr-2"></i>
@@ -158,6 +168,7 @@
 		<div
 			id="vehicle-scroll-container"
 			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
+			@scroll="handleScroll"
 		>
 			<div v-if="store.fetchError" class="flex flex-col items-center justify-center py-20">
 				<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
@@ -253,6 +264,17 @@
 			</div>
 		</div>
 
+		<div
+			v-if="store.paginatedVehicles.length > 0 && showScrollHint"
+			class="absolute bottom-16 left-0 right-0 h-24 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none flex justify-center items-end pb-4 z-20 lg:hidden transition-opacity duration-500"
+		>
+			<span
+				class="text-white text-sm font-bold animate-bounce flex items-center gap-2 bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 shadow-lg"
+			>
+				Scroll for more <i class="fas fa-chevron-down"></i>
+			</span>
+		</div>
+
 		<div class="flex-shrink-0 flex justify-center pt-4" v-if="store.totalVehicles > 0">
 			<div class="flex justify-center bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
 				<el-pagination
@@ -272,6 +294,7 @@
 <style scoped>
 	.custom-scrollbar::-webkit-scrollbar {
 		width: 6px;
+		height: 6px;
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-track {
@@ -286,6 +309,11 @@
 
 	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
 		background: rgba(255, 255, 255, 0.5);
+	}
+
+	.custom-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
 	}
 
 	:deep(.glass-pagination .el-pagination__total),
