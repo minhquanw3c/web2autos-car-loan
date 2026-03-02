@@ -136,21 +136,28 @@
 			{
 				heading: 'Final details',
 				inputs: [
-					{ label: 'Ok to run credit reports by our top rated dealership', type: 'checkbox', default: false },
-					{ label: 'How much of Down Payment?', type: 'number', required: true },
+					{ label: 'Allow partner dealerships to access my credit report', type: 'checkbox', default: false },
+					{ label: 'Estimated Credit Score', type: 'number', required: true },
+					{ label: 'Planned Down Payment', type: 'number', required: true },
 					{
-						label: 'I authorize this dealership to run my credit report.',
+						label: 'I authorize the dealership to run my credit report.',
 						type: 'checkbox',
 						default: false,
 						required: true
 					},
 					{
-						label: 'I agree to the collection and processing of my personal data.',
+						label: 'I agree to the Privacy Policy.',
 						type: 'checkbox',
 						default: false,
 						required: true
 					},
-					{ label: 'I agree to receive newsletters.', type: 'checkbox', default: false, required: false }
+					{
+						label: 'I agree to receive marketing emails.',
+						type: 'checkbox',
+						default: false,
+						required: false
+					},
+					{ label: 'Digital Signature', type: 'signature', required: true }
 				]
 			}
 		]
@@ -160,6 +167,86 @@
 	const formData = reactive<Record<string, any>>({})
 	const errors = reactive<Record<string, string>>({})
 	const itemRefs = reactive<Record<string, any>>({})
+	const signatureRefs = ref<Record<string, HTMLCanvasElement>>({})
+	const isDrawing = ref(false)
+	const lastPos = reactive({ x: 0, y: 0 })
+
+	const setSignatureRef = (el: any, key: string) => {
+		if (el) signatureRefs.value[key] = el
+	}
+
+	const getPos = (canvas: HTMLCanvasElement, e: MouseEvent | TouchEvent) => {
+		const rect = canvas.getBoundingClientRect()
+		let clientX = 0
+		let clientY = 0
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			if (e.touches.length > 0 && e.touches[0]) {
+				clientX = e.touches[0].clientX
+				clientY = e.touches[0].clientY
+			}
+		} else {
+			clientX = (e as MouseEvent).clientX
+			clientY = (e as MouseEvent).clientY
+		}
+		return {
+			x: (clientX - rect.left) * (canvas.width / rect.width),
+			y: (clientY - rect.top) * (canvas.height / rect.height)
+		}
+	}
+
+	const startDrawing = (e: MouseEvent | TouchEvent, key: string) => {
+		isDrawing.value = true
+		const canvas = signatureRefs.value[key]
+		if (!canvas) return
+		const pos = getPos(canvas, e)
+		lastPos.x = pos.x
+		lastPos.y = pos.y
+	}
+
+	const draw = (e: MouseEvent | TouchEvent, key: string) => {
+		if (!isDrawing.value) return
+		const canvas = signatureRefs.value[key]
+		if (!canvas) return
+		const ctx = canvas.getContext('2d')
+		if (!ctx) return
+
+		const pos = getPos(canvas, e)
+		ctx.lineWidth = 2
+		ctx.lineCap = 'round'
+		ctx.strokeStyle = '#000'
+
+		ctx.beginPath()
+		ctx.moveTo(lastPos.x, lastPos.y)
+		ctx.lineTo(pos.x, pos.y)
+		ctx.stroke()
+
+		lastPos.x = pos.x
+		lastPos.y = pos.y
+	}
+
+	const stopDrawing = (key: string) => {
+		if (isDrawing.value) {
+			isDrawing.value = false
+			saveSignature(key)
+		}
+	}
+
+	const saveSignature = (key: string) => {
+		const canvas = signatureRefs.value[key]
+		if (canvas) {
+			formData[key] = canvas.toDataURL()
+			if (errors[key]) delete errors[key]
+		}
+	}
+
+	const clearSignature = (key: string) => {
+		const canvas = signatureRefs.value[key]
+		if (canvas) {
+			const ctx = canvas.getContext('2d')
+			ctx?.clearRect(0, 0, canvas.width, canvas.height)
+			formData[key] = ''
+		}
+	}
 
 	const usStates = [
 		'AL',
@@ -299,6 +386,7 @@
 				}
 				formData[key] = val
 			}
+			if (input.type === 'signature') formData[key] = ''
 		})
 	})
 
@@ -335,6 +423,7 @@
 	const getResponsiveProps = (input: FormInput) => {
 		const l = input.label.toLowerCase()
 		if (input.type === 'checkbox') return { span: 24 }
+		if (input.type === 'signature') return { span: 24 }
 		if (l === 'current address' || l === 'address') return { xs: 24, sm: 24, md: 24, lg: 24 }
 		return { xs: 24, sm: 12, md: 12, lg: 8 }
 	}
@@ -358,8 +447,9 @@
 					} else {
 						const val = formData[key]
 						if (!val && val !== 0)
-							errorMsg =
-								input.type === 'checkbox' ? 'This field is required.' : `${input.label} is required.`
+							if (input.type === 'checkbox') errorMsg = 'This field is required.'
+							else if (input.type === 'signature') errorMsg = 'Please sign the application.'
+							else errorMsg = `${input.label} is required.`
 					}
 				}
 				if (!errorMsg && input.type === 'email' && formData[key]) {
@@ -401,7 +491,8 @@
 				workaddress_occupationjobtitle: 'Manager',
 				workaddress_timeofcurrentemployment: { year: 4, month: 2 },
 				workaddress_totalmonthlyincomeorannually: 6000,
-				finaldetails_howmuchofdownpayment: 2000
+				finaldetails_planneddownpayment: 2000,
+				finaldetails_estimatedcreditscore: 750
 			}
 		},
 		{
@@ -441,7 +532,8 @@
 				previousworkaddress_zipcode: '60610',
 				previousworkaddress_occupationjobtitle: 'Junior Designer',
 				previousworkaddress_timeatpreviousemployment: { year: 3, month: 0 },
-				finaldetails_howmuchofdownpayment: 1500
+				finaldetails_planneddownpayment: 1500,
+				finaldetails_estimatedcreditscore: 720
 			}
 		},
 		{
@@ -461,7 +553,8 @@
 				residence_monthlypaymentyourportion: 0,
 				residence_timeatcurrentaddress: { year: 15, month: 0 },
 				employment_employmentstatus: 'Retired',
-				finaldetails_howmuchofdownpayment: 5000
+				finaldetails_planneddownpayment: 5000,
+				finaldetails_estimatedcreditscore: 800
 			}
 		}
 	]
@@ -488,6 +581,15 @@
 					formData[key] = input.type === 'checkbox' ? false : ''
 				}
 
+				// Clear canvas if signature
+				if (input.type === 'signature') {
+					const canvas = signatureRefs.value[key]
+					if (canvas) {
+						const ctx = canvas.getContext('2d')
+						ctx?.clearRect(0, 0, canvas.width, canvas.height)
+					}
+				}
+
 				if (data[key] !== undefined) {
 					if (input.components && typeof data[key] === 'object') {
 						Object.assign(formData[key], data[key])
@@ -502,6 +604,23 @@
 					// Default down payment if not in test data
 					if (input.label.includes('Down Payment') && !data[key]) {
 						formData[key] = store.downPayment || 1000
+					}
+
+					// Auto-fill signature
+					if (input.type === 'signature') {
+						const canvas = signatureRefs.value[key]
+						if (canvas) {
+							const ctx = canvas.getContext('2d')
+							if (ctx) {
+								ctx.beginPath()
+								ctx.moveTo(50, 100)
+								ctx.bezierCurveTo(150, 50, 250, 150, 350, 100)
+								ctx.strokeStyle = '#000'
+								ctx.lineWidth = 2
+								ctx.stroke()
+								formData[key] = canvas.toDataURL()
+							}
+						}
 					}
 				}
 			})
@@ -642,6 +761,7 @@
 		if (input.type === 'checkbox') return val ? 'Yes' : 'No'
 		if (input.label.includes('Price') || input.label.includes('Income') || input.label.includes('Payment'))
 			return `$ ${Number(val).toLocaleString()}`
+		if (input.type === 'signature') return 'Signature Captured'
 		return val
 	}
 </script>
@@ -762,6 +882,16 @@
 								<span v-else-if="input.type === 'checkbox'" class="text-green-600 font-bold"
 									><i class="fas fa-check mr-1"></i> Agreed</span
 								>
+								<div
+									v-else-if="
+										input.type === 'signature' && formData[generateKey(group.heading, input.label)]
+									"
+								>
+									<img
+										:src="formData[generateKey(group.heading, input.label)]"
+										class="h-12 object-contain border border-gray-200 rounded bg-white"
+									/>
+								</div>
 								<span v-else>{{ formatValue(generateKey(group.heading, input.label), input) }}</span>
 							</el-descriptions-item>
 						</el-descriptions>
@@ -830,6 +960,51 @@
 											size="large"
 											class="whitespace-normal h-auto py-2"
 										/>
+									</el-form-item>
+
+									<el-form-item
+										v-else-if="input.type === 'signature'"
+										class="mb-6"
+										:label="input.label + (input.required ? ' *' : '')"
+										:error="errors[generateKey(group.heading, input.label)]"
+										:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
+									>
+										<div
+											class="signature-pad-wrapper w-full border border-gray-300 rounded-lg overflow-hidden relative bg-white shadow-inner"
+										>
+											<canvas
+												:ref="
+													(el: any) =>
+														setSignatureRef(el, generateKey(group.heading, input.label))
+												"
+												class="w-full h-40 cursor-crosshair touch-none block"
+												width="600"
+												height="200"
+												@mousedown="
+													(e) => startDrawing(e, generateKey(group.heading, input.label))
+												"
+												@mousemove="(e) => draw(e, generateKey(group.heading, input.label))"
+												@mouseup="() => stopDrawing(generateKey(group.heading, input.label))"
+												@mouseleave="() => stopDrawing(generateKey(group.heading, input.label))"
+												@touchstart.passive="
+													(e) => startDrawing(e, generateKey(group.heading, input.label))
+												"
+												@touchmove.prevent="
+													(e) => draw(e, generateKey(group.heading, input.label))
+												"
+												@touchend="() => stopDrawing(generateKey(group.heading, input.label))"
+											></canvas>
+											<div class="absolute bottom-2 right-2">
+												<el-button
+													size="small"
+													@click="clearSignature(generateKey(group.heading, input.label))"
+													>Clear</el-button
+												>
+											</div>
+										</div>
+										<div class="text-xs text-gray-400 mt-1">
+											Sign above using your mouse or finger.
+										</div>
 									</el-form-item>
 
 									<el-form-item

@@ -104,11 +104,11 @@
 					<div
 						v-for="review in group"
 						:key="review.id"
-						class="bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex flex-col relative group hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-indigo-500/20 h-full"
+						class="bg-white backdrop-blur-md border border-gray-100 rounded-2xl p-6 flex flex-col relative group hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-indigo-500/20 h-full"
 					>
 						<!-- Quote Icon -->
 						<div
-							class="absolute top-4 right-6 text-6xl text-indigo-500/10 font-serif leading-none select-none"
+							class="absolute top-4 right-6 text-6xl text-indigo-100 font-serif leading-none select-none"
 						>
 							&rdquo;
 						</div>
@@ -119,12 +119,12 @@
 						</div>
 
 						<!-- Text -->
-						<p class="text-gray-300 text-sm leading-relaxed mb-6 flex-grow relative z-10">
+						<p class="text-gray-700 text-sm leading-relaxed mb-6 flex-grow relative z-10">
 							"{{ review.text }}"
 						</p>
 
 						<!-- User Info -->
-						<div class="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
+						<div class="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100">
 							<div
 								class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-md"
 							>
@@ -132,10 +132,10 @@
 							</div>
 							<div>
 								<div class="flex items-center gap-2">
-									<h4 class="text-white font-bold text-sm">{{ review.name }}</h4>
+									<h4 class="text-gray-900 font-bold text-sm">{{ review.name }}</h4>
 									<span
 										v-if="review.verified"
-										class="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full flex items-center gap-1 border border-green-500/20"
+										class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full flex items-center gap-1 border border-green-200"
 									>
 										<i class="fas fa-check-circle"></i> Verified
 									</span>

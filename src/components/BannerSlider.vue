@@ -11,7 +11,7 @@
 			description:
 				'Get pre-approved in minutes with our secure online application. No impact on your credit score to check rates.',
 			image: '/peter-broomfield-m3m-lnR90uM-unsplash.jpg',
-			cta: 'Get Started'
+			cta: 'Apply Now'
 		},
 		{
 			id: 2,
@@ -19,14 +19,14 @@
 			description:
 				'We partner with leading financial institutions to bring you the best auto loan rates available.',
 			image: '/campbell-3ZUsNJhi_Ik-unsplash.jpg',
-			cta: 'View Rates'
+			cta: null
 		},
 		{
 			id: 3,
 			title: 'All Credit Types Welcome',
 			description: 'Whether you have excellent credit or are rebuilding, we have a financing solution for you.',
 			image: '/olav-tvedt-6lSBynPRaAQ-unsplash.jpg',
-			cta: 'Apply Now'
+			cta: null
 		}
 	]
 
@@ -51,6 +51,12 @@
 	onUnmounted(() => {
 		window.removeEventListener('resize', updateHeight)
 	})
+
+	const handleBannerAction = (banner: { id: number }) => {
+		if (banner.id === 1) {
+			store.startApplication()
+		}
+	}
 </script>
 
 <template>
@@ -87,6 +93,14 @@
 						>
 							{{ banner.description }}
 						</p>
+						<div v-if="banner.cta">
+							<button
+								@click="handleBannerAction(banner)"
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-indigo-500/50 flex items-center gap-2"
+							>
+								{{ banner.cta }} <i class="fas fa-arrow-right"></i>
+							</button>
+						</div>
 					</div>
 				</div>
 			</el-carousel-item>

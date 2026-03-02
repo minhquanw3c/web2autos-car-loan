@@ -41,6 +41,10 @@
 			</p>
 		</div>
 
+		<div class="relative w-full max-w-5xl mx-auto mb-16 flex justify-center">
+			<img src="/sleeping-mob-1.png" alt="Steps to your dream car" class="w-full h-auto object-contain" />
+		</div>
+
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative px-4">
 			<!-- Connecting Line (Desktop) -->
 			<div
