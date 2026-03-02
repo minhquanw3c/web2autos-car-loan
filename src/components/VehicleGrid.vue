@@ -266,13 +266,11 @@
 
 		<div
 			v-if="store.paginatedVehicles.length > 0 && showScrollHint"
-			class="absolute bottom-16 left-0 right-0 h-24 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none flex justify-center items-end pb-4 z-20 lg:hidden transition-opacity duration-500"
+			class="absolute bottom-16 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none flex justify-center items-end pb-6 z-20 lg:hidden transition-opacity duration-500"
 		>
-			<span
-				class="text-white text-sm font-bold animate-bounce flex items-center gap-2 bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 shadow-lg"
-			>
-				Scroll for more <i class="fas fa-chevron-down"></i>
-			</span>
+			<div class="flex flex-col items-center animate-bounce">
+				<span class="text-white text-sm font-bold drop-shadow-md mb-2">Scroll down to view more vehicles</span>
+			</div>
 		</div>
 
 		<div class="flex-shrink-0 flex justify-center pt-4" v-if="store.totalVehicles > 0">
