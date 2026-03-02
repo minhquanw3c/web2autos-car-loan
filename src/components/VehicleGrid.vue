@@ -167,7 +167,7 @@
 
 		<div
 			id="vehicle-scroll-container"
-			class="flex-1 overflow-y-auto overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
+			class="flex-1 overflow-y-scroll overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
 			@scroll="handleScroll"
 		>
 			<div v-if="store.fetchError" class="flex flex-col items-center justify-center py-20">
@@ -301,12 +301,12 @@
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-thumb {
-		background: rgba(255, 255, 255, 0.3);
+		background: rgba(255, 255, 255, 0.5);
 		border-radius: 3px;
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-		background: rgba(255, 255, 255, 0.5);
+		background: rgba(255, 255, 255, 0.8);
 	}
 
 	.custom-scrollbar {
