@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue'
+	import { ref, onMounted, watch } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
 	import VehicleGrid from '@/components/VehicleGrid.vue'
 	import VehicleModal from '@/components/VehicleModal.vue'
@@ -15,6 +15,27 @@
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
+	const showFiltersButton = ref(false)
+	const vehicleGridRef = ref<HTMLElement | null>(null)
+	let observer: IntersectionObserver | null = null
+
+	watch(vehicleGridRef, (el) => {
+		if (observer) {
+			observer.disconnect()
+			observer = null
+		}
+		if (el) {
+			observer = new IntersectionObserver(
+				([entry]) => {
+					if (entry) {
+						showFiltersButton.value = entry.isIntersecting
+					}
+				},
+				{ threshold: 0 }
+			)
+			observer.observe(el)
+		}
+	})
 
 	// Helper to close any open mobile modal
 	const closeMobileModals = () => {
@@ -115,7 +136,7 @@
 							<VehicleFilters />
 						</aside>
 
-						<div class="w-full flex-1 pb-32 lg:pb-0 min-w-0">
+						<div class="w-full flex-1 pb-32 lg:pb-0 min-w-0" ref="vehicleGridRef">
 							<VehicleGrid />
 						</div>
 					</div>
@@ -123,7 +144,7 @@
 					<VehicleModal />
 
 					<div
-						v-if="!showMobileVehFilters"
+						v-if="!showMobileVehFilters && showFiltersButton"
 						class="fixed bottom-6 left-0 right-0 z-[60] xl:hidden px-4 flex gap-3 justify-center"
 					>
 						<button
@@ -136,7 +157,7 @@
 					</div>
 
 					<div
-						v-else
+						v-else-if="showMobileVehFilters"
 						class="fixed bottom-6 left-0 right-0 z-[80] px-4 flex justify-center animate-[fadeIn_0.3s_ease-out]"
 					>
 						<button
