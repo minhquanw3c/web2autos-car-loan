@@ -1,72 +1,70 @@
 <script setup lang="ts">
 	const partners = [
-		{ name: 'Ally Financial', image: '/logo_01.png' },
-		{ name: 'Capital One', image: '/logo_01.png' },
-		{ name: 'Wells Fargo', image: '/logo_01.png' },
-		{ name: 'Chase Auto', image: '/logo_01.png' },
-		{ name: 'Bank of America', image: '/logo_01.png' },
-		{ name: 'Santander', image: '/logo_01.png' },
-		{ name: 'US Bank', image: '/logo_01.png' },
-		{ name: 'PNC Bank', image: '/logo_01.png' },
-		{ name: 'Truist', image: '/logo_01.png' },
-		{ name: 'TD Bank', image: '/logo_01.png' },
-		{ name: 'Citizens Bank', image: '/logo_01.png' },
-		{ name: 'Fifth Third Bank', image: '/logo_01.png' },
-		{ name: 'BMO Harris', image: '/logo_01.png' },
-		{ name: 'KeyBank', image: '/logo_01.png' },
-		{ name: 'Regions Bank', image: '/logo_01.png' },
-		{ name: 'M&T Bank', image: '/logo_01.png' },
-		{ name: 'Huntington', image: '/logo_01.png' },
-		{ name: 'Discover', image: '/logo_01.png' },
-		{ name: 'Synchrony', image: '/logo_01.png' },
-		{ name: 'Navy Federal', image: '/logo_01.png' }
+		{ name: 'Ally', logo: 'ally.svg' },
+		{ name: 'Ameri Credit', logo: 'ameri_credit.png' },
+		{ name: 'Capital One', logo: 'capital_one.svg' },
+		{ name: 'Chase', logo: 'chase.svg' },
+		{ name: 'Exeter Finance', logo: 'exeter_finance.svg' },
+		{ name: 'Global Lending Services', logo: 'global_lending_services.png' },
+		{ name: 'GOFI Auto Finance', logo: 'go_fi.png' },
+		{ name: 'SAFCO Acceptance', logo: 'gosafco.svg' },
+		{ name: 'Lendbuzz', logo: 'lendbuzz.svg' },
+		{ name: 'OneMain Financial', logo: 'onemain_financial.svg' },
+		{ name: 'Regional Acceptance', logo: 'regional_acceptance.svg' },
+		{ name: 'Santander', logo: 'santander_consumer_usa.svg' },
+		{ name: 'Upgrade Auto Loans', logo: 'upgrade.svg' },
+		{ name: 'Wells Fargo', logo: 'wells_fargo.svg' }
 	]
 </script>
 
 <template>
-	<div class="mb-24 space-y-16 animate-[fadeIn_0.6s_ease-out]">
-		<div class="text-center">
-			<h2 class="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
-				<i class="fas fa-handshake text-indigo-400 mr-2"></i>Our Lending Partners
-			</h2>
-			<p class="text-blue-200 text-sm md:text-base max-w-2xl mx-auto">
-				We work with the nation's top financial institutions to secure the best rates for your auto loan.
+	<div class="mb-24 py-8 animate-[fadeIn_0.8s_ease-out] overflow-hidden">
+		<div class="text-center mb-12">
+			<h2 class="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-md">Our Lending Partners</h2>
+			<p class="text-blue-200 text-lg max-w-2xl mx-auto">
+				We work with top financial institutions to secure your loan
 			</p>
 		</div>
 
-		<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+		<div class="relative w-full">
 			<div
-				v-for="(partner, index) in partners"
-				:key="index"
-				class="partner-card group relative bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-xl h-32 flex items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-default hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/20"
-			>
-				<!-- Glow effect -->
-				<div
-					class="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/10 group-hover:to-purple-500/10 transition-all duration-500"
-				></div>
+				class="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"
+			></div>
+			<div
+				class="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"
+			></div>
 
-				<!-- Logo (Background) -->
-				<div
-					class="absolute inset-0 flex items-center justify-center p-4 md:p-6 transition-transform duration-500 group-hover:scale-105"
-				>
-					<img
-						:src="partner.image"
-						:alt="partner.name"
-						class="w-full h-full object-contain opacity-30 grayscale filter group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500"
-					/>
+			<div class="flex w-max animate-marquee hover:[animation-play-state:paused]">
+				<div v-for="i in 3" :key="i" class="flex gap-6 mx-3">
+					<div
+						v-for="partner in partners"
+						:key="`${i}-${partner.name}`"
+						class="bg-white rounded-xl p-4 flex items-center justify-center h-24 w-48 md:h-28 md:w-60 shadow-lg hover:scale-105 transition-all duration-300 group cursor-pointer"
+					>
+						<img
+							:src="`/bank_logos/${partner.logo}`"
+							:alt="partner.name"
+							class="max-h-12 md:max-h-16 w-auto object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+							loading="lazy"
+						/>
+					</div>
 				</div>
-
-				<!-- Name (Foreground) -->
-				<h3
-					class="absolute bottom-2 right-2 z-10 text-gray-300 font-bold text-base md:text-lg text-right group-hover:text-white transition-colors duration-300 bg-slate-900/60 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/5 group-hover:border-white/20 group-hover:bg-slate-900/80 shadow-sm"
-				>
-					{{ partner.name }}
-				</h3>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-	/* Scoped styles if needed */
+	.animate-marquee {
+		animation: marquee 100s linear infinite;
+	}
+
+	@keyframes marquee {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-33.33%);
+		}
+	}
 </style>
