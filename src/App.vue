@@ -298,6 +298,42 @@
 		min-height: 100vh;
 	}
 
+	.bg-layer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(80px);
+		z-index: 0;
+	}
+
+	.orb-1 {
+		top: -20%;
+		left: -5%;
+		width: 50vw;
+		height: 50vw;
+		background: radial-gradient(circle, rgba(0, 238, 255, 0.7) 0%, rgba(0, 247, 255, 0) 70%);
+		animation: float 20s infinite ease-in-out;
+	}
+
+	.orb-2 {
+		bottom: -30%;
+		right: -5%;
+		width: 50vw;
+		height: 50vw;
+		background: radial-gradient(circle, rgba(0, 174, 255, 0.7) 0%, rgba(115, 255, 50, 0) 70%);
+		animation: float 25s infinite ease-in-out reverse;
+	}
+
 	.header-glass {
 		background: rgba(15, 23, 42, 0.6);
 		backdrop-filter: blur(12px);
@@ -363,6 +399,18 @@
 		animation: shine 5s infinite;
 		z-index: 20;
 		pointer-events: none;
+	}
+
+	@keyframes float {
+		0% {
+			transform: translate(0, 0);
+		}
+		50% {
+			transform: translate(30px, 50px);
+		}
+		100% {
+			transform: translate(0, 0);
+		}
 	}
 
 	@keyframes shine {
