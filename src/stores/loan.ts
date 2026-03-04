@@ -6,8 +6,8 @@ import { BACKEND_API_URL } from '@/constants/utils'
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
 	const currentView = ref<
-		'onboarding' | 'calculator' | 'application' | 'contact' | 'privacy' | 'terms' | 'disclaimer'
-	>('calculator')
+		'onboarding' | 'home' | 'inventory' | 'application' | 'contact' | 'privacy' | 'terms' | 'disclaimer'
+	>('home')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// NEW: Dynamic Loading Message
@@ -132,6 +132,7 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showContact')
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
+		url.searchParams.delete('showInventory')
 		if (url.searchParams.get('showApplication') !== 'true') {
 			url.searchParams.set('showApplication', 'true')
 			window.history.pushState({}, '', url.toString())
@@ -139,7 +140,7 @@ export const useLoanStore = defineStore('loan', () => {
 	}
 
 	const skipOnboarding = () => {
-		currentView.value = 'calculator'
+		currentView.value = 'inventory'
 	}
 
 	const goToContact = () => {
@@ -152,6 +153,7 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
+		url.searchParams.delete('showInventory')
 		if (url.searchParams.get('showContact') !== 'true') {
 			url.searchParams.set('showContact', 'true')
 			window.history.pushState({}, '', url.toString())
@@ -168,6 +170,7 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showContact')
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
+		url.searchParams.delete('showInventory')
 		if (url.searchParams.get('showPrivacy') !== 'true') {
 			url.searchParams.set('showPrivacy', 'true')
 			window.history.pushState({}, '', url.toString())
@@ -184,6 +187,7 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showContact')
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showDisclaimer')
+		url.searchParams.delete('showInventory')
 		if (url.searchParams.get('showTerms') !== 'true') {
 			url.searchParams.set('showTerms', 'true')
 			window.history.pushState({}, '', url.toString())
@@ -200,8 +204,26 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showContact')
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showInventory')
 		if (url.searchParams.get('showDisclaimer') !== 'true') {
 			url.searchParams.set('showDisclaimer', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
+	}
+
+	const goToInventory = () => {
+		currentView.value = 'inventory'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showDisclaimer')
+		// We don't delete vehicle_id here as we might be navigating to a specific vehicle
+		if (url.searchParams.get('showInventory') !== 'true') {
+			url.searchParams.set('showInventory', 'true')
 			window.history.pushState({}, '', url.toString())
 		}
 	}
@@ -216,7 +238,7 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 		if (make) filters.value.make = make
 		if (condition) filters.value.inventoryType = condition
-		currentView.value = 'calculator'
+		currentView.value = 'inventory'
 	}
 
 	const resetFilters = () => {
@@ -251,7 +273,7 @@ export const useLoanStore = defineStore('loan', () => {
 	}
 
 	const resetView = () => {
-		currentView.value = 'calculator'
+		currentView.value = 'home'
 		selectedVehicle.value = null
 
 		const url = new URL(window.location.href)
@@ -260,6 +282,7 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
+		url.searchParams.delete('showInventory')
 		url.searchParams.delete('vehicle_id')
 		window.history.pushState({}, '', url.toString())
 	}
@@ -465,6 +488,7 @@ export const useLoanStore = defineStore('loan', () => {
 		goToPrivacy,
 		goToTerms,
 		goToDisclaimer,
+		goToInventory,
 		applyOnboarding,
 		fetchInventory,
 		calculatePaymentForPrice,

@@ -1,16 +1,9 @@
 <script setup lang="ts">
-	import { ref, onMounted, watch } from 'vue'
+	import { onMounted } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
-	import VehicleGrid from '@/components/VehicleGrid.vue'
-	import VehicleModal from '@/components/VehicleModal.vue'
+	import HomePage from '@/components/HomePage.vue'
+	import InventoryPage from '@/components/InventoryPage.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
-	import VehicleFilters from '@/components/VehicleFilters.vue'
-	import LoanInputSection from '@/components/LoanInputSection.vue'
-	import LoanSummary from '@/components/LoanSummary.vue'
-	import LendingPartners from '@/components/LendingPartners.vue'
-	import BannerSlider from '@/components/BannerSlider.vue'
-	import CustomerReviews from '@/components/CustomerReviews.vue'
-	import VideoPlayer from '@/components/VideoPlayer.vue'
 	import StepsSection from '@/components/StepsSection.vue'
 	import ContactPage from '@/components/ContactPage.vue'
 	import PrivacyPage from '@/components/PrivacyPage.vue'
@@ -18,33 +11,6 @@
 	import DisclaimerPage from '@/components/DisclaimerPage.vue'
 
 	const store = useLoanStore()
-	const showMobileVehFilters = ref(false)
-	const showFiltersButton = ref(false)
-	const vehicleGridRef = ref<HTMLElement | null>(null)
-	let observer: IntersectionObserver | null = null
-
-	watch(vehicleGridRef, (el) => {
-		if (observer) {
-			observer.disconnect()
-			observer = null
-		}
-		if (el) {
-			observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry) {
-						showFiltersButton.value = entry.isIntersecting
-					}
-				},
-				{ threshold: 0 }
-			)
-			observer.observe(el)
-		}
-	})
-
-	// Helper to close any open mobile modal
-	const closeMobileModals = () => {
-		showMobileVehFilters.value = false
-	}
 
 	onMounted(() => {
 		store.fetchInventory()
@@ -61,12 +27,14 @@
 			store.goToTerms()
 		} else if (urlParams.get('showDisclaimer') === 'true') {
 			store.goToDisclaimer()
+		} else if (urlParams.get('showInventory') === 'true' || urlParams.get('vehicle_id')) {
+			store.goToInventory()
 		}
 	})
 </script>
 
 <template>
-	<div class="app-layout">
+	<div class="app-layout bg-slate-900 transition-colors duration-300">
 		<div
 			v-if="store.isFetchingVehicles && store.inventory.length === 0 && store.currentView !== 'onboarding'"
 			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
@@ -81,8 +49,8 @@
 		</div>
 
 		<div class="bg-layer">
-			<div class="orb orb-1"></div>
-			<div class="orb orb-2"></div>
+			<div class="orb orb-1 opacity-100"></div>
+			<div class="orb orb-2 opacity-100"></div>
 		</div>
 
 		<header class="header-glass sticky top-0 z-40 border-b border-white/10">
@@ -103,12 +71,22 @@
 						<a
 							@click="store.resetView"
 							:class="
-								store.currentView === 'calculator'
+								store.currentView === 'home'
 									? 'text-white font-bold'
 									: 'text-slate-300 hover:text-white'
 							"
 							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 							>Home</a
+						>
+						<a
+							@click="store.goToInventory"
+							:class="
+								store.currentView === 'inventory'
+									? 'text-white font-bold'
+									: 'text-slate-300 hover:text-white'
+							"
+							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+							>Inventory</a
 						>
 						<a
 							@click="store.goToContact"
@@ -144,74 +122,12 @@
 
 		<main class="flex-grow w-full max-w-[1900px] mx-auto relative z-10 p-4 sm:p-6 lg:p-8">
 			<transition name="fade" mode="out-in">
-				<div v-if="store.currentView === 'calculator'" key="calc">
-					<BannerSlider />
-					<LendingPartners />
-					<CustomerReviews />
-					<VideoPlayer />
-					<StepsSection />
-					<div class="mb-10">
-						<div
-							class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden p-6"
-						>
-							<div class="flex flex-col lg:flex-row gap-6">
-								<div class="w-full lg:w-1/3 xl:w-1/4">
-									<LoanSummary />
-								</div>
-								<div class="w-full lg:w-2/3 xl:w-3/4">
-									<LoanInputSection />
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="flex flex-col lg:flex-row gap-6 items-start">
-						<aside
-							class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24 h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar rounded-xl"
-						>
-							<VehicleFilters />
-						</aside>
+				<div v-if="store.currentView === 'home'" key="home">
+					<HomePage />
+				</div>
 
-						<div class="w-full flex-1 pb-32 lg:pb-0 min-w-0" ref="vehicleGridRef">
-							<VehicleGrid />
-						</div>
-					</div>
-
-					<VehicleModal />
-
-					<div
-						v-if="!showMobileVehFilters && showFiltersButton"
-						class="fixed bottom-6 left-0 right-0 z-[60] xl:hidden px-4 flex gap-3 justify-center"
-					>
-						<button
-							@click="showMobileVehFilters = true"
-							class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
-						>
-							<i class="fas fa-filter"></i>
-							<span class="font-bold text-sm">Filters</span>
-						</button>
-					</div>
-
-					<div
-						v-else-if="showMobileVehFilters"
-						class="fixed bottom-6 left-0 right-0 z-[80] px-4 flex justify-center animate-[fadeIn_0.3s_ease-out]"
-					>
-						<button
-							@click="closeMobileModals"
-							class="w-full max-w-sm bg-slate-900 text-white px-6 py-3 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] hover:bg-slate-800 transition-all flex items-center justify-center gap-3 active:scale-95 border border-white/20"
-						>
-							<i class="fas fa-times text-lg"></i>
-							<span class="font-bold text-sm">Close</span>
-						</button>
-					</div>
-
-					<div
-						class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-[70] bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] rounded-t-3xl border-t border-white/50 p-4 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto xl:hidden"
-						:class="showMobileVehFilters ? 'translate-y-0' : 'translate-y-full'"
-					>
-						<VehicleFilters />
-
-						<div class="h-16"></div>
-					</div>
+				<div v-else-if="store.currentView === 'inventory'" key="inventory">
+					<InventoryPage />
 				</div>
 
 				<div v-else-if="store.currentView === 'application'" key="app">
@@ -237,7 +153,7 @@
 		</main>
 
 		<footer
-			class="relative z-20 border-t border-white/10 bg-slate-900/60 backdrop-blur-xl text-slate-400 text-sm xl:mb-0"
+			class="relative z-20 border-t border-white/10 bg-slate-900/60 backdrop-blur-xl text-slate-400 text-sm xl:mb-0 transition-colors duration-300"
 		>
 			<div class="max-w-[1800px] mx-auto px-4 py-12">
 				<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
