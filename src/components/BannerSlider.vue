@@ -65,7 +65,7 @@
 			:interval="6000"
 			:height="carouselHeight"
 			arrow="always"
-			class="rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+			class="rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10"
 		>
 			<el-carousel-item v-for="banner in banners" :key="banner.id">
 				<div class="relative w-full h-full group">

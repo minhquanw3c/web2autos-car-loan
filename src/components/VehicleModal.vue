@@ -60,7 +60,7 @@
 			v-if="store.selectedVehicle"
 			class="flex flex-col lg:flex-row h-full lg:h-[80vh] overflow-hidden -m-4 sm:-m-6"
 		>
-			<div class="w-full lg:w-3/5 bg-gray-900 flex flex-col h-[40vh] lg:h-full relative group">
+			<div class="w-full lg:w-3/5 bg-slate-900 flex flex-col h-[40vh] lg:h-full relative group">
 				<div class="flex-1 relative overflow-hidden flex items-center justify-center bg-black">
 					<img
 						v-if="store.selectedVehicle.mediaUrls && store.selectedVehicle.mediaUrls.length > 0"
@@ -122,15 +122,15 @@
 				</div>
 			</div>
 
-			<div class="w-full lg:w-2/5 flex flex-col bg-white h-auto lg:h-full overflow-hidden">
-				<div class="p-6 border-b border-gray-100 flex-shrink-0">
+			<div class="w-full lg:w-2/5 flex flex-col bg-white dark:bg-slate-800 h-auto lg:h-full overflow-hidden">
+				<div class="p-6 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
 					<div class="flex justify-between items-start mb-2">
 						<div>
-							<h2 class="text-2xl font-bold text-gray-900 leading-tight">
+							<h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
 								{{ store.selectedVehicle.year }} {{ store.selectedVehicle.make }}
 								{{ store.selectedVehicle.model }}
 							</h2>
-							<p class="text-gray-500 text-sm font-medium">
+							<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">
 								{{ store.selectedVehicle.trim }} {{ store.selectedVehicle.body_type }}
 							</p>
 						</div>
@@ -332,14 +332,16 @@
 									</div>
 								</div>
 
-								<div class="bg-indigo-50 p-5 rounded-xl border border-indigo-100">
+								<div
+									class="bg-indigo-50 dark:bg-indigo-900/30 p-5 rounded-xl border border-indigo-100 dark:border-indigo-800"
+								>
 									<h3 class="text-sm font-bold text-indigo-900 uppercase tracking-wider mb-2">
 										Dealer Information
 									</h3>
-									<p class="font-bold text-lg text-slate-800">
+									<p class="font-bold text-lg text-slate-800 dark:text-white">
 										{{ store.selectedVehicle.dealer.name }}
 									</p>
-									<p class="text-sm text-slate-500 mb-3">
+									<p class="text-sm text-slate-500 dark:text-slate-400 mb-3">
 										{{ store.selectedVehicle.dealer.street }} -
 										{{ store.selectedVehicle.dealer.dealer_type }}
 									</p>
@@ -356,10 +358,12 @@
 					</el-tabs>
 				</div>
 
-				<div class="p-6 bg-white border-t border-gray-100 flex-shrink-0 flex flex-col sm:flex-row gap-4">
+				<div
+					class="p-6 bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-gray-700 flex-shrink-0 flex flex-col sm:flex-row gap-4"
+				>
 					<button
 						@click="dialogVisible = false"
-						class="px-6 py-3.5 border border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-colors w-full sm:w-auto"
+						class="px-6 py-3.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors w-full sm:w-auto"
 					>
 						Close
 					</button>

@@ -47,6 +47,12 @@
 	}
 
 	onMounted(() => {
+		if (store.theme === 'dark') {
+			document.documentElement.classList.add('dark')
+		} else {
+			document.documentElement.classList.remove('dark')
+		}
+
 		store.fetchInventory()
 
 		// Check URL for direct application access
@@ -66,26 +72,26 @@
 </script>
 
 <template>
-	<div class="app-layout">
+	<div class="app-layout bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
 		<div
 			v-if="store.isFetchingVehicles && store.inventory.length === 0 && store.currentView !== 'onboarding'"
-			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
+			class="fixed inset-0 z-[100] bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center"
 		>
 			<div class="animate-pulse mb-6">
 				<img src="/logo_01.png" alt="Web2Autos" class="h-24 w-auto object-contain opacity-80" />
 			</div>
 			<div class="flex items-center gap-3">
 				<div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-				<span class="text-white font-medium tracking-wide">{{ store.loadingMessage }}</span>
+				<span class="text-slate-900 dark:text-white font-medium tracking-wide">{{ store.loadingMessage }}</span>
 			</div>
 		</div>
 
 		<div class="bg-layer">
-			<div class="orb orb-1"></div>
-			<div class="orb orb-2"></div>
+			<div class="orb orb-1 opacity-30 dark:opacity-100"></div>
+			<div class="orb orb-2 opacity-30 dark:opacity-100"></div>
 		</div>
 
-		<header class="header-glass sticky top-0 z-40 border-b border-white/10">
+		<header class="header-glass sticky top-0 z-40 border-b border-slate-200 dark:border-white/10">
 			<div class="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 				<div class="flex items-center gap-3 cursor-pointer group" @click="store.resetView">
 					<a href="https://web2autos.com" target="_blank" class="relative overflow-hidden rounded-lg">
@@ -104,8 +110,8 @@
 							@click="store.resetView"
 							:class="
 								store.currentView === 'calculator'
-									? 'text-white font-bold'
-									: 'text-slate-300 hover:text-white'
+									? 'text-indigo-600 dark:text-white font-bold'
+									: 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white'
 							"
 							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 							>Home</a
@@ -114,13 +120,20 @@
 							@click="store.goToContact"
 							:class="
 								store.currentView === 'contact'
-									? 'text-white font-bold'
-									: 'text-slate-300 hover:text-white'
+									? 'text-indigo-600 dark:text-white font-bold'
+									: 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white'
 							"
 							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 							>Contact</a
 						>
 					</nav>
+
+					<button
+						@click="store.toggleTheme"
+						class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-300 dark:hover:bg-white/20 transition-colors"
+					>
+						<i class="fas" :class="store.theme === 'dark' ? 'fa-sun' : 'fa-moon'"></i>
+					</button>
 
 					<button
 						v-if="store.currentView !== 'application'"
@@ -131,9 +144,11 @@
 					</button>
 
 					<div class="flex flex-col items-end mr-2">
-						<span class="text-[10px] text-gray-400 uppercase font-bold">Sales Hotline</span>
+						<span class="text-[10px] text-slate-500 dark:text-gray-400 uppercase font-bold"
+							>Sales Hotline</span
+						>
 						<span
-							class="text-white tracking-wide text-sm hover:text-indigo-400 transition-colors cursor-pointer"
+							class="text-slate-900 dark:text-white tracking-wide text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
 						>
 							<i class="fas fa-phone-alt mr-1 text-xs"></i> (844) 922-7227
 						</span>
@@ -152,7 +167,7 @@
 					<StepsSection />
 					<div class="mb-10">
 						<div
-							class="bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-white/10 overflow-hidden p-6"
+							class="bg-white dark:bg-slate-900/95 backdrop-blur-md rounded-xl shadow-xl border border-slate-200 dark:border-white/10 overflow-hidden p-6"
 						>
 							<div class="flex flex-col lg:flex-row gap-6">
 								<div class="w-full lg:w-1/3 xl:w-1/4">
@@ -184,7 +199,7 @@
 					>
 						<button
 							@click="showMobileVehFilters = true"
-							class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-white/20"
+							class="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-6 py-3 rounded-full shadow-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 active:scale-95 border border-slate-200 dark:border-white/20"
 						>
 							<i class="fas fa-filter"></i>
 							<span class="font-bold text-sm">Filters</span>
@@ -197,7 +212,7 @@
 					>
 						<button
 							@click="closeMobileModals"
-							class="w-full max-w-sm bg-slate-900 text-white px-6 py-3 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] hover:bg-slate-800 transition-all flex items-center justify-center gap-3 active:scale-95 border border-white/20"
+							class="w-full max-w-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-6 py-3 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-3 active:scale-95 border border-slate-200 dark:border-white/20"
 						>
 							<i class="fas fa-times text-lg"></i>
 							<span class="font-bold text-sm">Close</span>
@@ -205,7 +220,7 @@
 					</div>
 
 					<div
-						class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-[70] bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] rounded-t-3xl border-t border-white/50 p-4 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto xl:hidden"
+						class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-[70] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] rounded-t-3xl border-t border-slate-200 dark:border-white/50 p-4 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto xl:hidden"
 						:class="showMobileVehFilters ? 'translate-y-0' : 'translate-y-full'"
 					>
 						<VehicleFilters />
@@ -237,12 +252,12 @@
 		</main>
 
 		<footer
-			class="relative z-20 border-t border-white/10 bg-slate-900/60 backdrop-blur-xl text-slate-400 text-sm xl:mb-0"
+			class="relative z-20 border-t border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl text-slate-600 dark:text-slate-400 text-sm xl:mb-0 transition-colors duration-300"
 		>
 			<div class="max-w-[1800px] mx-auto px-4 py-12">
 				<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
 					<div class="col-span-1 md:col-span-1">
-						<div class="flex items-center gap-2 mb-4 text-white">
+						<div class="flex items-center gap-2 mb-4 text-slate-900 dark:text-white">
 							<a
 								href="https://web2autos.com"
 								target="_blank"
@@ -263,40 +278,42 @@
 					</div>
 
 					<div>
-						<h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Company</h4>
+						<h4 class="text-slate-900 dark:text-white font-bold mb-4 uppercase text-xs tracking-wider">
+							Company
+						</h4>
 						<ul class="space-y-2 mb-4">
 							<li>
 								<a
 									@click="store.resetView"
-									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
 									>Home</a
 								>
 							</li>
 							<li>
 								<a
 									@click="store.goToContact"
-									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
 									>Contact Us</a
 								>
 							</li>
 							<li>
 								<a
 									@click="store.goToPrivacy"
-									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
 									>Privacy Policy</a
 								>
 							</li>
 							<li>
 								<a
 									@click="store.goToDisclaimer"
-									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
 									>Disclaimer</a
 								>
 							</li>
 							<li>
 								<a
 									@click="store.goToTerms"
-									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
 									>Terms of Service</a
 								>
 							</li>
@@ -304,13 +321,15 @@
 					</div>
 
 					<div>
-						<h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Social</h4>
+						<h4 class="text-slate-900 dark:text-white font-bold mb-4 uppercase text-xs tracking-wider">
+							Social
+						</h4>
 						<ul class="space-y-2">
 							<li>
 								<a
 									href="https://www.facebook.com/profile.php?id=61580498513700"
 									target="_blank"
-									class="w-8 h-8 rounded bg-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"
+									class="w-8 h-8 rounded bg-slate-200 dark:bg-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"
 									><i class="fab fa-facebook-f"></i
 								></a>
 							</li>
@@ -318,7 +337,7 @@
 								<a
 									href="https://www.tiktok.com/@web2autos"
 									target="_blank"
-									class="w-8 h-8 rounded bg-white/5 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-colors"
+									class="w-8 h-8 rounded bg-slate-200 dark:bg-white/5 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-colors"
 									><i class="fab fa-tiktok"></i
 								></a>
 							</li>
@@ -326,29 +345,33 @@
 					</div>
 
 					<div>
-						<h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Contact</h4>
+						<h4 class="text-slate-900 dark:text-white font-bold mb-4 uppercase text-xs tracking-wider">
+							Contact
+						</h4>
 						<ul class="space-y-3">
 							<li class="flex items-start gap-3">
-								<i class="fas fa-map-marker-alt mt-1 text-indigo-500"></i>
+								<i class="fas fa-map-marker-alt mt-1 text-indigo-600 dark:text-indigo-500"></i>
 								<span>38623 FREMONT BLVD STE 185,<br />FREMONT, CA 94536</span>
 							</li>
 							<li class="flex items-center gap-3">
-								<i class="fas fa-phone text-indigo-500"></i>
+								<i class="fas fa-phone text-indigo-600 dark:text-indigo-500"></i>
 								<span>Direct: (408) 646-1313 (24/7)</span>
 							</li>
 							<li class="flex items-center gap-3">
-								<i class="fas fa-phone text-indigo-500"></i>
+								<i class="fas fa-phone text-indigo-600 dark:text-indigo-500"></i>
 								<span>Office: (844) 922-7227</span>
 							</li>
 							<li class="flex items-center gap-3">
-								<i class="fas fa-envelope text-indigo-500"></i>
+								<i class="fas fa-envelope text-indigo-600 dark:text-indigo-500"></i>
 								<span>info@web2autos.com</span>
 							</li>
 						</ul>
 					</div>
 				</div>
 
-				<div class="border-t border-white/10 pt-8 flex flex-col justify-center items-center gap-4">
+				<div
+					class="border-t border-slate-200 dark:border-white/10 pt-8 flex flex-col justify-center items-center gap-4"
+				>
 					<p>&copy; {{ new Date().getFullYear() }} Web2Autos.com LLC. All rights reserved.</p>
 					<p>
 						Web2Autos is a lead generation platform and is not a lender, broker, or auto dealership. We
@@ -360,11 +383,15 @@
 					</p>
 					<p>
 						Read our
-						<a class="cursor-pointer hover:text-indigo-400 transition-colors" @click="store.goToPrivacy"
+						<a
+							class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+							@click="store.goToPrivacy"
 							>Privacy Policy</a
 						>
 						and
-						<a class="cursor-pointer hover:text-indigo-400 transition-colors" @click="store.goToTerms"
+						<a
+							class="cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+							@click="store.goToTerms"
 							>Terms of Use</a
 						>
 						for more details.
@@ -383,10 +410,14 @@
 	}
 
 	.header-glass {
-		background: rgba(15, 23, 42, 0.6);
+		background: rgba(255, 255, 255, 0.8);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		transition: background-color 0.3s;
+	}
+
+	:global(.dark) .header-glass {
+		background: rgba(15, 23, 42, 0.6);
 	}
 
 	.mobile-bottom-sheet {

@@ -19,10 +19,10 @@
 </script>
 
 <template>
-	<el-card shadow="hover" class="mb-6">
+	<el-card shadow="hover" class="mb-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
 		<template #header>
 			<div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-				<div class="flex items-center text-lg font-bold text-gray-800">
+				<div class="flex items-center text-lg font-bold text-gray-800 dark:text-white">
 					<i class="fas fa-calculator text-blue-500 mr-2"></i>
 					<span>Auto Loan Calculator</span>
 				</div>
@@ -38,7 +38,7 @@
 			<!-- Conditional Input: Price vs Budget -->
 			<div class="space-y-1">
 				<div class="flex items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600 mr-2">
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300 mr-2">
 						{{ store.filterMode === 'price' ? 'Vehicle Selling Price' : 'Target Monthly Budget' }}
 					</span>
 					<el-tooltip
@@ -80,7 +80,7 @@
 			<!-- Down Payment -->
 			<div class="space-y-1">
 				<div class="flex items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600 mr-2">Cash Down Payment</span>
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300 mr-2">Cash Down Payment</span>
 					<el-tooltip content="Cash paid upfront to reduce the loan amount." placement="top">
 						<i class="fas fa-info-circle text-gray-400 cursor-help"></i>
 					</el-tooltip>
@@ -93,7 +93,7 @@
 			<!-- Interest Rate -->
 			<div class="space-y-1 md:col-span-2 lg:col-span-1">
 				<div class="flex justify-between items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600">Interest Rate (APR)</span>
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300">Interest Rate (APR)</span>
 					<span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded"
 						>{{ store.interestRate }}%</span
 					>
@@ -112,7 +112,7 @@
 			<!-- Loan Duration -->
 			<div class="space-y-1">
 				<div class="flex items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600 mr-2">Loan Duration</span>
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300 mr-2">Loan Duration</span>
 					<el-tooltip content="Length of the loan in months." placement="top">
 						<i class="fas fa-info-circle text-gray-400 cursor-help"></i>
 					</el-tooltip>
@@ -125,7 +125,7 @@
 			<!-- Trade-in Offer -->
 			<div class="space-y-1">
 				<div class="flex items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600 mr-2">Trade-in Offer</span>
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300 mr-2">Trade-in Offer</span>
 					<el-tooltip content="The amount offered for your old car." placement="top">
 						<i class="fas fa-info-circle text-gray-400 cursor-help"></i>
 					</el-tooltip>
@@ -138,7 +138,9 @@
 			<!-- Amount Owed -->
 			<div class="space-y-1">
 				<div class="flex items-center mb-1">
-					<span class="text-sm font-semibold text-gray-600 mr-2">Amount Owed on Trade-in</span>
+					<span class="text-sm font-semibold text-gray-600 dark:text-gray-300 mr-2"
+						>Amount Owed on Trade-in</span
+					>
 					<el-tooltip content="Remaining loan balance on your trade-in vehicle." placement="top">
 						<i class="fas fa-info-circle text-gray-400 cursor-help"></i>
 					</el-tooltip>

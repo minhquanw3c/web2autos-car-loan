@@ -20,18 +20,20 @@
 <template>
 	<div class="mb-24 py-8 animate-[fadeIn_0.8s_ease-out] overflow-hidden">
 		<div class="text-center mb-12">
-			<h2 class="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-md">Our Lending Partners</h2>
-			<p class="text-blue-200 text-lg max-w-2xl mx-auto">
+			<h2 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-3 drop-shadow-md">
+				Our Lending Partners
+			</h2>
+			<p class="text-slate-600 dark:text-blue-200 text-lg max-w-2xl mx-auto">
 				We work with top financial institutions to secure your loan
 			</p>
 		</div>
 
 		<div class="relative w-full">
 			<div
-				class="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"
+				class="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-slate-50 dark:from-slate-900 to-transparent z-10 pointer-events-none"
 			></div>
 			<div
-				class="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"
+				class="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-slate-50 dark:from-slate-900 to-transparent z-10 pointer-events-none"
 			></div>
 
 			<div class="flex w-max animate-marquee hover:[animation-play-state:paused]">

@@ -9,6 +9,7 @@ export const useLoanStore = defineStore('loan', () => {
 		'onboarding' | 'calculator' | 'application' | 'contact' | 'privacy' | 'terms' | 'disclaimer'
 	>('calculator')
 	const selectedVehicle = ref<Vehicle | null>(null)
+	const theme = ref<'dark' | 'light'>('dark')
 
 	// NEW: Dynamic Loading Message
 	const loadingMessage = ref('Loading Inventory...')
@@ -120,6 +121,15 @@ export const useLoanStore = defineStore('loan', () => {
 				isFetchingVehicles.value = false
 				processDeepLink()
 			}, 500)
+		}
+	}
+
+	const toggleTheme = () => {
+		theme.value = theme.value === 'dark' ? 'light' : 'dark'
+		if (theme.value === 'dark') {
+			document.documentElement.classList.add('dark')
+		} else {
+			document.documentElement.classList.remove('dark')
 		}
 	}
 
@@ -428,6 +438,7 @@ export const useLoanStore = defineStore('loan', () => {
 		interestRate,
 		loanTerm,
 		currentView,
+		theme,
 		selectedVehicle,
 		inventory,
 		isFetchingVehicles,
@@ -458,6 +469,7 @@ export const useLoanStore = defineStore('loan', () => {
 		uniqueDealers,
 
 		// Actions
+		toggleTheme,
 		startApplication,
 		resetView,
 		skipOnboarding,

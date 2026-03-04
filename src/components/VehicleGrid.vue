@@ -40,7 +40,7 @@
 		const count = store.paginatedVehicles.length
 		const total = store.totalVehicles
 
-		const highlight = (str: string) => `<span class="text-indigo-300 font-bold">${str}</span>`
+		const highlight = (str: string) => `<span class="text-indigo-600 dark:text-indigo-300 font-bold">${str}</span>`
 
 		// 1. Build primary description (e.g. "Used Toyota Camry vehicles")
 		const descParts: string[] = []
@@ -108,18 +108,20 @@
 		<div class="mb-6 relative z-30 flex-shrink-0">
 			<div class="flex items-center mb-2 ml-1">
 				<i class="fas fa-search text-indigo-400 mr-2"></i>
-				<label class="text-blue-100 font-bold text-sm uppercase tracking-wider">Search Inventory</label>
+				<label class="text-slate-700 dark:text-blue-100 font-bold text-sm uppercase tracking-wider"
+					>Search Inventory</label
+				>
 			</div>
 			<div class="relative group">
 				<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 					<i
-						class="fas fa-search text-gray-400 text-lg group-focus-within:text-indigo-500 transition-colors"
+						class="fas fa-search text-gray-400 text-lg group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-500 transition-colors"
 					></i>
 				</div>
 				<input
 					type="text"
 					v-model="store.searchQuery"
-					class="block w-full pl-12 pr-10 py-4 border border-gray-200 rounded-xl leading-5 bg-white text-slate-900 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-lg transition-all shadow-lg hover:shadow-xl hover:border-indigo-300"
+					class="block w-full pl-12 pr-10 py-4 border border-gray-200 dark:border-gray-700 rounded-xl leading-5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-lg transition-all shadow-lg hover:shadow-xl hover:border-indigo-300"
 					placeholder="Search vehicles by make, model, year..."
 				/>
 				<div
@@ -133,7 +135,9 @@
 		</div>
 
 		<div class="flex-shrink-0 flex flex-col md:flex-row justify-between items-end mb-4 px-1 gap-4">
-			<h3 class="text-xl md:text-2xl text-white drop-shadow-md flex items-center leading-tight">
+			<h3
+				class="text-xl md:text-2xl text-slate-800 dark:text-white drop-shadow-md flex items-center leading-tight"
+			>
 				<i class="fas fa-car-side mr-3 hidden sm:inline-block"></i>
 				<span v-html="headerText"></span>
 			</h3>
@@ -159,7 +163,10 @@
 					<el-option label="96 / page" :value="96" />
 				</el-select>
 
-				<span class="text-blue-200 text-sm font-medium whitespace-nowrap" v-if="store.totalVehicles > 0">
+				<span
+					class="text-slate-600 dark:text-blue-200 text-sm font-medium whitespace-nowrap"
+					v-if="store.totalVehicles > 0"
+				>
 					{{ store.paginatedVehicles.length }} / {{ store.totalVehicles }}
 				</span>
 			</div>
@@ -174,15 +181,15 @@
 				<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
 					<i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
 				</div>
-				<h3 class="text-xl font-bold text-white mb-2">Connection Error</h3>
-				<p class="text-gray-300 mb-6 text-center max-w-md">{{ store.fetchError }}</p>
+				<h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Connection Error</h3>
+				<p class="text-slate-600 dark:text-gray-300 mb-6 text-center max-w-md">{{ store.fetchError }}</p>
 				<el-button type="primary" size="large" @click="store.fetchInventory(true)">
 					<i class="fas fa-sync-alt mr-2"></i> Reload Inventory
 				</el-button>
 			</div>
 
 			<div v-else-if="store.filteredVehicles.length === 0">
-				<el-card shadow="never" class="border-0">
+				<el-card shadow="never" class="border-0 bg-transparent">
 					<el-empty
 						description="No vehicles found matching your criteria. Try adjusting the budget or price."
 					/>
@@ -204,7 +211,7 @@
 						<el-card
 							:body-style="{ padding: '0px' }"
 							shadow="hover"
-							class="vehicle-card h-full flex flex-col cursor-pointer"
+							class="vehicle-card h-full flex flex-col cursor-pointer bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
 							@click="openModal(car)"
 						>
 							<div class="relative h-48 overflow-hidden bg-gray-100">
@@ -228,8 +235,12 @@
 							</div>
 							<div class="p-5 flex flex-col flex-grow">
 								<div class="flex flex-col items-start mb-2">
-									<h4 class="text-lg text-gray-800 leading-tight">{{ car.dealer.name }}</h4>
-									<h4 class="font-bold text-lg text-gray-800 leading-tight">{{ car.heading }}</h4>
+									<h4 class="text-lg text-gray-800 dark:text-gray-200 leading-tight">
+										{{ car.dealer.name }}
+									</h4>
+									<h4 class="font-bold text-lg text-gray-800 dark:text-white leading-tight">
+										{{ car.heading }}
+									</h4>
 								</div>
 
 								<div class="flex items-baseline gap-2 mb-2">
@@ -268,13 +279,15 @@
 			v-if="store.paginatedVehicles.length > 0 && showScrollHint"
 			class="absolute bottom-16 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none flex justify-center items-end pb-6 z-20 lg:hidden transition-opacity duration-500"
 		>
-			<div class="flex flex-col items-center animate-bounce">
+			<div class="flex flex-col items-center animate-bounce bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
 				<span class="text-white text-sm font-bold drop-shadow-md mb-2">Scroll down to view more vehicles</span>
 			</div>
 		</div>
 
 		<div class="flex-shrink-0 flex justify-center pt-4" v-if="store.totalVehicles > 0">
-			<div class="flex justify-center bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-white/20">
+			<div
+				class="flex justify-center bg-white/50 dark:bg-white/10 backdrop-blur-sm rounded-xl p-2 border border-slate-200 dark:border-white/20"
+			>
 				<el-pagination
 					v-model:current-page="store.currentPage"
 					v-model:page-size="store.pageSize"
@@ -296,21 +309,34 @@
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-track {
-		background: rgba(255, 255, 255, 0.1);
+		background: rgba(0, 0, 0, 0.05);
 		border-radius: 3px;
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-thumb {
-		background: rgba(255, 255, 255, 0.5);
+		background: rgba(0, 0, 0, 0.2);
 		border-radius: 3px;
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-		background: rgba(255, 255, 255, 0.8);
+		background: rgba(0, 0, 0, 0.3);
 	}
 
 	.custom-scrollbar {
 		scrollbar-width: thin;
+		scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+	}
+
+	:global(.dark) .custom-scrollbar::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.1);
+	}
+	:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.5);
+	}
+	:global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.8);
+	}
+	:global(.dark) .custom-scrollbar {
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
 	}
 

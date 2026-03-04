@@ -36,7 +36,7 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">Media</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: If you upload images to the website, you should avoid uploading images with embedded
 					location data (EXIF GPS) included. Visitors to the website can download and extract any location
 					data from images on the website.
@@ -45,22 +45,22 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">Cookies</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: If you leave a comment on our site you may opt-in to saving your name, email address
 					and website in cookies. These are for your convenience so that you do not have to fill in your
 					details again when you leave another comment. These cookies will last for one year.
 				</p>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					If you visit our login page, we will set a temporary cookie to determine if your browser accepts
 					cookies. This cookie contains no personal data and is discarded when you close your browser.
 				</p>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					When you log in, we will also set up several cookies to save your login information and your screen
 					display choices. Login cookies last for two days, and screen options cookies last for a year. If you
 					select "Remember Me", your login will persist for two weeks. If you log out of your account, the
 					login cookies will be removed.
 				</p>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					If you edit or publish an article, an additional cookie will be saved in your browser. This cookie
 					includes no personal data and simply indicates the post ID of the article you just edited. It
 					expires after 1 day.
@@ -69,12 +69,12 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">Embedded content from other websites</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: Articles on this site may include embedded content (e.g. videos, images, articles,
 					etc.). Embedded content from other websites behaves in the exact same way as if the visitor has
 					visited the other website.
 				</p>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					These websites may collect data about you, use cookies, embed additional third-party tracking, and
 					monitor your interaction with that embedded content, including tracking your interaction with the
 					embedded content if you have an account and are logged in to that website.
@@ -83,7 +83,7 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">Who we share your data with</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: If you request a password reset, your IP address will be included in the reset
 					email.
 				</p>
@@ -91,12 +91,12 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">How long we retain your data</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: If you leave a comment, the comment and its metadata are retained indefinitely. This
 					is so we can recognize and approve any follow-up comments automatically instead of holding them in a
 					moderation queue.
 				</p>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					For users that register on our website (if any), we also store the personal information they provide
 					in their user profile. All users can see, edit, or delete their personal information at any time
 					(except they cannot change their username). Website administrators can also see and edit that
@@ -106,7 +106,7 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">What rights you have over your data</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: If you have an account on this site, or have left comments, you can request to
 					receive an exported file of the personal data we hold about you, including any data you have
 					provided to us. You can also request that we erase any personal data we hold about you. This does
@@ -116,7 +116,7 @@
 
 			<section>
 				<h3 class="text-2xl font-bold mb-4 text-indigo-400">Where your data is sent</h3>
-				<p class="text-slate-300 leading-relaxed">
+				<p class="text-slate-600 dark:text-slate-300 leading-relaxed">
 					Suggested text: Visitor comments may be checked through an automated spam detection service.
 				</p>
 			</section>
@@ -125,7 +125,7 @@
 		<div class="text-center mt-12">
 			<button
 				@click="store.resetView"
-				class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold transition-all border border-white/20 hover:border-white/40 active:scale-95"
+				class="inline-flex items-center gap-2 bg-slate-200 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-800 dark:text-white px-8 py-4 rounded-full font-bold transition-all border border-slate-300 dark:border-white/20 hover:border-slate-400 dark:hover:border-white/40 active:scale-95"
 			>
 				<i class="fas fa-arrow-left"></i> Back to Home
 			</button>

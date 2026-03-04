@@ -781,7 +781,7 @@
 			<div v-if="store.selectedVehicle" class="mb-6">
 				<el-card
 					shadow="never"
-					class="border border-blue-100 bg-blue-50/50 rounded-xl overflow-hidden"
+					class="border border-blue-100 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl overflow-hidden"
 					:body-style="{ padding: '0' }"
 				>
 					<div class="flex flex-col sm:flex-row">
@@ -795,33 +795,41 @@
 						<div class="p-6 flex flex-col justify-center w-full sm:w-2/3">
 							<div class="flex justify-between items-start">
 								<div>
-									<div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">
+									<div
+										class="text-sm text-blue-500 dark:text-blue-400 font-bold uppercase tracking-wider mb-1"
+									>
 										Selected Vehicle
 									</div>
-									<h3 class="text-2xl font-bold text-slate-800 mb-1">
+									<h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-1">
 										{{ store.selectedVehicle.year }} {{ store.selectedVehicle.make }}
 										{{ store.selectedVehicle.model }}
 									</h3>
 								</div>
 								<div class="text-right">
-									<div class="text-xs text-slate-500 uppercase font-bold">Total Price</div>
-									<div class="text-xl font-extrabold text-slate-700">
+									<div class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">
+										Total Price
+									</div>
+									<div class="text-xl font-extrabold text-slate-700 dark:text-slate-200">
 										{{ formatCurrency(store.selectedVehicle.price) }}
 									</div>
 								</div>
 							</div>
 
-							<div class="mt-4 pt-4 border-t border-blue-200/60 grid grid-cols-2 gap-4">
+							<div
+								class="mt-4 pt-4 border-t border-blue-200/60 dark:border-blue-700/60 grid grid-cols-2 gap-4"
+							>
 								<div>
-									<div class="text-xs text-slate-500 mb-1">Est. Monthly Payment</div>
-									<div class="text-2xl font-extrabold text-blue-600">
+									<div class="text-xs text-slate-500 dark:text-slate-400 mb-1">
+										Est. Monthly Payment
+									</div>
+									<div class="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
 										{{
 											formatCurrency(store.calculatePaymentForPrice(store.selectedVehicle.price))
 										}}
-										<span class="text-sm font-normal text-slate-500">/mo</span>
+										<span class="text-sm font-normal text-slate-500 dark:text-slate-400">/mo</span>
 									</div>
 								</div>
-								<div class="text-sm text-slate-600 space-y-1">
+								<div class="text-sm text-slate-600 dark:text-slate-300 space-y-1">
 									<div class="flex justify-between">
 										<span>Down Pmt:</span>
 										<span class="font-bold">{{ formatCurrency(store.downPayment) }}</span>
@@ -840,14 +848,19 @@
 			</div>
 
 			<div v-else class="mb-6">
-				<el-card shadow="never" class="border border-gray-200 bg-gray-50 rounded-xl p-6">
+				<el-card
+					shadow="never"
+					class="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-800 rounded-xl p-6"
+				>
 					<div class="flex items-center gap-4">
 						<div class="p-4 bg-indigo-100 rounded-full text-indigo-600">
 							<i class="fas fa-file-signature text-2xl"></i>
 						</div>
 						<div>
-							<h3 class="text-xl font-bold text-gray-800">General Financing Application</h3>
-							<p class="text-gray-500 text-sm">
+							<h3 class="text-xl font-bold text-gray-800 dark:text-white">
+								General Financing Application
+							</h3>
+							<p class="text-gray-500 dark:text-gray-400 text-sm">
 								You are applying for a pre-approval amount without a specific vehicle selected.
 							</p>
 						</div>
@@ -859,18 +872,18 @@
 				<template v-for="(group, gIndex) in schema.groups" :key="gIndex">
 					<el-card
 						shadow="never"
-						class="mb-4 rounded-xl border border-gray-200"
+						class="mb-4 rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-slate-800"
 						v-if="shouldShowGroup(group)"
 					>
 						<template #header>
-							<div class="font-bold text-slate-700 text-lg">{{ group.heading }}</div>
+							<div class="font-bold text-slate-700 dark:text-slate-200 text-lg">{{ group.heading }}</div>
 						</template>
 						<el-descriptions :column="1" border>
 							<el-descriptions-item
 								v-for="(input, iIndex) in group.inputs"
 								:key="iIndex"
 								:label="input.label"
-								label-class-name="font-semibold text-slate-600 bg-slate-50 w-1/3"
+								label-class-name="font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700 w-1/3"
 							>
 								<span
 									v-if="
@@ -919,8 +932,12 @@
 		<div>
 			<div class="flex justify-between items-center mb-6 px-2">
 				<div>
-					<h2 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{{ schema.formHeading }}</h2>
-					<p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
+					<h2 class="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white drop-shadow-md">
+						{{ schema.formHeading }}
+					</h2>
+					<p class="text-slate-600 dark:text-blue-200 mt-1 text-sm md:text-base">
+						{{ schema.formDescription }}
+					</p>
 				</div>
 				<div class="flex items-center gap-3">
 					<el-button v-if="isDev" type="warning" plain size="default" @click="fillTestData">
@@ -938,7 +955,11 @@
 					class="mb-6"
 					v-show="shouldShowGroup(group)"
 				>
-					<el-card shadow="hover" class="rounded-xl border-0 shadow-sm" :body-style="{ padding: '16px' }">
+					<el-card
+						shadow="hover"
+						class="rounded-xl border-0 shadow-sm bg-white dark:bg-slate-800"
+						:body-style="{ padding: '16px' }"
+					>
 						<template #header>
 							<div class="flex items-center">
 								<i class="fas fa-caret-right text-blue-500 mr-2"></i><span>{{ group.heading }}</span>

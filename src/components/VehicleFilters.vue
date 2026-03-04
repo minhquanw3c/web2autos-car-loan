@@ -5,7 +5,10 @@
 </script>
 
 <template>
-	<el-card shadow="hover" class="rounded-xl border border-white/50 bg-white/80 backdrop-blur-md">
+	<el-card
+		shadow="hover"
+		class="rounded-xl border border-slate-200 dark:border-white/50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md"
+	>
 		<template #header>
 			<div class="flex justify-between items-center">
 				<div class="flex items-center text-lg font-bold text-gray-800">
