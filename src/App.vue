@@ -12,6 +12,10 @@
 	import CustomerReviews from '@/components/CustomerReviews.vue'
 	import VideoPlayer from '@/components/VideoPlayer.vue'
 	import StepsSection from '@/components/StepsSection.vue'
+	import ContactPage from '@/components/ContactPage.vue'
+	import PrivacyPage from '@/components/PrivacyPage.vue'
+	import TermsPage from '@/components/TermsPage.vue'
+	import DisclaimerPage from '@/components/DisclaimerPage.vue'
 
 	const store = useLoanStore()
 	const showMobileVehFilters = ref(false)
@@ -49,6 +53,14 @@
 		const urlParams = new URLSearchParams(window.location.search)
 		if (urlParams.get('showApplication') === 'true') {
 			store.startApplication()
+		} else if (urlParams.get('showContact') === 'true') {
+			store.goToContact()
+		} else if (urlParams.get('showPrivacy') === 'true') {
+			store.goToPrivacy()
+		} else if (urlParams.get('showTerms') === 'true') {
+			store.goToTerms()
+		} else if (urlParams.get('showDisclaimer') === 'true') {
+			store.goToDisclaimer()
 		}
 	})
 </script>
@@ -87,6 +99,29 @@
 				</div>
 
 				<div class="flex items-center gap-6">
+					<nav class="hidden lg:flex items-center gap-6 mr-4">
+						<a
+							@click="store.resetView"
+							:class="
+								store.currentView === 'calculator'
+									? 'text-white font-bold'
+									: 'text-slate-300 hover:text-white'
+							"
+							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+							>Home</a
+						>
+						<a
+							@click="store.goToContact"
+							:class="
+								store.currentView === 'contact'
+									? 'text-white font-bold'
+									: 'text-slate-300 hover:text-white'
+							"
+							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+							>Contact</a
+						>
+					</nav>
+
 					<button
 						v-if="store.currentView !== 'application'"
 						@click="store.startApplication()"
@@ -182,6 +217,22 @@
 				<div v-else-if="store.currentView === 'application'" key="app">
 					<ConsultantForm />
 				</div>
+
+				<div v-else-if="store.currentView === 'contact'" key="contact">
+					<ContactPage />
+				</div>
+
+				<div v-else-if="store.currentView === 'privacy'" key="privacy">
+					<PrivacyPage />
+				</div>
+
+				<div v-else-if="store.currentView === 'terms'" key="terms">
+					<TermsPage />
+				</div>
+
+				<div v-else-if="store.currentView === 'disclaimer'" key="disclaimer">
+					<DisclaimerPage />
+				</div>
 			</transition>
 		</main>
 
@@ -212,21 +263,40 @@
 					</div>
 
 					<div>
-						<h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Legal</h4>
-						<ul class="space-y-2">
+						<h4 class="text-white font-bold mb-4 uppercase text-xs tracking-wider">Company</h4>
+						<ul class="space-y-2 mb-4">
 							<li>
 								<a
-									href="https://web2autos.com/disclaimer/"
-									target="_blank"
-									class="hover:text-indigo-400 transition-colors"
+									@click="store.resetView"
+									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									>Home</a
+								>
+							</li>
+							<li>
+								<a
+									@click="store.goToContact"
+									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									>Contact Us</a
+								>
+							</li>
+							<li>
+								<a
+									@click="store.goToPrivacy"
+									class="cursor-pointer hover:text-indigo-400 transition-colors"
+									>Privacy Policy</a
+								>
+							</li>
+							<li>
+								<a
+									@click="store.goToDisclaimer"
+									class="cursor-pointer hover:text-indigo-400 transition-colors"
 									>Disclaimer</a
 								>
 							</li>
 							<li>
 								<a
-									href="https://web2autos.com/__trashed/"
-									target="_blank"
-									class="hover:text-indigo-400 transition-colors"
+									@click="store.goToTerms"
+									class="cursor-pointer hover:text-indigo-400 transition-colors"
 									>Terms of Service</a
 								>
 							</li>
@@ -278,8 +348,27 @@
 					</div>
 				</div>
 
-				<div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-center items-center gap-4">
-					<p>&copy; {{ new Date().getFullYear() }} Web2Autos Inc. All rights reserved.</p>
+				<div class="border-t border-white/10 pt-8 flex flex-col justify-center items-center gap-4">
+					<p>&copy; {{ new Date().getFullYear() }} Web2Autos.com LLC. All rights reserved.</p>
+					<p>
+						Web2Autos is a lead generation platform and is not a lender, broker, or auto dealership. We
+						connect consumers with third-party dealerships and financing partners based on credit profile
+						and vehicle needs. All financing decisions, approvals, and vehicle transactions are made
+						exclusively by licensed dealers or lenders. Information submitted through this site is securely
+						encrypted, never sold, and only shared with authorized partners upon user consent. Submitting an
+						application authorizes a soft credit inquiry, which does not impact your credit score.
+					</p>
+					<p>
+						Read our
+						<a class="cursor-pointer hover:text-indigo-400 transition-colors" @click="store.goToPrivacy"
+							>Privacy Policy</a
+						>
+						and
+						<a class="cursor-pointer hover:text-indigo-400 transition-colors" @click="store.goToTerms"
+							>Terms of Use</a
+						>
+						for more details.
+					</p>
 				</div>
 			</div>
 		</footer>

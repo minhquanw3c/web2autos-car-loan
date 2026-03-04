@@ -5,7 +5,9 @@ import { BACKEND_API_URL } from '@/constants/utils'
 
 export const useLoanStore = defineStore('loan', () => {
 	// -- App State --
-	const currentView = ref<'onboarding' | 'calculator' | 'application'>('calculator')
+	const currentView = ref<
+		'onboarding' | 'calculator' | 'application' | 'contact' | 'privacy' | 'terms' | 'disclaimer'
+	>('calculator')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
 	// NEW: Dynamic Loading Message
@@ -126,6 +128,10 @@ export const useLoanStore = defineStore('loan', () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' })
 
 		const url = new URL(window.location.href)
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showDisclaimer')
 		if (url.searchParams.get('showApplication') !== 'true') {
 			url.searchParams.set('showApplication', 'true')
 			window.history.pushState({}, '', url.toString())
@@ -134,6 +140,70 @@ export const useLoanStore = defineStore('loan', () => {
 
 	const skipOnboarding = () => {
 		currentView.value = 'calculator'
+	}
+
+	const goToContact = () => {
+		currentView.value = 'contact'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('vehicle_id')
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showDisclaimer')
+		if (url.searchParams.get('showContact') !== 'true') {
+			url.searchParams.set('showContact', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
+	}
+
+	const goToPrivacy = () => {
+		currentView.value = 'privacy'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('vehicle_id')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showDisclaimer')
+		if (url.searchParams.get('showPrivacy') !== 'true') {
+			url.searchParams.set('showPrivacy', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
+	}
+
+	const goToTerms = () => {
+		currentView.value = 'terms'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('vehicle_id')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showDisclaimer')
+		if (url.searchParams.get('showTerms') !== 'true') {
+			url.searchParams.set('showTerms', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
+	}
+
+	const goToDisclaimer = () => {
+		currentView.value = 'disclaimer'
+		window.scrollTo({ top: 0, behavior: 'smooth' })
+
+		const url = new URL(window.location.href)
+		url.searchParams.delete('showApplication')
+		url.searchParams.delete('vehicle_id')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showTerms')
+		if (url.searchParams.get('showDisclaimer') !== 'true') {
+			url.searchParams.set('showDisclaimer', 'true')
+			window.history.pushState({}, '', url.toString())
+		}
 	}
 
 	const applyOnboarding = (budget: number | null, make: string, condition: string) => {
@@ -186,6 +256,10 @@ export const useLoanStore = defineStore('loan', () => {
 
 		const url = new URL(window.location.href)
 		url.searchParams.delete('showApplication')
+		url.searchParams.delete('showContact')
+		url.searchParams.delete('showPrivacy')
+		url.searchParams.delete('showTerms')
+		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('vehicle_id')
 		window.history.pushState({}, '', url.toString())
 	}
@@ -387,6 +461,10 @@ export const useLoanStore = defineStore('loan', () => {
 		startApplication,
 		resetView,
 		skipOnboarding,
+		goToContact,
+		goToPrivacy,
+		goToTerms,
+		goToDisclaimer,
 		applyOnboarding,
 		fetchInventory,
 		calculatePaymentForPrice,
