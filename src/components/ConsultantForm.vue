@@ -234,7 +234,7 @@
 	const saveSignature = (key: string) => {
 		const canvas = signatureRefs.value[key]
 		if (canvas) {
-			formData[key] = canvas.toDataURL()
+			formData[key] = canvas.toDataURL('image/png', 1.0)
 			if (errors[key]) delete errors[key]
 		}
 	}
