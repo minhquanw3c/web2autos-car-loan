@@ -14,7 +14,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const loadingMessage = ref('Loading Inventory...')
 
 	// -- Calculator Inputs --
-	const price = ref<number>(100000)
+	const price = ref<number>(30000)
 	const monthlyBudget = ref<number>(500)
 	const filterMode = ref<'price' | 'budget'>('price')
 	const sortOption = ref<string>('price-asc')

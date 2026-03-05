@@ -56,14 +56,14 @@
 		<header class="header-glass sticky top-0 z-40 border-b border-white/10">
 			<div class="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 				<div class="flex items-center gap-3 cursor-pointer group" @click="store.resetView">
-					<a href="https://web2autos.com" target="_blank" class="relative overflow-hidden rounded-lg">
+					<div class="relative overflow-hidden rounded-lg">
 						<img
 							src="/logo_01.png"
 							alt="Web2Autos Logo"
 							class="h-16 w-auto object-contain transform transition-transform duration-300 group-hover:scale-105 drop-shadow-md relative z-10"
 						/>
 						<div class="logo-shine"></div>
-					</a>
+					</div>
 				</div>
 
 				<div class="flex items-center gap-6">
@@ -158,19 +158,15 @@
 			<div class="max-w-[1800px] mx-auto px-4 py-12">
 				<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
 					<div class="col-span-1 md:col-span-1">
-						<div class="flex items-center gap-2 mb-4 text-white">
-							<a
-								href="https://web2autos.com"
-								target="_blank"
-								class="relative overflow-hidden rounded-lg group"
-							>
+						<div class="flex items-center gap-2 mb-4 text-white cursor-pointer" @click="store.resetView">
+							<div class="relative overflow-hidden rounded-lg group">
 								<img
 									src="/logo_01.png"
 									alt="Web2Autos"
 									class="h-16 w-auto object-contain relative z-10 transform transition-transform duration-300 group-hover:scale-105"
 								/>
 								<div class="logo-shine"></div>
-							</a>
+							</div>
 						</div>
 						<p class="leading-relaxed mb-4">
 							Get approved for your next car fast with Web2Autos. We connect you to trusted dealers work

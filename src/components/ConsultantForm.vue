@@ -111,7 +111,7 @@
 						format: '() years, () months',
 						components: { year: { type: 'number' }, month: { type: 'number' } }
 					},
-					{ label: 'Total Monthly Income or Annually', type: 'number', required: true }
+					{ label: 'Total Monthly Income', type: 'number', required: true }
 				]
 			},
 			{
@@ -956,10 +956,21 @@
 									>
 										<el-checkbox
 											v-model="formData[generateKey(group.heading, input.label)]"
-											:label="input.label"
 											size="large"
 											class="whitespace-normal h-auto py-2"
-										/>
+										>
+											<span v-if="input.label.includes('Privacy Policy')">
+												I agree to the
+												<a
+													href="?showPrivacy=true"
+													target="_blank"
+													class="text-indigo-600 hover:underline"
+													@click.stop
+													>Privacy Policy</a
+												>.
+											</span>
+											<span v-else>{{ input.label }}</span>
+										</el-checkbox>
 									</el-form-item>
 
 									<el-form-item
@@ -1019,6 +1030,7 @@
 											v-model="formData[generateKey(group.heading, input.label)]"
 											placeholder="Select..."
 											class="w-full"
+											:filterable="['City', 'State'].includes(input.label)"
 										>
 											<el-option
 												v-for="opt in resolveOptions(input.options)"
@@ -1070,6 +1082,7 @@
 														: 'text'
 											"
 											:placeholder="input.format || ''"
+											:show-password="input.type === 'password'"
 										>
 											<template
 												#prefix
