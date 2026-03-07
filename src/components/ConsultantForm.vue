@@ -46,8 +46,8 @@
 				inputs: [
 					{ label: 'Address Line 1', type: 'text', required: true },
 					{ label: 'Address Line 2', type: 'text', required: false },
-					{ label: 'City', type: 'select', required: true, options: 'US cities' },
-					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'City', type: 'text', required: true },
+					{ label: 'State', type: 'text', required: true },
 					{ label: 'Zip Code', type: 'text', required: true },
 					{
 						label: 'Housing Status',
@@ -70,8 +70,8 @@
 				inputs: [
 					{ label: 'Address Line 1', type: 'text', required: true },
 					{ label: 'Address Line 2', type: 'text', required: false },
-					{ label: 'City', type: 'select', required: true, options: 'US cities' },
-					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'City', type: 'text', required: true },
+					{ label: 'State', type: 'text', required: true },
 					{ label: 'Zip Code', type: 'text', required: true },
 					{
 						label: 'Time at previous address',
@@ -99,8 +99,8 @@
 				inputs: [
 					{ label: 'Address Line 1', type: 'text', required: true },
 					{ label: 'Address Line 2', type: 'text', required: false },
-					{ label: 'City', type: 'select', required: true, options: 'US cities' },
-					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'City', type: 'text', required: true },
+					{ label: 'State', type: 'text', required: true },
 					{ label: 'Zip Code', type: 'text', required: true },
 					{ label: 'Occupation/Job Title', type: 'text', required: true },
 					{ label: 'Work Phone', type: 'text', required: false },
@@ -120,8 +120,8 @@
 					{ label: 'Company Name', type: 'text', required: true },
 					{ label: 'Address Line 1', type: 'text', required: true },
 					{ label: 'Address Line 2', type: 'text', required: false },
-					{ label: 'City', type: 'select', required: true, options: 'US cities' },
-					{ label: 'State', type: 'select', required: true, options: 'US states' },
+					{ label: 'City', type: 'text', required: true },
+					{ label: 'State', type: 'text', required: true },
 					{ label: 'Zip Code', type: 'text', required: true },
 					{ label: 'Occupation/Job Title', type: 'text', required: true },
 					{
