@@ -91,20 +91,10 @@
 		const scrollContainer = document.getElementById('vehicle-scroll-container')
 		if (scrollContainer) scrollContainer.scrollTop = 0
 	}
-
-	const showScrollHint = ref(true)
-	const handleScroll = (e: Event) => {
-		const target = e.target as HTMLElement
-		if (target.scrollTop > 20) {
-			showScrollHint.value = false
-		} else {
-			showScrollHint.value = true
-		}
-	}
 </script>
 
 <template>
-	<div class="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)] relative" id="vehicle-grid-anchor">
+	<div class="flex flex-col lg:h-[calc(100vh-10rem)] relative" id="vehicle-grid-anchor">
 		<div class="mb-6 relative z-30 flex-shrink-0">
 			<div class="flex items-center mb-2 ml-1">
 				<i class="fas fa-search text-indigo-400 mr-2"></i>
@@ -167,8 +157,7 @@
 
 		<div
 			id="vehicle-scroll-container"
-			class="flex-1 overflow-y-scroll overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar pb-40 lg:pb-0"
-			@scroll="handleScroll"
+			class="flex-1 overflow-y-scroll overflow-x-hidden pr-2 lg:pb-0 custom-scrollbar lg:pb-0"
 		>
 			<div v-if="store.fetchError" class="flex flex-col items-center justify-center py-20">
 				<div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
@@ -261,15 +250,6 @@
 						</el-card>
 					</el-col>
 				</el-row>
-			</div>
-		</div>
-
-		<div
-			v-if="store.paginatedVehicles.length > 0 && showScrollHint"
-			class="absolute bottom-16 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none flex justify-center items-end pb-6 z-20 lg:hidden transition-opacity duration-500"
-		>
-			<div class="flex flex-col items-center animate-bounce">
-				<span class="text-white text-sm font-bold drop-shadow-md mb-2">Scroll down to view more vehicles</span>
 			</div>
 		</div>
 
