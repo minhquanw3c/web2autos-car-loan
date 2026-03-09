@@ -127,6 +127,80 @@
 			<p class="text-slate-400">Loading featured vehicles...</p>
 		</div>
 
+		<!-- Dealership Inquiry Section -->
+		<div class="mb-24 mx-4 md:mx-0">
+			<div
+				class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden flex flex-col-reverse lg:flex-row-reverse"
+			>
+				<!-- Background decoration -->
+				<div
+					class="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"
+				></div>
+				<div
+					class="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"
+				></div>
+
+				<div class="flex-1 space-y-6 p-8 md:p-12 relative z-10">
+					<div
+						class="inline-block bg-indigo-500/20 text-indigo-300 px-4 py-1 rounded-full text-sm font-bold mb-2 border border-indigo-500/30"
+					>
+						For Dealerships
+					</div>
+
+					<div class="text-slate-300 text-lg space-y-4 leading-relaxed">
+						<p>
+							If you're serious about growing your dealership’s sales and getting a true return on your
+							investment, <strong class="text-white">Web2Autos</strong> is your solution. We don’t just
+							send leads — we deliver qualified, ready-to-buy customers that drive more sales.
+						</p>
+						<p>
+							We offer many flexible programs, and we’re confident you’ll find one that’s a perfect fit
+							for your dealership’s needs.
+						</p>
+					</div>
+
+					<ul class="space-y-3 pt-2">
+						<li class="flex items-start gap-3">
+							<i class="fas fa-check-circle text-green-600 mt-1"></i>
+							<span class="text-slate-300">High-quality subprime and prime leads</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<i class="fas fa-check-circle text-green-600 mt-1"></i>
+							<span class="text-slate-300">Proven ROI — our dealer partners see results fast</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<i class="fas fa-check-circle text-green-600 mt-1"></i>
+							<span class="text-slate-300"
+								>Custom programs designed to match your dealership’s goals</span
+							>
+						</li>
+					</ul>
+
+					<div class="pt-6 border-t border-slate-200 mt-6">
+						<p class="text-slate-300 font-medium mb-6 flex items-center gap-2">
+							Stop wasting money on low-quality leads. Partner with Web2Autos and watch your bottom line
+							grow.
+						</p>
+						<button
+							@click="store.goToDealershipInquiry"
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-105 flex items-center justify-center gap-3 text-lg w-full sm:w-auto"
+						>
+							Become a Partner <i class="fas fa-arrow-right"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="w-full lg:w-1/2 relative min-h-[300px] lg:min-h-full">
+					<img
+						src="/ildar-garifullin-TX2tgF4aFhI-unsplash.jpg"
+						alt="Dealer Collaboration"
+						class="absolute inset-0 w-full h-full object-cover"
+						loading="lazy"
+					/>
+				</div>
+			</div>
+		</div>
+
 		<CustomerReviews />
 		<VideoPlayer />
 		<StepsSection />

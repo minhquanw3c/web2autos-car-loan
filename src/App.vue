@@ -9,6 +9,8 @@
 	import PrivacyPage from '@/components/PrivacyPage.vue'
 	import TermsPage from '@/components/TermsPage.vue'
 	import DisclaimerPage from '@/components/DisclaimerPage.vue'
+	import DealershipInquiryPage from '@/components/DealershipInquiryPage.vue'
+	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
 
@@ -29,24 +31,18 @@
 			store.goToDisclaimer()
 		} else if (urlParams.get('showInventory') === 'true' || urlParams.get('vehicle_id')) {
 			store.goToInventory()
+		} else if (urlParams.get('showDealershipInquiry') === 'true') {
+			store.goToDealershipInquiry()
 		}
 	})
 </script>
 
 <template>
 	<div class="app-layout bg-slate-900 transition-colors duration-300">
-		<div
-			v-if="store.isFetchingVehicles && store.inventory.length === 0 && store.currentView !== 'onboarding'"
-			class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
-		>
-			<div class="animate-pulse mb-6">
-				<img src="/logo_01.png" alt="Web2Autos" class="h-24 w-auto object-contain opacity-80" />
-			</div>
-			<div class="flex items-center gap-3">
-				<div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-				<span class="text-white font-medium tracking-wide">{{ store.loadingMessage }}</span>
-			</div>
-		</div>
+		<FullScreenLoader
+			:visible="store.isFetchingVehicles && store.inventory.length === 0 && store.currentView !== 'onboarding'"
+			:text="store.loadingMessage"
+		/>
 
 		<div class="bg-layer">
 			<div class="orb orb-1 opacity-100"></div>
@@ -98,6 +94,16 @@
 							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 							>Contact</a
 						>
+						<a
+							@click="store.goToDealershipInquiry"
+							:class="
+								store.currentView === 'dealership-inquiry'
+									? 'text-white font-bold'
+									: 'text-slate-300 hover:text-white'
+							"
+							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+							>For Dealers</a
+						>
 					</nav>
 
 					<button
@@ -148,6 +154,10 @@
 
 				<div v-else-if="store.currentView === 'disclaimer'" key="disclaimer">
 					<DisclaimerPage />
+				</div>
+
+				<div v-else-if="store.currentView === 'dealership-inquiry'" key="dealership-inquiry">
+					<DealershipInquiryPage />
 				</div>
 			</transition>
 		</main>
