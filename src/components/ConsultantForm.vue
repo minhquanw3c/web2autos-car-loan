@@ -1,13 +1,15 @@
 <script setup lang="ts">
 	import { ref, reactive, watch } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
-	import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+	import { ElMessage, ElMessageBox } from 'element-plus'
 	import type { FormSchema, FormInput } from '@/types'
 	import { BACKEND_API_URL } from '@/constants/utils'
+	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
 	const summaryVisible = ref(false)
 	const isDev = import.meta.env.DEV // Check for Dev environment
+	const isSubmitting = ref(false)
 
 	// Helper for currency formatting
 	const formatCurrency = (val: number) => {
@@ -649,24 +651,7 @@
 	}
 
 	const confirmSubmission = async () => {
-		const svg = `
-	       <path class="path" d="
-	         M 30 15
-	         L 28 17
-	         M 25.61 25.61
-	         A 15 15, 0, 0, 1, 15 30
-	         A 15 15, 0, 1, 1, 27.99 7.5
-	         L 15 15
-	       " style="stroke-width: 4px; fill: none;"/>
-	     `
-
-		const loading = ElLoading.service({
-			lock: true,
-			text: 'Processing your secure application...',
-			background: 'rgba(0, 0, 0, 0.9)',
-			svg: svg,
-			svgViewBox: '-10, -10, 50, 50'
-		})
+		isSubmitting.value = true
 
 		try {
 			const response = await fetch(`${BACKEND_API_URL}/api/application`, {
@@ -698,6 +683,7 @@
 				throw new Error(result.error || 'Server rejected request')
 			}
 
+			isSubmitting.value = false
 			summaryVisible.value = false
 
 			await ElMessageBox.alert(
@@ -720,11 +706,11 @@
 					showClose: false,
 					callback: () => {
 						store.resetView()
-						loading.close()
 					}
 				}
 			)
 		} catch (e) {
+			isSubmitting.value = false
 			await ElMessageBox.alert(
 				`
 	           <div class="text-center">
@@ -742,10 +728,7 @@
 					confirmButtonClass: 'bg-red-600 border-red-600 w-full font-bold hover:bg-red-700',
 					center: true,
 					customClass: 'custom-message-box',
-					showClose: false,
-					callback: () => {
-						loading.close()
-					}
+					showClose: false
 				}
 			)
 		}
@@ -767,6 +750,7 @@
 </script>
 
 <template>
+	<FullScreenLoader :visible="isSubmitting" text="Processing your secure application..." />
 	<div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
 		<el-dialog
 			v-model="summaryVisible"
