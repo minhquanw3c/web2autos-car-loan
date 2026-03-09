@@ -750,7 +750,9 @@
 </script>
 
 <template>
-	<FullScreenLoader :visible="isSubmitting" text="Processing your secure application..." />
+	<Teleport to="body">
+		<FullScreenLoader :visible="isSubmitting" text="Processing your secure application..." />
+	</Teleport>
 	<div class="max-w-5xl mx-auto my-4 md:my-8 animate-[fadeIn_0.5s_ease-out]">
 		<el-dialog
 			v-model="summaryVisible"

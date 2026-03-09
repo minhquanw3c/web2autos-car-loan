@@ -157,7 +157,9 @@
 </script>
 
 <template>
-	<FullScreenLoader :visible="isSubmitting" text="Submitting Inquiry..." />
+	<Teleport to="body">
+		<FullScreenLoader :visible="isSubmitting" text="Submitting Inquiry..." />
+	</Teleport>
 	<div class="max-w-[1600px] mx-auto my-8 px-4 sm:px-6 lg:px-8 animate-[fadeIn_0.5s_ease-out]">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 			<!-- Left Column: Information -->
