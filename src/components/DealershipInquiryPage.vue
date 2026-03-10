@@ -1,8 +1,10 @@
 <script setup lang="ts">
 	import { reactive, ref } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
+	import axios from 'axios'
 	import { ElMessage } from 'element-plus'
 	import { DealershipInquirySchema } from '@/schemas/dealershipInquiry'
+	import { BACKEND_API_URL } from '@/constants/utils'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
@@ -143,11 +145,8 @@
 
 		isSubmitting.value = true
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 3000))
-
-			// ElMessage.success('Inquiry submitted successfully! We will contact you shortly.')
-			ElMessage.error('Failed to submit inquiry. Please try again.')
+			await axios.post(`${BACKEND_API_URL}/api/dealership-inquiry`, form)
+			ElMessage.success('Inquiry submitted successfully! We will contact you shortly.')
 		} catch (error) {
 			ElMessage.error('Failed to submit inquiry. Please try again.')
 		} finally {
