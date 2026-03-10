@@ -35,6 +35,13 @@
 		} else if (urlParams.get('showDealershipInquiry') === 'true') {
 			store.goToDealershipInquiry()
 		}
+
+		// Embed Chat Widget
+		const script = document.createElement('script')
+		script.src = 'https://beta.leadconnectorhq.com/loader.js'
+		script.setAttribute('data-resources-url', 'https://beta.leadconnectorhq.com/chat-widget/loader.js')
+		script.setAttribute('data-widget-id', '68b77d83c08a475db08c6e02')
+		document.body.appendChild(script)
 	})
 </script>
 
