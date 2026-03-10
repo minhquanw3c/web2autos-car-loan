@@ -63,6 +63,13 @@
 				<i class="fas fa-car"></i>
 			</button>
 			<button
+				@click="store.startApplication"
+				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
+				title="Apply Now"
+			>
+				<i class="fas fa-file-signature"></i>
+			</button>
+			<button
 				@click="store.goToContact"
 				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
 				title="Contact"
