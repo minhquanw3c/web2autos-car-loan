@@ -44,6 +44,40 @@
 			:text="store.loadingMessage"
 		/>
 
+		<!-- Mobile Navigation Menu -->
+		<div
+			class="fixed right-0 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-4 p-3 bg-slate-900/90 backdrop-blur-lg rounded-l-2xl border-y border-l border-white/20 shadow-2xl lg:hidden"
+		>
+			<button
+				@click="store.resetView"
+				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
+				title="Home"
+			>
+				<i class="fas fa-home"></i>
+			</button>
+			<button
+				@click="store.goToInventory"
+				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
+				title="Inventory"
+			>
+				<i class="fas fa-car"></i>
+			</button>
+			<button
+				@click="store.goToContact"
+				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
+				title="Contact"
+			>
+				<i class="fas fa-envelope"></i>
+			</button>
+			<button
+				@click="store.goToDealershipInquiry"
+				class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-lg border border-indigo-500/30"
+				title="For Dealers"
+			>
+				<i class="fas fa-handshake"></i>
+			</button>
+		</div>
+
 		<div class="bg-layer">
 			<div class="orb orb-1 opacity-100"></div>
 			<div class="orb orb-2 opacity-100"></div>
