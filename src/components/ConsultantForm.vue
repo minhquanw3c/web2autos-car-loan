@@ -388,7 +388,7 @@
 			const timeKey = 'workaddress_timeofcurrentemployment'
 			const timeData = formData[timeKey]
 			const year = timeData && timeData.year !== '' ? Number(timeData.year) : 0
-			return year < 1
+			return year < 2
 		}
 		return true
 	}
