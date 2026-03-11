@@ -27,7 +27,7 @@
 				inputs: [
 					{ label: 'First Name', type: 'text', required: true },
 					{ label: 'Last Name', type: 'text', required: true },
-					{ label: 'SSN', type: 'password', required: true },
+					{ label: 'SSN', type: 'password', required: true, format: 'XXX-XX-XXXX', masked: true },
 					{
 						label: 'Date of birth',
 						type: 'text',
@@ -335,6 +335,27 @@
 		return `${prefix}_${suffix}`
 	}
 
+	const handleMaskInput = (val: string, key: string, input: FormInput) => {
+		if (!input.masked) return
+
+		const digits = val.replace(/\D/g, '')
+		let formatted = digits
+
+		if (input.label === 'Phone') {
+			if (digits.length === 0) formatted = ''
+			else if (digits.length <= 3) formatted = `(${digits}`
+			else if (digits.length <= 6) formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+			else formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+		} else if (input.label === 'SSN') {
+			if (digits.length === 0) formatted = ''
+			else if (digits.length <= 3) formatted = digits
+			else if (digits.length <= 5) formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`
+			else formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5, 9)}`
+		}
+
+		formData[key] = formatted
+	}
+
 	const setItemRef = (el: any, key: string) => {
 		if (el) itemRefs[key] = el
 	}
@@ -384,7 +405,7 @@
 				if (input.type === 'checkbox') val = false
 				// Always populate Down Payment from store if available
 				if (input.label.includes('Down Payment')) {
-					val = store.downPayment
+					val = 0
 				}
 				formData[key] = val
 			}
@@ -598,6 +619,10 @@
 					} else {
 						formData[key] = data[key]
 					}
+					// Apply mask to filled data
+					if (input.masked && typeof formData[key] === 'string') {
+						handleMaskInput(formData[key], key, input)
+					}
 				} else {
 					// Default required checkboxes
 					if (input.type === 'checkbox' && input.required) {
@@ -693,7 +718,7 @@
 	                       <i class="fas fa-check text-4xl text-green-600"></i>
 	                   </div>
 	                   <h3 class="text-2xl font-bold text-gray-800 mb-2">Success!</h3>
-	                   <p class="text-gray-600">Your application has been securely transmitted. <br>Ref ID: #APP-${Math.floor(Math.random() * 10000)}</p>
+	                   <p class="text-gray-600">Your application has been securely transmitted. <br></p>
 	               </div>
 	               `,
 				{
@@ -1069,6 +1094,10 @@
 											"
 											:placeholder="input.format || ''"
 											:show-password="input.type === 'password'"
+											@input="
+												(val: string) =>
+													handleMaskInput(val, generateKey(group.heading, input.label), input)
+											"
 										>
 											<template
 												#prefix
