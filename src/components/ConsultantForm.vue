@@ -356,6 +356,16 @@
 		formData[key] = formatted
 	}
 
+	const validatePhone = (val: string) => {
+		const digits = val.replace(/\D/g, '')
+		return digits.length === 10
+	}
+
+	const validateSSN = (val: string) => {
+		const digits = val.replace(/\D/g, '')
+		return digits.length === 9
+	}
+
 	const setItemRef = (el: any, key: string) => {
 		if (el) itemRefs[key] = el
 	}
@@ -365,7 +375,7 @@
 			const timeKey = 'residence_timeatcurrentaddress'
 			const timeData = formData[timeKey]
 			const year = timeData && timeData.year !== '' ? Number(timeData.year) : 0
-			return year < 1
+			return year < 2
 		}
 		const status = formData['employment_employmentstatus']
 		const isEmployed = status === 'Employed' || status === 'Self-employed'
@@ -478,6 +488,12 @@
 				if (!errorMsg && input.type === 'email' && formData[key]) {
 					if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData[key]))
 						errorMsg = 'Please enter a valid email address.'
+				}
+				if (!errorMsg && input.label === 'Phone' && formData[key]) {
+					if (!validatePhone(formData[key])) errorMsg = 'Please enter a valid 10-digit phone number.'
+				}
+				if (!errorMsg && input.label === 'SSN' && formData[key]) {
+					if (!validateSSN(formData[key])) errorMsg = 'Please enter a valid 9-digit SSN.'
 				}
 				if (errorMsg) {
 					errors[key] = errorMsg
