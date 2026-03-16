@@ -39,6 +39,7 @@
 	const headerText = computed(() => {
 		const count = store.paginatedVehicles.length
 		const total = store.totalVehicles
+		const totalPages = Math.max(1, Math.ceil(total / store.pageSize))
 
 		const highlight = (str: string) => `<span class="text-indigo-300 font-bold">${str}</span>`
 
@@ -55,7 +56,7 @@
 
 		const vehicleNoun = descParts.length > 0 ? descParts.join(' ') + ' vehicles' : 'vehicles'
 
-		let text = `Showing ${count}/${total} ${vehicleNoun}`
+		let text = `Showing ${count} of ${total} ${vehicleNoun} (Page ${store.currentPage} of ${totalPages})`
 
 		if (store.searchQuery && store.searchQuery.trim()) {
 			text += ` matching "${highlight(store.searchQuery)}"`
@@ -83,13 +84,40 @@
 
 	const handlePageChange = (val: number) => {
 		store.currentPage = val
-		const scrollContainer = document.getElementById('vehicle-scroll-container')
-		if (scrollContainer) scrollContainer.scrollTop = 0
+
+		const innerScroll = document.getElementById('vehicle-scroll-container')
+		if (innerScroll) {
+			innerScroll.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+
+		const anchor = document.getElementById('vehicle-grid-anchor')
+		if (anchor) {
+			const headerOffset = 100 // Account for sticky header
+			const elementPosition = anchor.getBoundingClientRect().top
+			const offsetPosition = elementPosition + window.scrollY - headerOffset
+
+			window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+		} else {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}
 	}
 
 	const handlePageSizeChange = () => {
-		const scrollContainer = document.getElementById('vehicle-scroll-container')
-		if (scrollContainer) scrollContainer.scrollTop = 0
+		const innerScroll = document.getElementById('vehicle-scroll-container')
+		if (innerScroll) {
+			innerScroll.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+
+		const anchor = document.getElementById('vehicle-grid-anchor')
+		if (anchor) {
+			const headerOffset = 100 // Account for sticky header
+			const elementPosition = anchor.getBoundingClientRect().top
+			const offsetPosition = elementPosition + window.scrollY - headerOffset
+
+			window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+		} else {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}
 	}
 </script>
 

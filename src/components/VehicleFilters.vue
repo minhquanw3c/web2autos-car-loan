@@ -2,6 +2,26 @@
 	import { useLoanStore } from '@/stores/loan'
 
 	const store = useLoanStore()
+	const emit = defineEmits(['action'])
+
+	const handleAction = () => {
+		emit('action')
+
+		const innerScroll = document.getElementById('vehicle-scroll-container')
+		if (innerScroll) {
+			innerScroll.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+
+		const anchor = document.getElementById('vehicle-grid-anchor')
+		if (anchor) {
+			const headerOffset = 100 // Account for sticky header
+			const elementPosition = anchor.getBoundingClientRect().top
+			const offsetPosition = elementPosition + window.scrollY - headerOffset
+			window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+		} else {
+			window.scrollTo({ top: 0, behavior: 'smooth' })
+		}
+	}
 </script>
 
 <template>
@@ -25,7 +45,7 @@
 			<div class="block sm:hidden space-y-4 border-b border-gray-200 pb-4">
 				<div class="space-y-1">
 					<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Sort Results</label>
-					<el-select v-model="store.sortOption" placeholder="Sort by" class="w-full">
+					<el-select v-model="store.sortOption" placeholder="Sort by" class="w-full" @change="handleAction">
 						<el-option label="Price: Low to High" value="price-asc" />
 						<el-option label="Price: High to Low" value="price-desc" />
 						<el-option label="Year: Newest First" value="year-desc" />
@@ -35,7 +55,7 @@
 
 				<div class="space-y-1">
 					<label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Items Per Page</label>
-					<el-select v-model="store.pageSize" placeholder="Show" class="w-full">
+					<el-select v-model="store.pageSize" placeholder="Show" class="w-full" @change="handleAction">
 						<el-option label="12 / page" :value="12" />
 						<el-option label="24 / page" :value="24" />
 						<el-option label="48 / page" :value="48" />

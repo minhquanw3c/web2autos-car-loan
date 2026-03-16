@@ -56,7 +56,7 @@
 			<aside
 				class="hidden xl:block w-[280px] flex-shrink-0 sticky top-24 h-[calc(100vh-10rem)] overflow-y-auto custom-scrollbar rounded-xl"
 			>
-				<VehicleFilters />
+				<VehicleFilters @action="closeMobileModals" />
 			</aside>
 
 			<div class="w-full flex-1 pb-32 lg:pb-0 min-w-0" ref="vehicleGridRef">
@@ -96,7 +96,7 @@
 			class="mobile-bottom-sheet fixed bottom-0 left-0 right-0 z-[70] bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] rounded-t-3xl border-t border-white/50 p-4 transition-transform duration-300 ease-in-out max-h-[85vh] overflow-y-auto xl:hidden"
 			:class="showMobileVehFilters ? 'translate-y-0' : 'translate-y-full'"
 		>
-			<VehicleFilters />
+			<VehicleFilters @action="closeMobileModals" />
 			<div class="h-16"></div>
 		</div>
 	</div>
