@@ -142,6 +142,13 @@
 					{ label: 'Estimated Credit Score', type: 'number', required: true },
 					{ label: 'Planned Down Payment', type: 'number', required: true },
 					{
+						label: 'What kind of car are you looking to buy right now? Or special request.',
+						type: 'textarea',
+						required: false,
+						maxLength: 150,
+						showWordLimit: true
+					} as any,
+					{
 						label: 'I authorize the dealership to run my credit report.',
 						type: 'checkbox',
 						default: false,
@@ -457,6 +464,7 @@
 		const l = input.label.toLowerCase()
 		if (input.type === 'checkbox') return { span: 24 }
 		if (input.type === 'signature') return { span: 24 }
+		if (input.type === 'textarea') return { span: 24 }
 		if (l === 'current address' || l === 'address') return { xs: 24, sm: 24, md: 24, lg: 24 }
 		return { xs: 24, sm: 12, md: 12, lg: 8 }
 	}
@@ -495,6 +503,15 @@
 				if (!errorMsg && input.label === 'SSN' && formData[key]) {
 					if (!validateSSN(formData[key])) errorMsg = 'Please enter a valid 9-digit SSN.'
 				}
+				if (
+					!errorMsg &&
+					(input as any).maxLength &&
+					formData[key] &&
+					String(formData[key]).length > (input as any).maxLength
+				) {
+					errorMsg = `Cannot exceed ${(input as any).maxLength} characters.`
+				}
+
 				if (errorMsg) {
 					errors[key] = errorMsg
 					if (!firstErrorKey) firstErrorKey = key
@@ -1106,10 +1123,15 @@
 													? 'number'
 													: input.type === 'password'
 														? 'password'
-														: 'text'
+														: input.type === 'textarea'
+															? 'textarea'
+															: 'text'
 											"
 											:placeholder="input.format || ''"
 											:show-password="input.type === 'password'"
+											:maxlength="(input as any).maxLength"
+											:show-word-limit="(input as any).showWordLimit"
+											:rows="input.type === 'textarea' ? 5 : undefined"
 											@input="
 												(val: string) =>
 													handleMaskInput(val, generateKey(group.heading, input.label), input)
