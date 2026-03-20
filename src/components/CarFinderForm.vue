@@ -16,6 +16,7 @@
 
 	const summaryVisible = ref(false)
 	const isSubmitting = ref(false)
+	const isDev = import.meta.env.DEV
 
 	const store = useLoanStore()
 
@@ -300,6 +301,161 @@
 		return firstErrorKey
 	}
 
+	const testDataSets = [
+		{
+			name: 'Practical Commuter',
+			data: {
+				personal_firstname: 'John',
+				personal_lastname: 'Doe',
+				personal_email: 'john.doe@example.com',
+				personal_phone: '(555) 123-4567',
+				personal_zipcode: '90210',
+				vehicle_condition: 'Used',
+				vehicle_bodystyle: 'Sedan',
+				vehicle_make: 'Toyota',
+				vehicle_model: 'Camry',
+				vehicle_trimpackage: 'LE',
+				vehicle_transmission: 'Automatic',
+				vehicle_minhighwaympg: '30',
+				vehicle_maxmileage: '50,000',
+				vehicle_yearmin: '2018',
+				vehicle_yearmax: '2022',
+				vehicle_preferredexteriorcolor: 'Silver',
+				vehicle_preferredinteriorcolor: 'Black',
+				vehicle_minprice: 'Any',
+				vehicle_maxprice: formatCurrency(20000),
+				vehicle_maxmonthlypayment: formatCurrency(350),
+				vehicle_engine: '4-Cylinder',
+				vehicle_drivetrain: 'FWD',
+				vehicle_fueltype: 'Gasoline',
+				vehicle_seats: '5+',
+				vehicle_seatingrows: '2',
+				vehicle_doors: '4',
+				features_interiorfeatures: ['Leather Seats'],
+				features_exteriorfeatures: ['Sunroof/Moonroof'],
+				features_entertainmentfeatures: ['Bluetooth', 'Apple CarPlay'],
+				features_safetyfeatures: ['Back Up Camera'],
+				additional_whendoyouplantopurchasethisvehicle: 'Within a month',
+				additional_comments: 'Looking for something reliable and fuel efficient.'
+			}
+		},
+		{
+			name: 'Family SUV',
+			data: {
+				personal_firstname: 'Jane',
+				personal_lastname: 'Smith',
+				personal_email: 'jane.smith@example.com',
+				personal_phone: '(555) 987-6543',
+				personal_zipcode: '10001',
+				vehicle_condition: 'New',
+				vehicle_bodystyle: 'SUV',
+				vehicle_make: 'Honda',
+				vehicle_model: 'Highlander',
+				vehicle_trimpackage: 'Any',
+				vehicle_transmission: 'Automatic',
+				vehicle_minhighwaympg: 'Any',
+				vehicle_maxmileage: '10,000',
+				vehicle_yearmin: '2023',
+				vehicle_yearmax: '2024',
+				vehicle_preferredexteriorcolor: 'White',
+				vehicle_preferredinteriorcolor: 'Beige',
+				vehicle_minprice: formatCurrency(30000),
+				vehicle_maxprice: formatCurrency(50000),
+				vehicle_maxmonthlypayment: formatCurrency(700),
+				vehicle_engine: 'V6',
+				vehicle_drivetrain: 'AWD',
+				vehicle_fueltype: 'Gas/Electric Hybrid',
+				vehicle_seats: '7+',
+				vehicle_seatingrows: '3',
+				vehicle_doors: '4',
+				features_interiorfeatures: ['Third Row Seat', 'Rear Air'],
+				features_exteriorfeatures: ['Roof Rack'],
+				features_entertainmentfeatures: ['TV/DVD'],
+				features_safetyfeatures: ['Blindspot Monitoring', 'Parking Sensors'],
+				additional_whendoyouplantopurchasethisvehicle: 'Within the next 2 months',
+				additional_comments: 'Need space for 3 kids and a dog.'
+			}
+		},
+		{
+			name: 'Work Truck',
+			data: {
+				personal_firstname: 'Bob',
+				personal_lastname: 'Builder',
+				personal_email: 'bob@example.com',
+				personal_phone: '(555) 555-5555',
+				personal_zipcode: '75001',
+				vehicle_condition: 'Used',
+				vehicle_bodystyle: 'Pickup Truck',
+				vehicle_make: 'Ford',
+				vehicle_model: 'F-150',
+				vehicle_trimpackage: 'XLT',
+				vehicle_transmission: 'Any',
+				vehicle_minhighwaympg: 'Any',
+				vehicle_maxmileage: '100,000',
+				vehicle_yearmin: '2015',
+				vehicle_yearmax: '2024',
+				vehicle_preferredexteriorcolor: 'Black',
+				vehicle_preferredinteriorcolor: 'Gray',
+				vehicle_minprice: 'Any',
+				vehicle_maxprice: formatCurrency(40000),
+				vehicle_maxmonthlypayment: formatCurrency(600),
+				vehicle_engine: 'V8',
+				vehicle_drivetrain: '4X4',
+				vehicle_fueltype: 'Gasoline',
+				vehicle_seats: '5+',
+				vehicle_seatingrows: '2',
+				vehicle_doors: '4',
+				features_interiorfeatures: ['Extra Cab'],
+				features_exteriorfeatures: ['Bedliner', 'Tow Hitch'],
+				features_entertainmentfeatures: ['AM/FM'],
+				features_safetyfeatures: ['Traction Control'],
+				additional_whendoyouplantopurchasethisvehicle: 'Within 2 weeks',
+				additional_comments: 'Must have towing capacity of at least 8000 lbs.'
+			}
+		}
+	]
+
+	const currentTestIndex = ref(0)
+
+	const fillTestData = () => {
+		const testCase = testDataSets[currentTestIndex.value]
+		if (!testCase) return
+
+		const data: any = testCase.data
+
+		schema.groups.forEach((group) => {
+			group.inputs.forEach((input) => {
+				const key = generateKey(group, input.label)
+
+				// Reset field
+				if (input.type === 'checkbox-group') {
+					formData[key] = []
+				} else {
+					formData[key] = input.type === 'checkbox' ? false : ''
+				}
+
+				if (data[key] !== undefined) {
+					formData[key] = data[key]
+					// Apply mask to filled data
+					if (input.masked && typeof formData[key] === 'string') {
+						handleMaskInput(formData[key], key, input)
+					}
+				} else {
+					// Populate with default options if available and not specifically listed
+					if (input.default !== undefined) {
+						formData[key] = input.default
+					}
+				}
+			})
+		})
+
+		// Validate immediately to clear any existing errors and ensure logic runs
+		checkErrors()
+
+		ElMessage.success(`Test data filled: ${testCase.name}`)
+		currentTestIndex.value = (currentTestIndex.value + 1) % testDataSets.length
+	}
+
 	const submitForm = () => {
 		const firstErrorKey = checkErrors()
 		if (firstErrorKey) {
@@ -456,6 +612,9 @@
 					<p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
 				</div>
 				<div class="flex items-center gap-3">
+					<el-button v-if="isDev" type="warning" plain size="default" @click="fillTestData">
+						<i class="fas fa-flask mr-2"></i> Fill Test Data
+					</el-button>
 					<el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
 				</div>
 			</div>
