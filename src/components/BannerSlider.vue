@@ -6,6 +6,14 @@
 
 	const banners = [
 		{
+			id: 4,
+			title: 'AI Instant Pre-Qualification',
+			description:
+				'Our AI technology analyzes your application instantly, answers your questions in real time, and connects you with lenders for faster loan approvals.',
+			image: '/238e062b-d019-413e-b1e0-de01d667dde4.jpg',
+			cta: 'Apply Now'
+		},
+		{
 			id: 1,
 			title: 'Drive Your Dream Car Today',
 			description:
@@ -27,14 +35,6 @@
 			description: 'Whether you have excellent credit or are rebuilding, we have a financing solution for you.',
 			image: '/olav-tvedt-6lSBynPRaAQ-unsplash.jpg',
 			cta: null
-		},
-		{
-			id: 4,
-			title: 'AI Instant Pre-Qualification',
-			description:
-				'Our AI technology analyzes your application instantly, answers your questions in real time, and connects you with lenders for faster loan approvals.',
-			image: '/238e062b-d019-413e-b1e0-de01d667dde4.jpg',
-			cta: 'Apply Now'
 		}
 	]
 
