@@ -1,5 +1,6 @@
 <script setup lang="ts">
 	import { ref, reactive } from 'vue'
+	import { useLoanStore } from '@/stores/loan'
 	import { ElMessage, ElMessageBox } from 'element-plus'
 	import type { FormSchema, FormInput, FormGroup } from '@/types'
 	import {
@@ -15,6 +16,8 @@
 
 	const summaryVisible = ref(false)
 	const isSubmitting = ref(false)
+
+	const store = useLoanStore()
 
 	const formatCurrency = (val: number) =>
 		new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val)
@@ -447,9 +450,14 @@
 		</el-dialog>
 
 		<div>
-			<div class="mb-6 px-2">
-				<h2 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{{ schema.formHeading }}</h2>
-				<p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
+			<div class="flex justify-between items-center mb-6 px-2">
+				<div>
+					<h2 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{{ schema.formHeading }}</h2>
+					<p class="text-blue-200 mt-1 text-sm md:text-base">{{ schema.formDescription }}</p>
+				</div>
+				<div class="flex items-center gap-3">
+					<el-button type="danger" circle @click="store.resetView"><i class="fas fa-times"></i></el-button>
+				</div>
 			</div>
 
 			<el-form label-position="top" @submit.prevent="submitForm">
@@ -525,6 +533,7 @@
 					</el-card>
 				</div>
 				<div class="flex flex-col-reverse md:flex-row justify-end gap-4 mt-8 pb-10">
+					<el-button size="large" @click="store.resetView" class="w-full md:w-auto">Cancel</el-button>
 					<el-button type="primary" size="large" native-type="submit" class="!px-8 !text-lg w-full md:w-auto">
 						Review Details <i class="fas fa-arrow-right ml-2"></i>
 					</el-button>
