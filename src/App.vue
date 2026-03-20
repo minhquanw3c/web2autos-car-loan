@@ -10,6 +10,7 @@
 	import TermsPage from '@/components/TermsPage.vue'
 	import DisclaimerPage from '@/components/DisclaimerPage.vue'
 	import DealershipInquiryPage from '@/components/DealershipInquiryPage.vue'
+	import CarFinderForm from '@/components/CarFinderForm.vue'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
@@ -34,6 +35,8 @@
 			store.goToInventory()
 		} else if (urlParams.get('showDealershipInquiry') === 'true') {
 			store.goToDealershipInquiry()
+		} else if (urlParams.get('showCarFinder') === 'true') {
+			store.goToCarFinder()
 		}
 
 		// Embed Chat Widget
@@ -122,6 +125,16 @@
 							class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
 							>For Dealers</a
 						>
+						<a
+							@click="
+								() => {
+									store.goToCarFinder()
+									isMobileMenuOpen = false
+								}
+							"
+							class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
+							>Car Finder</a
+						>
 					</div>
 
 					<div class="flex gap-6 mt-8">
@@ -204,6 +217,16 @@
 							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 							>For Dealers</a
 						>
+						<a
+							@click="store.goToCarFinder"
+							:class="
+								store.currentView === 'car-finder'
+									? 'text-white font-bold'
+									: 'text-slate-300 hover:text-white'
+							"
+							class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+							>Car Finder</a
+						>
 					</nav>
 
 					<button
@@ -263,6 +286,10 @@
 
 				<div v-else-if="store.currentView === 'dealership-inquiry'" key="dealership-inquiry">
 					<DealershipInquiryPage />
+				</div>
+
+				<div v-else-if="store.currentView === 'car-finder'" key="car-finder">
+					<CarFinderForm />
 				</div>
 			</transition>
 		</main>
