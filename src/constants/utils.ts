@@ -1,4 +1,5 @@
 export const BACKEND_API_URL: string = import.meta.env.VITE_BACKEND_API_URL || 'https://api.web2autos.com'
+
 export const CAR_FINDER_MAKES: Array<string> = [
 	'Select One',
 	'Any',
@@ -100,6 +101,7 @@ export const CAR_FINDER_MAKES: Array<string> = [
 	'Yugo',
 	'Willys'
 ]
+
 export const CAR_FINDER_BODY_STYLE: Array<string> = [
 	'Any',
 	'Pickup Truck',
@@ -111,4 +113,79 @@ export const CAR_FINDER_BODY_STYLE: Array<string> = [
 	'Convertible',
 	'Minivan',
 	'Other'
+]
+
+export const CAR_FINDER_INTERIOR_FEATURES: Array<string> = [
+	'Adjustable Pedals',
+	'Airconditioned Seats',
+	'Auto Climate Control',
+	'Bucket Seats',
+	'Cruise Control',
+	'Extra Cab',
+	'Heated Seats',
+	'Heated Steering Wheel',
+	'Keyless Entry',
+	'Leather Seats',
+	'Memory Seats',
+	'Power Doors',
+	'Power Seats',
+	'Push-button Start',
+	'Quad Seats',
+	'Rear Air',
+	'Rear Heated Seats',
+	'Remote Start',
+	'Third Row Seat',
+	'Tilt Wheel',
+	'Tinted Windows'
+]
+
+export const CAR_FINDER_EXTERIOR_FEATURES: Array<string> = [
+	'Bed Cover',
+	'Bedliner',
+	'Convertible Top',
+	'Fog Lights',
+	'Power Tailgate',
+	'Roof Rack',
+	'Running Boards',
+	'Rear Spoiler',
+	'Sunroof/Moonroof',
+	'Tool Box',
+	'Tow Hitch'
+]
+
+export const CAR_FINDER_ENTERTAINMENT_FEATURES: Array<string> = [
+	'AM/FM',
+	'Bluetooth',
+	'CD',
+	'CD Changer',
+	'Satellite/XM Radio',
+	'Navigation',
+	'Apple CarPlay',
+	'Android Auto',
+	'Alexa Auto',
+	'TV/DVD',
+	'TV/VCR',
+	'USB Integration',
+	'Voice Activation',
+	'Premium Audio'
+]
+
+export const CAR_FINDER_SAFETY_FEATURES: Array<string> = [
+	'Adaptive Cruise Control',
+	'Alarm System',
+	'Anti-Lock Brakes',
+	'Back Up Camera',
+	'Back Up Sonar',
+	'Blindspot Monitoring',
+	'Collision Avoidance',
+	'Daytime Running Lights',
+	'Driver Airbag',
+	'HID Headlights',
+	'Heads-Up Display',
+	'Parking Sensors',
+	'Passenger Airbag',
+	'Night View',
+	'Side Airbags',
+	'Rear Defroster',
+	'Traction Control'
 ]

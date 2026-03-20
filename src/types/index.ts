@@ -61,6 +61,7 @@ export interface FormInput {
 }
 
 export interface FormGroup {
+	id?: string
 	heading: string
 	inputs: FormInput[]
 }

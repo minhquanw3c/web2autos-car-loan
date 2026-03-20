@@ -1,8 +1,16 @@
 <script setup lang="ts">
 	import { ref, reactive } from 'vue'
 	import { ElMessage, ElMessageBox } from 'element-plus'
-	import type { FormSchema, FormInput } from '@/types'
-	import { BACKEND_API_URL, CAR_FINDER_BODY_STYLE, CAR_FINDER_MAKES } from '@/constants/utils'
+	import type { FormSchema, FormInput, FormGroup } from '@/types'
+	import {
+		BACKEND_API_URL,
+		CAR_FINDER_BODY_STYLE,
+		CAR_FINDER_MAKES,
+		CAR_FINDER_INTERIOR_FEATURES,
+		CAR_FINDER_EXTERIOR_FEATURES,
+		CAR_FINDER_ENTERTAINMENT_FEATURES,
+		CAR_FINDER_SAFETY_FEATURES
+	} from '@/constants/utils'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const summaryVisible = ref(false)
@@ -22,6 +30,7 @@
 			"We're ready to take the work out of car shopping! Simply tell us what you're looking for and we'll find your perfect fit.",
 		groups: [
 			{
+				id: 'personal',
 				heading: 'Tell us about you',
 				inputs: [
 					{ label: 'First name', type: 'text', required: true, maxLength: 50 } as any,
@@ -32,7 +41,8 @@
 				]
 			},
 			{
-				heading: "Tell us what you're looking for",
+				id: 'vehicle',
+				heading: 'Tell us what you are looking for',
 				inputs: [
 					{
 						label: 'Condition',
@@ -143,6 +153,58 @@
 						default: 'Any'
 					}
 				]
+			},
+			{
+				id: 'features',
+				heading: 'Which of the following features are you looking for?',
+				inputs: [
+					{
+						label: 'Interior Features',
+						type: 'checkbox-group',
+						format: 'Select all that apply',
+						options: CAR_FINDER_INTERIOR_FEATURES
+					},
+					{
+						label: 'Exterior Features',
+						type: 'checkbox-group',
+						format: 'Select all that apply',
+						options: CAR_FINDER_EXTERIOR_FEATURES
+					},
+					{
+						label: 'Entertainment Features',
+						type: 'checkbox-group',
+						format: 'Select all that apply',
+						options: CAR_FINDER_ENTERTAINMENT_FEATURES
+					},
+					{
+						label: 'Safety Features',
+						type: 'checkbox-group',
+						format: 'Select all that apply',
+						options: CAR_FINDER_SAFETY_FEATURES
+					}
+				]
+			},
+			{
+				id: 'additional',
+				heading: 'Additional information',
+				inputs: [
+					{
+						label: 'When do you plan to purchase this vehicle?',
+						type: 'select',
+						options: [
+							'Within 2 weeks',
+							'Within a month',
+							'Within the next 2 months',
+							'Within the next 4 months'
+						]
+					},
+					{
+						label: 'Comments',
+						type: 'textarea',
+						maxLength: 200,
+						showWordLimit: true
+					} as any
+				]
 			}
 		]
 	})
@@ -151,8 +213,8 @@
 	const errors = reactive<Record<string, string>>({})
 	const itemRefs = reactive<Record<string, any>>({})
 
-	const generateKey = (groupHeading: string, label: string) => {
-		const prefix = groupHeading.replace(/\s+/g, '').toLowerCase()
+	const generateKey = (group: FormGroup, label: string) => {
+		const prefix = (group.id || group.heading).replace(/\s+/g, '').toLowerCase()
 		const suffix = label.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
 		return `${prefix}_${suffix}`
 	}
@@ -185,12 +247,18 @@
 	// Initialize form data
 	schema.groups.forEach((group) => {
 		group.inputs.forEach((input) => {
-			const key = generateKey(group.heading, input.label)
-			formData[key] = input.default !== undefined ? input.default : ''
+			const key = generateKey(group, input.label)
+			if (input.type === 'checkbox-group') {
+				formData[key] = input.default !== undefined ? input.default : []
+			} else {
+				formData[key] = input.default !== undefined ? input.default : ''
+			}
 		})
 	})
 
-	const getResponsiveProps = () => {
+	const getResponsiveProps = (input: FormInput) => {
+		if (input.type === 'checkbox-group' || input.type === 'textarea') return { xs: 24, sm: 24, md: 24, lg: 24 }
+		if (input.label === 'When do you plan to purchase this vehicle?') return { xs: 24, sm: 24, md: 12, lg: 12 }
 		return { xs: 24, sm: 12, md: 8, lg: 8 }
 	}
 
@@ -200,7 +268,7 @@
 
 		schema.groups.forEach((group) => {
 			group.inputs.forEach((input) => {
-				const key = generateKey(group.heading, input.label)
+				const key = generateKey(group, input.label)
 				let errorMsg: string | null = null
 				const val = formData[key]
 
@@ -292,7 +360,9 @@
 				}
 			)
 			// Reset form
-			Object.keys(formData).forEach((key) => (formData[key] = ''))
+			Object.keys(formData).forEach((key) => {
+				formData[key] = Array.isArray(formData[key]) ? [] : ''
+			})
 		} catch (e) {
 			isSubmitting.value = false
 			await ElMessageBox.alert(
@@ -347,7 +417,12 @@
 								:label="input.label"
 								label-class-name="font-semibold text-slate-600 bg-slate-50 w-1/3"
 							>
-								<span>{{ formData[generateKey(group.heading, input.label)] }}</span>
+								<span v-if="Array.isArray(formData[generateKey(group, input.label)])">
+									{{ formData[generateKey(group, input.label)].join(', ') }}
+								</span>
+								<span v-else>
+									{{ formData[generateKey(group, input.label)] }}
+								</span>
 							</el-descriptions-item>
 						</el-descriptions>
 					</el-card>
@@ -388,16 +463,16 @@
 
 						<el-row :gutter="24">
 							<template v-for="(input, iIndex) in group.inputs" :key="iIndex">
-								<el-col v-bind="getResponsiveProps()">
+								<el-col v-bind="getResponsiveProps(input)">
 									<el-form-item
 										:label="input.label + (input.required ? ' *' : '')"
 										class="mb-6"
-										:error="errors[generateKey(group.heading, input.label)]"
-										:ref="(el: any) => setItemRef(el, generateKey(group.heading, input.label))"
+										:error="errors[generateKey(group, input.label)]"
+										:ref="(el: any) => setItemRef(el, generateKey(group, input.label))"
 									>
 										<el-select
 											v-if="input.type === 'select'"
-											v-model="formData[generateKey(group.heading, input.label)]"
+											v-model="formData[generateKey(group, input.label)]"
 											placeholder="Select..."
 											class="w-full"
 											filterable
@@ -410,15 +485,37 @@
 											/>
 										</el-select>
 
+										<div v-else-if="input.type === 'checkbox-group'" class="w-full">
+											<div class="text-sm text-slate-400 mb-2 -mt-2" v-if="input.format">
+												{{ input.format }}
+											</div>
+											<el-checkbox-group
+												v-model="formData[generateKey(group, input.label)]"
+												class="flex flex-wrap"
+											>
+												<el-checkbox
+													v-for="opt in input.options"
+													:key="opt as string"
+													:label="opt"
+													:value="opt"
+													class="mr-4 mb-2"
+												>
+													{{ opt }}
+												</el-checkbox>
+											</el-checkbox-group>
+										</div>
+
 										<el-input
 											v-else
-											v-model="formData[generateKey(group.heading, input.label)]"
-											:type="input.type"
+											v-model="formData[generateKey(group, input.label)]"
+											:type="input.type === 'textarea' ? 'textarea' : input.type"
 											:placeholder="input.format || ''"
 											:maxlength="(input as any).maxLength"
+											:show-word-limit="(input as any).showWordLimit"
+											:rows="input.type === 'textarea' ? 5 : undefined"
 											@input="
 												(val: string) =>
-													handleMaskInput(val, generateKey(group.heading, input.label), input)
+													handleMaskInput(val, generateKey(group, input.label), input)
 											"
 										/>
 									</el-form-item>
