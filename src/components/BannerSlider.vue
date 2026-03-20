@@ -10,7 +10,7 @@
 			title: 'Drive Your Dream Car Today',
 			description:
 				'Get pre-approved in minutes with our secure online application. No impact on your credit score to check rates.',
-			image: '/peter-broomfield-m3m-lnR90uM-unsplash.jpg',
+			image: '/shutterstock_2506974129.webp',
 			cta: 'Apply Now'
 		},
 		{
@@ -18,7 +18,7 @@
 			title: 'Competitive Rates & Terms',
 			description:
 				'We partner with leading financial institutions to bring you the best auto loan rates available.',
-			image: '/campbell-3ZUsNJhi_Ik-unsplash.jpg',
+			image: '/e105b708-3a9f-42e8-98eb-d6e2a98216b6.jpg',
 			cta: null
 		},
 		{
@@ -27,19 +27,25 @@
 			description: 'Whether you have excellent credit or are rebuilding, we have a financing solution for you.',
 			image: '/olav-tvedt-6lSBynPRaAQ-unsplash.jpg',
 			cta: null
+		},
+		{
+			id: 4,
+			title: 'AI Instant Pre-Qualification',
+			description:
+				'Our AI technology analyzes your application instantly, answers your questions in real time, and connects you with lenders for faster loan approvals.',
+			image: '/238e062b-d019-413e-b1e0-de01d667dde4.jpg',
+			cta: 'Apply Now'
 		}
 	]
 
-	const carouselHeight = ref('500px')
+	const carouselHeight = ref('600px')
 
 	const updateHeight = () => {
 		const width = window.innerWidth
-		if (width < 640) {
-			carouselHeight.value = '300px'
-		} else if (width < 1024) {
-			carouselHeight.value = '400px'
-		} else {
+		if (width < 1024) {
 			carouselHeight.value = '500px'
+		} else {
+			carouselHeight.value = '600px'
 		}
 	}
 
@@ -79,27 +85,29 @@
 					</div>
 
 					<!-- Gradient Overlay -->
-					<div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+					<div class="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
 
 					<!-- Content -->
 					<div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-20 max-w-3xl">
-						<h2
-							class="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg tracking-tight"
-						>
-							{{ banner.title }}
-						</h2>
-						<p
-							class="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 max-w-xl leading-relaxed drop-shadow-md"
-						>
-							{{ banner.description }}
-						</p>
-						<div v-if="banner.cta">
-							<button
-								@click="handleBannerAction(banner)"
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-indigo-500/50 flex items-center gap-2"
+						<div class="bg-black/50 backdrop-blur-md p-6 sm:p-10 rounded-3xl border border-white/10">
+							<h2
+								class="text-3xl sm:text-4xl lg:text-4xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg tracking-tight"
 							>
-								{{ banner.cta }} <i class="fas fa-arrow-right"></i>
-							</button>
+								{{ banner.title }}
+							</h2>
+							<p
+								class="text-base sm:text-lg lg:text-xl text-slate-200 mb-8 max-w-xl leading-relaxed drop-shadow-md"
+							>
+								{{ banner.description }}
+							</p>
+							<div v-if="banner.cta">
+								<button
+									@click="handleBannerAction(banner)"
+									class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 hover:shadow-indigo-500/50 flex items-center gap-2"
+								>
+									{{ banner.cta }} <i class="fas fa-arrow-right"></i>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -110,19 +118,18 @@
 
 <style scoped>
 	:deep(.el-carousel__button) {
-		width: 40px;
-		height: 4px;
-		border-radius: 2px;
-		background-color: rgba(255, 255, 255, 0.3);
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.4);
 		transition: all 0.3s;
 	}
 	:deep(.el-carousel__indicator.is-active .el-carousel__button) {
 		background-color: #fff;
-		width: 60px;
 	}
 	:deep(.el-carousel__arrow) {
 		background-color: rgba(0, 0, 0, 0.3);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
 		backdrop-filter: blur(4px);
 		top: auto;
 		bottom: 20px;
