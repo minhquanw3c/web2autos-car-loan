@@ -2,11 +2,19 @@
 	import { ref, reactive } from 'vue'
 	import { ElMessage, ElMessageBox } from 'element-plus'
 	import type { FormSchema, FormInput } from '@/types'
-	import { BACKEND_API_URL, CAR_FINDER_BODY_STYLE } from '@/constants/utils'
+	import { BACKEND_API_URL, CAR_FINDER_BODY_STYLE, CAR_FINDER_MAKES } from '@/constants/utils'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const summaryVisible = ref(false)
 	const isSubmitting = ref(false)
+
+	const formatCurrency = (val: number) =>
+		new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val)
+
+	const priceOptions = ['Any', ...Array.from({ length: 100 }, (_, i) => formatCurrency((i + 1) * 1000))]
+	const mpgOptions = ['Any', ...Array.from({ length: 11 }, (_, i) => String(10 + i * 5))]
+	const paymentOptions = Array.from({ length: 17 }, (_, i) => formatCurrency(100 + i * 50))
+	const seatOptions = ['Any', ...Array.from({ length: 15 }, (_, i) => `${i + 1}+`)]
 
 	const schema = reactive<FormSchema>({
 		formHeading: 'Car finder',
@@ -35,8 +43,104 @@
 					{
 						label: 'Body style',
 						type: 'select',
-						required: true,
 						options: CAR_FINDER_BODY_STYLE
+					},
+					{
+						label: 'Make',
+						type: 'select',
+						options: CAR_FINDER_MAKES,
+						default: 'Any'
+					},
+					{ label: 'Model', type: 'text' },
+					{ label: 'Trim/Package', type: 'text' },
+					{
+						label: 'Transmission',
+						type: 'select',
+						options: ['Any', 'Automatic', 'CVT', 'Manual'],
+						default: 'Any'
+					},
+					{
+						label: 'Min Highway MPG',
+						type: 'select',
+						options: mpgOptions,
+						default: 'Any'
+					},
+					{
+						label: 'Max Mileage',
+						type: 'select',
+						options: [
+							'Any',
+							'5,000',
+							'10,000',
+							'20,000',
+							'30,000',
+							'50,000',
+							'75,000',
+							'100,000',
+							'150,000'
+						],
+						default: 'Any'
+					},
+					{ label: 'Year Min', type: 'text' },
+					{ label: 'Year Max', type: 'text' },
+					{ label: 'Preferred Exterior Color', type: 'text' },
+					{ label: 'Preferred Interior Color', type: 'text' },
+					{
+						label: 'Min Price',
+						type: 'select',
+						options: priceOptions,
+						default: 'Any'
+					},
+					{
+						label: 'Max Price',
+						type: 'select',
+						options: priceOptions,
+						default: 'Any'
+					},
+					{
+						label: 'Max Monthly Payment',
+						type: 'select',
+						options: paymentOptions
+					},
+					{ label: 'Engine', type: 'text' },
+					{
+						label: 'Drivetrain',
+						type: 'select',
+						options: ['Any', 'FWD', 'RWD', 'AWD', '4WD', '4X4', '4X2', '6X4'],
+						default: 'Any'
+					},
+					{
+						label: 'Fuel Type',
+						type: 'select',
+						options: [
+							'Any',
+							'Gasoline',
+							'Flex Fuel',
+							'Diesel',
+							'Bio Diesel',
+							'Gas/Electric Hybrid',
+							'Plug-in Hybrid',
+							'Electric'
+						],
+						default: 'Any'
+					},
+					{
+						label: 'Seats',
+						type: 'select',
+						options: seatOptions,
+						default: 'Any'
+					},
+					{
+						label: 'Seating Rows',
+						type: 'select',
+						options: ['Any', '1', '2', '3', '4', '5'],
+						default: 'Any'
+					},
+					{
+						label: 'Doors',
+						type: 'select',
+						options: ['Any', '2', '3', '4', '5'],
+						default: 'Any'
 					}
 				]
 			}
@@ -82,12 +186,12 @@
 	schema.groups.forEach((group) => {
 		group.inputs.forEach((input) => {
 			const key = generateKey(group.heading, input.label)
-			formData[key] = ''
+			formData[key] = input.default !== undefined ? input.default : ''
 		})
 	})
 
 	const getResponsiveProps = () => {
-		return { xs: 24, sm: 12, md: 12, lg: 12 }
+		return { xs: 24, sm: 12, md: 8, lg: 8 }
 	}
 
 	const checkErrors = () => {
@@ -143,11 +247,19 @@
 	const confirmSubmission = async () => {
 		isSubmitting.value = true
 
+		const payload = { ...formData }
+		// Strip currency formatting before sending to backend
+		Object.keys(payload).forEach((key) => {
+			if (typeof payload[key] === 'string' && payload[key].startsWith('$')) {
+				payload[key] = payload[key].replace(/[$,]/g, '')
+			}
+		})
+
 		try {
 			const response = await fetch(`${BACKEND_API_URL}/api/car-finder`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData)
+				body: JSON.stringify(payload)
 			})
 
 			const result = await response.json()
