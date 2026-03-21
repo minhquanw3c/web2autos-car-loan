@@ -149,39 +149,66 @@
 
 					<div class="text-slate-600 text-lg space-y-4 leading-relaxed">
 						<p>
-							If you're serious about growing your dealership’s sales and getting a true return on your
-							investment, <strong class="text-slate-900">Web2Autos</strong> is your solution. We don’t
-							just send leads — we deliver qualified, ready-to-buy customers that drive more sales.
+							If you’re looking to grow your dealership’s sales with smarter, more targeted connections,
+							Web2Autos is here to help.
 						</p>
 						<p>
-							We offer many flexible programs, and we’re confident you’ll find one that’s a perfect fit
-							for your dealership’s needs.
+							We use advanced AI technology to match real, ready-to-buy customers with the right
+							dealerships — ensuring every connection is relevant, timely, and meaningful. At Web2Autos,
+							we focus on creating a trusted space where buyers and sellers meet, not just generating
+							leads.
+						</p>
+						<p>
+							Our platform helps pre-screen customers using AI-driven insights, including soft credit
+							checks with customer authorization, to better understand their buying position. This helps
+							connect your dealership with customers who are more likely to meet typical financing
+							criteria — while respecting privacy and maintaining a customer-first experience.
+						</p>
+						<p>
+							Our approach is designed to support long-term success by helping dealerships connect with
+							customers who are actively searching for vehicles that fit their needs.
+						</p>
+						<p>
+							We offer flexible programs tailored to your dealership’s goals, making it easier to build
+							consistent, high-quality opportunities.
 						</p>
 					</div>
 
 					<ul class="space-y-3 pt-2">
 						<li class="flex items-start gap-3">
 							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium">High-quality subprime and prime leads</span>
+							<span class="text-slate-700 font-medium">AI-powered customer-to-dealer matching</span>
 						</li>
 						<li class="flex items-start gap-3">
 							<i class="fas fa-check-circle text-green-500 mt-1"></i>
 							<span class="text-slate-700 font-medium"
-								>Proven ROI — our dealer partners see results fast</span
+								>Pre-screened buyers using permission-based soft credit insights</span
 							>
 						</li>
 						<li class="flex items-start gap-3">
 							<i class="fas fa-check-circle text-green-500 mt-1"></i>
 							<span class="text-slate-700 font-medium"
-								>Custom programs designed to match your dealership’s goals</span
+								>Subprime and prime opportunities aligned with dealership programs</span
+							>
+						</li>
+						<li class="flex items-start gap-3">
+							<i class="fas fa-check-circle text-green-500 mt-1"></i>
+							<span class="text-slate-700 font-medium"
+								>Transparent, customer-first marketplace experience</span
+							>
+						</li>
+						<li class="flex items-start gap-3">
+							<i class="fas fa-check-circle text-green-500 mt-1"></i>
+							<span class="text-slate-700 font-medium"
+								>Programs customized to fit your dealership’s needs</span
 							>
 						</li>
 					</ul>
 
 					<div class="pt-6 border-t border-gray-100 mt-6">
 						<p class="text-slate-700 font-medium mb-6 flex items-center gap-2">
-							Stop wasting money on low-quality leads. Partner with Web2Autos and watch your bottom line
-							grow.
+							Build better connections with serious buyers — and grow your dealership the right way with
+							Web2Autos.
 						</p>
 						<button
 							@click="store.goToDealershipInquiry"
