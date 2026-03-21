@@ -59,7 +59,7 @@
 	})
 
 	const handleBannerAction = (banner: { id: number }) => {
-		if (banner.id === 1) {
+		if (banner.id === 1 || banner.id === 4) {
 			store.startApplication()
 		}
 	}
