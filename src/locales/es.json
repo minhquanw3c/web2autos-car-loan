@@ -1,0 +1,11 @@
+{
+	"nav": {
+		"home": "Inicio",
+		"inventory": "Inventario",
+		"apply": "Aplica Ya",
+		"contact": "Contacto",
+		"dealers": "Para Distribuidores",
+		"car_finder": "Buscador de Autos",
+		"sales_hotline": "Línea de Ventas"
+	}
+}
