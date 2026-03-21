@@ -216,6 +216,12 @@
 						>
 							Become a Partner <i class="fas fa-arrow-right"></i>
 						</button>
+						<p class="text-xs text-slate-400 mt-10 text-center sm:text-left leading-relaxed">
+							* Disclaimer: Soft credit checks are conducted only with consumer consent and do not impact
+							credit scores. All financing decisions, approvals, and terms are determined solely by the
+							dealership and/or participating lenders. Web2Autos does not guarantee approval or specific
+							financial outcomes.
+						</p>
 					</div>
 				</div>
 
