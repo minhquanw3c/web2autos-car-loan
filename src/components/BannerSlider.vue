@@ -43,9 +43,9 @@
 	const updateHeight = () => {
 		const width = window.innerWidth
 		if (width < 1024) {
-			carouselHeight.value = '500px'
+			carouselHeight.value = '570px'
 		} else {
-			carouselHeight.value = '600px'
+			carouselHeight.value = '650px'
 		}
 	}
 
@@ -74,9 +74,9 @@
 			class="rounded-2xl overflow-hidden shadow-2xl border border-white/10"
 		>
 			<el-carousel-item v-for="banner in banners" :key="banner.id">
-				<div class="relative w-full h-full group">
+				<div class="relative w-full h-full group flex flex-col lg:block">
 					<!-- Background Image with Zoom Effect -->
-					<div class="absolute inset-0 overflow-hidden">
+					<div class="relative lg:absolute inset-0 overflow-hidden h-[45%] lg:h-full w-full shrink-0">
 						<img
 							:src="banner.image"
 							:alt="banner.title"
@@ -85,18 +85,24 @@
 					</div>
 
 					<!-- Gradient Overlay -->
-					<div class="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"></div>
+					<div
+						class="hidden lg:block absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent"
+					></div>
 
 					<!-- Content -->
-					<div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-20 max-w-3xl">
-						<div class="bg-black/50 backdrop-blur-md p-6 sm:p-10 rounded-3xl border border-white/10">
+					<div
+						class="relative z-10 flex-1 w-full lg:h-full flex flex-col justify-center px-6 py-6 sm:px-12 sm:py-10 lg:px-20 lg:py-0 bg-slate-900 lg:bg-transparent"
+					>
+						<div
+							class="max-w-3xl lg:bg-black/50 lg:backdrop-blur-md lg:p-10 lg:rounded-3xl lg:border lg:border-white/10"
+						>
 							<h2
-								class="text-3xl sm:text-4xl lg:text-4xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg tracking-tight"
+								class="text-2xl sm:text-4xl lg:text-4xl font-extrabold text-white mb-2 lg:mb-4 leading-tight drop-shadow-lg tracking-tight"
 							>
 								{{ banner.title }}
 							</h2>
 							<p
-								class="text-base sm:text-lg lg:text-xl text-slate-200 mb-8 max-w-xl leading-relaxed drop-shadow-md"
+								class="text-sm sm:text-lg lg:text-xl text-slate-300 lg:text-slate-200 mb-6 lg:mb-8 max-w-xl leading-relaxed drop-shadow-md"
 							>
 								{{ banner.description }}
 							</p>
