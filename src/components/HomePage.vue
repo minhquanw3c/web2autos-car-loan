@@ -56,7 +56,7 @@
 		<div class="mb-24" v-if="sampleVehicles.length > 0">
 			<div class="text-center mb-12">
 				<h2 class="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-md">Featured Inventory</h2>
-				<p class="text-blue-200 text-lg max-w-2xl mx-auto">Check out some of our latest arrivals.</p>
+				<p class="text-blue-200 text-lg max-w-2xl mx-auto">Check out some of our new arrivals.</p>
 			</div>
 
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

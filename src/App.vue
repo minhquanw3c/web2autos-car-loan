@@ -354,8 +354,8 @@
 								</div>
 							</div>
 							<p class="leading-relaxed mb-4">
-								Get approved for your next car fast with Web2Autos. We connect you to trusted dealers
-								work with all credit types. Apply online in minutes!
+								Get approved for a car today — even with low credit or past issues. Web2Autos connects
+								you with lenders ready to say YES. Apply in minutes and see your options now.
 							</p>
 						</div>
 

@@ -162,7 +162,7 @@
 	<div class="max-w-[1600px] mx-auto my-8 px-4 sm:px-6 lg:px-8 animate-[fadeIn_0.5s_ease-out]">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 			<!-- Left Column: Information -->
-			<div class="text-slate-300 space-y-8 lg:sticky lg:top-24">
+			<div class="text-slate-200 space-y-10 lg:sticky lg:top-24">
 				<div class="rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/20">
 					<div class="relative pt-[56.25%]">
 						<iframe
@@ -176,107 +176,47 @@
 				</div>
 
 				<div>
-					<h1 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-						Dealership Inquiry Why - It’s Important and Why Choose Us
+					<h1 class="text-3xl md:text-4xl font-extrabold text-white mb-6 leading-tight drop-shadow-md">
+						Dealership Inquiry Form - Get Started Today!
 					</h1>
+					<p class="text-lg leading-relaxed mb-5">
+						If you're serious about growing your dealership's sales and getting a true return on your
+						investment, Web2Autos is your solution. We don't just send leads - we deliver qualified,
+						ready-to-buy customers that drive more sales.
+					</p>
 					<p class="text-lg leading-relaxed">
-						A dealership inquiry is the first step in ensuring you make an informed decision when purchasing
-						your next vehicle. Whether you’re interested in new or pre-owned cars, the inquiry process
-						allows you to communicate directly with our team to get the answers, pricing details, and
-						vehicle information you need. This personalized approach ensures you choose the best car,
-						financing options, and promotions available to you.
+						We offer many flexible programs, and we're confident you'll find one that's a perfect fit for
+						your dealership's needs.
 					</p>
 				</div>
 
-				<div>
-					<h3 class="text-2xl font-bold text-white mb-4">Why Make a Dealership Inquiry?</h3>
-					<p class="mb-4">A dealership inquiry is crucial for several reasons:</p>
-					<ul class="space-y-3">
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-indigo-500 mt-1"></i>
-							<span
-								><strong>Direct Communication:</strong> You can communicate directly with our sales
-								team, ensuring all your questions are answered promptly.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-indigo-500 mt-1"></i>
-							<span
-								><strong>Vehicle Information:</strong> Get detailed specifications, availability, and
-								pricing for the car you’re interested in.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-indigo-500 mt-1"></i>
-							<span
-								><strong>Exclusive Offers:</strong> Be the first to know about exclusive dealership
-								promotions and discounts.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-indigo-500 mt-1"></i>
-							<span
-								><strong>Test Drive Scheduling:</strong> Easily schedule a test drive to see the car in
-								person before making your decision.</span
-							>
-						</li>
-					</ul>
-				</div>
+				<ul class="space-y-4 text-lg">
+					<li class="flex items-start gap-3">
+						<i class="fas fa-check-circle text-indigo-400 text-xl drop-shadow-sm"></i>
+						<span>High-quality subprime and prime leads</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<i class="fas fa-check-circle text-indigo-400 text-xl drop-shadow-sm"></i>
+						<span>Proven ROI - our dealer partners see results fast</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<i class="fas fa-check-circle text-indigo-400 text-xl drop-shadow-sm"></i>
+						<span>Custom programs designed to match your dealership's goals</span>
+					</li>
+				</ul>
 
 				<div>
-					<h3 class="text-2xl font-bold text-white mb-4">Why Choose Our Dealership?</h3>
-					<p class="mb-4">
-						There are many reasons why our customers keep coming back. Here’s why you should choose us:
-					</p>
-					<ul class="space-y-3">
-						<li class="flex items-start gap-3">
-							<i class="fas fa-star text-yellow-500 mt-1"></i>
-							<span
-								><strong>Wide Range of Cars:</strong> We offer a variety of both new and pre-owned cars,
-								catering to all budgets and preferences.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-star text-yellow-500 mt-1"></i>
-							<span
-								><strong>Competitive Pricing:</strong> We guarantee you the best prices, making sure you
-								get excellent value for your money.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-star text-yellow-500 mt-1"></i>
-							<span
-								><strong>Exceptional Customer Service:</strong> Our friendly and knowledgeable team is
-								here to guide you through every step of your car-buying journey.</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-star text-yellow-500 mt-1"></i>
-							<span
-								><strong>Flexible Financing Options:</strong> We offer tailored financing plans to make
-								your purchase more affordable.</span
-							>
-						</li>
-					</ul>
-				</div>
-
-				<div>
-					<h3 class="text-2xl font-bold text-white mb-4">
-						What Happens After You Submit a Dealership Inquiry?
+					<h3 class="text-2xl md:text-3xl font-extrabold text-white mb-5 leading-tight drop-shadow-md">
+						Stop wasting money on low-quality leads. Partner with Web2Autos and watch your bottom line grow.
 					</h3>
-					<p class="leading-relaxed">
-						Once you submit your dealership inquiry, our team will reach out to you to discuss your needs,
-						provide details on your vehicle of interest, and assist with financing options. We are here to
-						help every step of the way to ensure you drive away in the car that fits you best.
-					</p>
-				</div>
-
-				<div class="bg-indigo-900/30 p-6 rounded-xl border border-indigo-500/30">
-					<h3 class="text-xl font-bold text-white mb-2">Find the Best Deal for Your Next Car</h3>
-					<p class="text-indigo-200">
-						Start your dealership inquiry now and get personalized assistance in choosing the right vehicle
-						for you. Whether you’re looking for the latest models or a pre-owned gem, we’re here to help you
-						find the perfect car.
+					<p class="text-lg leading-relaxed mb-4">
+						Call <span class="font-bold text-white">(844) 922-7227</span> or email
+						<a
+							href="mailto:info@web2autos.com"
+							class="text-indigo-400 hover:text-indigo-300 font-bold transition-colors underline decoration-indigo-500/50 underline-offset-4"
+							>info@web2autos.com</a
+						>
+						to get started today!
 					</p>
 				</div>
 			</div>
