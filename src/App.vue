@@ -204,7 +204,7 @@
 					</div>
 
 					<div class="flex items-center gap-6">
-						<nav class="hidden lg:flex items-center gap-6 mr-4">
+						<nav class="hidden lg:flex items-center gap-3 xl:gap-5 mr-4">
 							<a
 								@click="store.resetView"
 								:class="
@@ -214,6 +214,10 @@
 								"
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.home') }}</a
+							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
 							>
 							<a
 								@click="store.goToInventory"
@@ -225,6 +229,10 @@
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.inventory') }}</a
 							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
+							>
 							<a
 								@click="store.goToAbout"
 								:class="
@@ -234,6 +242,10 @@
 								"
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.about') }}</a
+							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
 							>
 							<a
 								@click="store.goToContact"
@@ -245,6 +257,10 @@
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.contact') }}</a
 							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
+							>
 							<a
 								@click="store.goToDealershipInquiry"
 								:class="
@@ -254,6 +270,10 @@
 								"
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.dealers') }}</a
+							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
 							>
 							<a
 								@click="store.goToCarFinder"

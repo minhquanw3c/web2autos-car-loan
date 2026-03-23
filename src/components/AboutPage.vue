@@ -62,32 +62,32 @@
 					<h3 class="text-xl font-bold text-indigo-900 mb-6">Here’s what you can expect when you apply:</h3>
 					<ul class="space-y-4">
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800"
 								>A personalized match with a dealership that welcomes all credit types</span
 							>
 						</li>
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800"
 								>Financing possibilities — even after repos, bankruptcies, or limited credit
 								history</span
 							>
 						</li>
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800">Options that may include affordable monthly payments</span>
 						</li>
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800">The possibility of $0 down and quick delivery</span>
 						</li>
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800">One-on-one support from professionals who truly care</span>
 						</li>
 						<li class="flex items-start gap-4">
-							<i class="fas fa-check-circle text-indigo-600 mt-1 text-xl"></i>
+							<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
 							<span class="text-slate-800"
 								>A smooth, respectful process from application to dealership introduction</span
 							>
