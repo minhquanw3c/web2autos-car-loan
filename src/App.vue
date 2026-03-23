@@ -304,7 +304,7 @@
 						</button>
 
 						<!-- Language Switcher -->
-						<el-dropdown @command="switchLanguage" trigger="click" class="ml-2 lg:ml-0">
+						<!-- <el-dropdown @command="switchLanguage" trigger="click" class="ml-2 lg:ml-0">
 							<span
 								class="text-white cursor-pointer flex items-center gap-1 font-medium hover:text-indigo-400 transition-colors outline-none"
 							>
@@ -321,7 +321,7 @@
 									>
 								</el-dropdown-menu>
 							</template>
-						</el-dropdown>
+						</el-dropdown> -->
 
 						<div class="hidden lg:flex flex-col items-end mr-2">
 							<span class="text-[10px] text-gray-400 uppercase font-bold">{{
