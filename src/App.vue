@@ -14,6 +14,7 @@
 	import DisclaimerPage from '@/components/DisclaimerPage.vue'
 	import DealershipInquiryPage from '@/components/DealershipInquiryPage.vue'
 	import CarFinderForm from '@/components/CarFinderForm.vue'
+	import AboutPage from '@/components/AboutPage.vue'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
@@ -35,6 +36,8 @@
 		const urlParams = new URLSearchParams(window.location.search)
 		if (urlParams.get('showApplication') === 'true') {
 			store.startApplication()
+		} else if (urlParams.get('showAbout') === 'true') {
+			store.goToAbout()
 		} else if (urlParams.get('showContact') === 'true') {
 			store.goToContact()
 		} else if (urlParams.get('showPrivacy') === 'true') {
@@ -109,6 +112,16 @@
 								"
 								class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
 								>{{ $t('nav.inventory') }}</a
+							>
+							<a
+								@click="
+									() => {
+										store.goToAbout()
+										isMobileMenuOpen = false
+									}
+								"
+								class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
+								>{{ $t('nav.about') }}</a
 							>
 							<a
 								@click="
@@ -213,6 +226,16 @@
 								>{{ $t('nav.inventory') }}</a
 							>
 							<a
+								@click="store.goToAbout"
+								:class="
+									store.currentView === 'about'
+										? 'text-white font-bold'
+										: 'text-slate-300 hover:text-white'
+								"
+								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
+								>{{ $t('nav.about') }}</a
+							>
+							<a
 								@click="store.goToContact"
 								:class="
 									store.currentView === 'contact'
@@ -304,6 +327,10 @@
 						<InventoryPage />
 					</div>
 
+					<div v-else-if="store.currentView === 'about'" key="about">
+						<AboutPage />
+					</div>
+
 					<div v-else-if="store.currentView === 'application'" key="app">
 						<ConsultantForm />
 					</div>
@@ -367,6 +394,13 @@
 										@click="store.resetView"
 										class="cursor-pointer hover:text-indigo-400 transition-colors"
 										>Home</a
+									>
+								</li>
+								<li>
+									<a
+										@click="store.goToAbout"
+										class="cursor-pointer hover:text-indigo-400 transition-colors"
+										>About Us</a
 									>
 								</li>
 								<li>
