@@ -127,7 +127,7 @@
 			<p class="text-slate-400">Loading featured vehicles...</p>
 		</div>
 
-		<!-- Dealership Inquiry Section -->
+		<!-- Why Web2Autos Works Section -->
 		<div class="mb-24 mx-4 md:mx-0">
 			<div
 				class="bg-white rounded-3xl shadow-2xl border border-gray-100 relative overflow-hidden flex flex-col-reverse lg:flex-row-reverse"
@@ -141,94 +141,79 @@
 				></div>
 
 				<div class="flex-1 space-y-6 p-8 md:p-12 relative z-10">
-					<div
-						class="inline-block bg-indigo-50 text-indigo-700 px-4 py-1 rounded-full text-sm font-bold mb-2 border border-indigo-200"
-					>
-						For Dealerships
-					</div>
+					<h2 class="text-3xl md:text-4xl font-bold text-slate-900 drop-shadow-sm">Why Web2Autos Works</h2>
 
-					<div class="text-slate-600 text-lg space-y-4 leading-relaxed">
+					<div class="text-slate-700 text-lg space-y-4 leading-relaxed">
 						<p>
-							If you’re looking to grow your dealership’s sales with smarter, more targeted connections,
-							Web2Autos is here to help.
+							At Web2Autos, we help individuals with challenged credit connect with dealerships that are
+							ready to give them a real opportunity — with dignity, speed, and professionalism.
 						</p>
+						<p>While many services stop after collecting your application, we go further.</p>
 						<p>
-							We use advanced AI technology to match real, ready-to-buy customers with the right
-							dealerships — ensuring every connection is relevant, timely, and meaningful. At Web2Autos,
-							we focus on creating a trusted space where buyers and sellers meet, not just generating
-							leads.
+							With over 25 years of experience in auto finance, our founder Danny Tran and the Web2Autos
+							team understand the realities of buying a car with credit challenges. We don’t just pass
+							your info around. We carefully match you with a participating dealership that actually
+							understands your situation and is open to working with you.
 						</p>
-						<p>
-							Our platform helps pre-screen customers using AI-driven insights, including soft credit
-							checks with customer authorization, to better understand their buying position. This helps
-							connect your dealership with customers who are more likely to meet typical financing
-							criteria — while respecting privacy and maintaining a customer-first experience.
-						</p>
-						<p>
-							Our approach is designed to support long-term success by helping dealerships connect with
-							customers who are actively searching for vehicles that fit their needs.
-						</p>
-						<p>
-							We offer flexible programs tailored to your dealership’s goals, making it easier to build
-							consistent, high-quality opportunities.
+						<p class="text-sm text-slate-500 italic pt-4">
+							Web2Autos is not a lender, broker, or dealership. We don’t make credit decisions — we simply
+							connect you with the people who can help.
 						</p>
 					</div>
 
-					<ul class="space-y-3 pt-2">
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium">AI-powered customer-to-dealer matching</span>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium"
-								>Pre-screened buyers using permission-based soft credit insights</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium"
-								>Subprime and prime opportunities aligned with dealership programs</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium"
-								>Transparent, customer-first marketplace experience</span
-							>
-						</li>
-						<li class="flex items-start gap-3">
-							<i class="fas fa-check-circle text-green-500 mt-1"></i>
-							<span class="text-slate-700 font-medium"
-								>Programs customized to fit your dealership’s needs</span
-							>
-						</li>
-					</ul>
+					<div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 mt-8">
+						<h3 class="text-xl font-bold text-indigo-900 mb-4">
+							Here’s what you can expect when you apply:
+						</h3>
+						<ul class="space-y-4">
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800"
+									>A personalized match with a dealership that welcomes all credit types</span
+								>
+							</li>
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800"
+									>Financing possibilities — even after repos, bankruptcies, or limited credit
+									history</span
+								>
+							</li>
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800">Options that may include affordable monthly payments</span>
+							</li>
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800">The possibility of $0 down and quick delivery</span>
+							</li>
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800">One-on-one support from professionals who truly care</span>
+							</li>
+							<li class="flex items-start gap-4">
+								<i class="fas fa-check-circle text-indigo-600 text-xl mt-1 shrink-0"></i>
+								<span class="text-slate-800"
+									>A smooth, respectful process from application to dealership introduction</span
+								>
+							</li>
+						</ul>
+					</div>
 
 					<div class="pt-6 border-t border-gray-100 mt-6">
-						<p class="text-slate-700 font-medium mb-6 flex items-center gap-2">
-							Build better connections with serious buyers — and grow your dealership the right way with
-							Web2Autos.
-						</p>
 						<button
-							@click="store.goToDealershipInquiry"
+							@click="store.startApplication"
 							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg w-full sm:w-auto"
 						>
-							Become a Partner <i class="fas fa-arrow-right"></i>
+							Apply Now <i class="fas fa-arrow-right"></i>
 						</button>
-						<p class="text-xs text-slate-400 mt-10 text-center sm:text-left leading-relaxed">
-							* Disclaimer: Soft credit checks are conducted only with consumer consent and do not impact
-							credit scores. All financing decisions, approvals, and terms are determined solely by the
-							dealership and/or participating lenders. Web2Autos does not guarantee approval or specific
-							financial outcomes.
-						</p>
 					</div>
 				</div>
 
 				<div class="w-full lg:w-1/2 relative min-h-[300px] lg:min-h-full">
 					<img
 						src="/ildar-garifullin-TX2tgF4aFhI-unsplash.jpg"
-						alt="Dealer Collaboration"
+						alt="Why Web2Autos Works"
 						class="absolute inset-0 w-full h-full object-cover"
 						loading="lazy"
 					/>

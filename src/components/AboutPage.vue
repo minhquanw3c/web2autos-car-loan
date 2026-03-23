@@ -31,7 +31,9 @@
 					straightforward, and built to support you — not pressure you.
 				</p>
 				<p class="text-xl font-bold text-slate-900 text-center py-6 border-y border-slate-200 my-8">
-					We’re not here to sell you a car. We’re here to connect you to the people who can.
+					We’re not here to sell you a car. We’re here to connect you with the people who can — using
+					AI-powered tools to perform a secure soft credit check and match you with trusted dealerships and
+					lenders, so you don’t have to jump from one dealer to another.
 				</p>
 			</div>
 		</div>
