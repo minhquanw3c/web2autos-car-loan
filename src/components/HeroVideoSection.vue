@@ -26,7 +26,7 @@
 		class="relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-4 sm:-mt-6 lg:-mt-8 mb-24 h-[calc(100vh-5rem)] min-h-[550px] md:min-h-[600px] bg-slate-950 flex items-end pb-24 md:pb-0 md:items-center justify-center overflow-hidden"
 	>
 		<!-- Background Vimeo Video (Using the background=1 param for autoplay/loop/mute) -->
-		<div class="absolute inset-0 w-full h-full pointer-events-none opacity-50">
+		<div class="absolute inset-0 w-full h-full pointer-events-none opacity-80">
 			<iframe
 				ref="videoIframe"
 				src="https://player.vimeo.com/video/1131989201?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
@@ -56,7 +56,7 @@
 					class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 md:mb-6 drop-shadow-2xl"
 				>
 					Drive Your Dream Car <br class="hidden md:block" />
-					<span class="text-indigo-400">Today</span>
+					<span class="text-indigo-400">&dollar;0 Down</span>
 				</h1>
 
 				<p class="text-lg sm:text-xl md:text-2xl text-slate-200 mb-8 md:mb-10 leading-relaxed drop-shadow-lg">
