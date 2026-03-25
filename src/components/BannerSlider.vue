@@ -33,7 +33,7 @@
 			id: 3,
 			title: 'All Credit Types Welcome',
 			description: 'Whether you have excellent credit or are rebuilding, we have a financing solution for you.',
-			image: '/olav-tvedt-6lSBynPRaAQ-unsplash.jpg',
+			image: '/web2autos-car.webp',
 			cta: null
 		}
 	]
