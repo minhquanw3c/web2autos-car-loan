@@ -1,5 +1,6 @@
 <script setup lang="ts">
 	import { useLoanStore } from '@/stores/loan'
+	import HeroVideoSection from '@/components/HeroVideoSection.vue'
 	import BannerSlider from '@/components/BannerSlider.vue'
 	import LendingPartners from '@/components/LendingPartners.vue'
 	import FeaturedInventory from '@/components/FeaturedInventory.vue'
@@ -12,6 +13,7 @@
 
 <template>
 	<div class="animate-[fadeIn_0.5s_ease-out]">
+		<HeroVideoSection />
 		<BannerSlider />
 		<LendingPartners />
 
