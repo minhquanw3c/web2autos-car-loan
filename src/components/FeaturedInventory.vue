@@ -60,7 +60,7 @@
 
 	const viewDealerInventory = (dealerName: string) => {
 		store.resetFilters()
-		store.filters.dealer = dealerName
+		// store.filters.dealer = dealerName
 		store.goToInventory()
 	}
 

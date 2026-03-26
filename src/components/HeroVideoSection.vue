@@ -56,7 +56,7 @@
 					class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 md:mb-6 drop-shadow-2xl"
 				>
 					Drive Your Dream Car <br class="hidden md:block" />
-					<span class="text-indigo-400">&dollar;0 Down</span>
+					<span class="text-indigo-400">As Low As &dollar;99 Down</span>
 				</h1>
 
 				<p class="text-lg sm:text-xl md:text-2xl text-slate-200 mb-8 md:mb-10 leading-relaxed drop-shadow-lg">
