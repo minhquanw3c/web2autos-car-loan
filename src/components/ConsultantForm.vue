@@ -90,7 +90,7 @@
 					{
 						label: 'Employment Status',
 						type: 'select',
-						required: true,
+						required: false,
 						options: ['Employed', 'Retired', 'Self-employed', 'Other']
 					},
 					{ label: 'Company Name', type: 'text', required: true }
@@ -385,7 +385,7 @@
 			return year < 2
 		}
 		const status = formData['employment_employmentstatus']
-		const isEmployed = status === 'Employed' || status === 'Self-employed'
+		const isEmployed = !!status && (status === 'Employed' || status === 'Self-employed')
 
 		if (group.heading === 'Work Address') {
 			return isEmployed
@@ -403,7 +403,7 @@
 	const shouldShowInput = (group: any, input: any) => {
 		if (group.heading === 'Employment' && input.label === 'Company Name') {
 			const status = formData['employment_employmentstatus']
-			return status === 'Employed' || status === 'Self-employed'
+			return !!status && (status === 'Employed' || status === 'Self-employed')
 		}
 		return true
 	}
@@ -434,7 +434,7 @@
 	watch(
 		() => formData['employment_employmentstatus'],
 		(newVal) => {
-			const isEmployed = newVal === 'Employed' || newVal === 'Self-employed'
+			const isEmployed = !!newVal && (newVal === 'Employed' || newVal === 'Self-employed')
 			const empGroup = schema.groups.find((g) => g.heading === 'Employment')
 			const compInput = empGroup?.inputs.find((i) => i.label === 'Company Name')
 			if (compInput) {
