@@ -138,6 +138,8 @@
 			{
 				heading: 'Final details',
 				inputs: [
+					{ label: 'Do you have trade-in?', type: 'radio', options: ['Yes', 'No'], required: true },
+					{ label: 'Please enter your vehicle model/year', type: 'text', required: true },
 					{ label: 'Allow partner dealerships to access my credit report', type: 'checkbox', default: false },
 					{ label: 'Estimated Credit Score', type: 'number', required: true },
 					{ label: 'Planned Down Payment', type: 'number', required: true },
@@ -405,6 +407,9 @@
 			const status = formData['employment_employmentstatus']
 			return !!status && (status === 'Employed' || status === 'Self-employed')
 		}
+		if (group.heading === 'Final details' && input.label === 'Please enter your vehicle model/year') {
+			return formData['finaldetails_doyouhavetradein'] === 'Yes'
+		}
 		return true
 	}
 
@@ -490,6 +495,7 @@
 						if (!val && val !== 0)
 							if (input.type === 'checkbox') errorMsg = 'This field is required.'
 							else if (input.type === 'signature') errorMsg = 'Please sign the application.'
+							else if (input.type === 'radio') errorMsg = 'Please select an option.'
 							else errorMsg = `${input.label} is required.`
 					}
 				}
@@ -547,6 +553,8 @@
 				workaddress_occupationjobtitle: 'Manager',
 				workaddress_timeofcurrentemployment: { year: 4, month: 2 },
 				workaddress_totalmonthlyincomeorannually: 6000,
+				finaldetails_doyouhavetradein: 'Yes',
+				finaldetails_pleaseenteryourvehiclemodelyear: '2018 Toyota Camry',
 				finaldetails_planneddownpayment: 2000,
 				finaldetails_estimatedcreditscore: 750
 			}
@@ -588,6 +596,7 @@
 				previousworkaddress_zipcode: '60610',
 				previousworkaddress_occupationjobtitle: 'Junior Designer',
 				previousworkaddress_timeatpreviousemployment: { year: 3, month: 0 },
+				finaldetails_doyouhavetradein: 'No',
 				finaldetails_planneddownpayment: 1500,
 				finaldetails_estimatedcreditscore: 720
 			}
@@ -609,6 +618,7 @@
 				residence_monthlypaymentyourportion: 0,
 				residence_timeatcurrentaddress: { year: 15, month: 0 },
 				employment_employmentstatus: 'Retired',
+				finaldetails_doyouhavetradein: 'No',
 				finaldetails_planneddownpayment: 5000,
 				finaldetails_estimatedcreditscore: 800
 			}
@@ -1114,6 +1124,21 @@
 												</el-input>
 											</div>
 										</div>
+
+										<el-radio-group
+											v-else-if="input.type === 'radio'"
+											v-model="formData[generateKey(group.heading, input.label)]"
+											class="w-full"
+										>
+											<el-radio
+												v-for="opt in resolveOptions(input.options)"
+												:key="opt"
+												:label="opt"
+												:value="opt"
+											>
+												{{ opt }}
+											</el-radio>
+										</el-radio-group>
 
 										<el-input
 											v-else
