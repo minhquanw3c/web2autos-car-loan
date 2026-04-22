@@ -55,13 +55,13 @@
 				<h1
 					class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 md:mb-6 drop-shadow-2xl"
 				>
-					Drive Your Dream Car <br class="hidden md:block" />
-					<span class="text-indigo-400">As Low As &dollar;99 Down</span>
+					Apply Once. <br class="hidden md:block" />
+					<span class="text-indigo-400">Let AI Do the Work.</span>
 				</h1>
 
 				<p class="text-lg sm:text-xl md:text-2xl text-slate-200 mb-8 md:mb-10 leading-relaxed drop-shadow-lg">
-					Experience a seamless, transparent, and digital-first approach to buying your next car. We connect
-					you with lenders ready to say YES.
+					Submit one simple form and get instantly matched with lenders ready to say YES—no matter your
+					credit. Fast approvals and as low as &dollar;99 down at delivery
 				</p>
 
 				<div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4 md:gap-5 w-full sm:w-auto">
