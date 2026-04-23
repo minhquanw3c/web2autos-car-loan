@@ -1,42 +1,12 @@
-# web2autos-car-loan
+Steps to obtain access tokens for Sub-account to make api calls to upsert data to GoHighLevel CRM
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+- Go to: https://marketplace.gohighlevel.com/login
+- Sign in using email: info@web2autos.com (App developer account)
+- Once signed in, access: https://marketplace.gohighlevel.com/app-settings/68999b4e7091972603e3fd96/version/68999b4e7091972603e3fd96/advanced/auth
+- Open a new browser tab and go to: https://marketplace.gohighlevel.com/v2/oauth/chooselocation?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foauth&client_id=68999b4e7091972603e3fd96-me6srmeg&scope=contacts.write+objects%2Frecord.readonly+objects%2Fschema.readonly+locations%2FcustomFields.readonly&version_id=68999b4e7091972603e3fd96
+- If asked for sign in after redirection, use email: web2autos@gmail.com (Agency account)
+- Once app installed, copy authorization code from browser url
+- Go to: https://marketplace.gohighlevel.com/docs/Authorization/TargetUserAgency
+- Fill in required fields and make request to obtain agency access token
+- Then go to: https://marketplace.gohighlevel.com/docs/ghl/oauth/get-location-access-token
+- Again, fill in required fields in combination with agency access token to make request to obtain Location access token.
