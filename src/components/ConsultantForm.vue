@@ -91,7 +91,7 @@
 						label: 'Employment Status',
 						type: 'select',
 						required: false,
-						options: ['Employed', 'Retired', 'Self-employed', 'Other']
+						options: ['Employed', 'Retired', 'Self-employed']
 					},
 					{ label: 'Company Name', type: 'text', required: true }
 				]
