@@ -49,9 +49,13 @@
 					class="bg-gradient-to-b from-indigo-900/50 to-slate-900 border border-indigo-500/30 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:shadow-indigo-500/20 group"
 				>
 					<div
-						class="w-20 h-20 mx-auto bg-indigo-500/20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
 					>
-						<i class="fas fa-mobile-alt text-4xl text-indigo-400"></i>
+						<img
+							src="/pexels-japy-34624326.jpg"
+							alt="1st Prize"
+							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+						/>
 					</div>
 					<h3 class="text-xl font-bold text-indigo-400 mb-2 uppercase tracking-wide">1st Prize</h3>
 					<p class="text-3xl font-extrabold text-white">iPhone 17</p>
@@ -61,9 +65,13 @@
 					class="bg-gradient-to-b from-slate-800/80 to-slate-900 border border-white/10 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:border-white/30 group"
 				>
 					<div
-						class="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
 					>
-						<i class="fas fa-tv text-4xl text-slate-200"></i>
+						<img
+							src="/campbell-3ZUsNJhi_Ik-unsplash.jpg"
+							alt="2nd Prize"
+							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+						/>
 					</div>
 					<h3 class="text-xl font-bold text-slate-400 mb-2 uppercase tracking-wide">2nd Prize</h3>
 					<p class="text-2xl font-extrabold text-white">
@@ -75,15 +83,25 @@
 					class="bg-gradient-to-b from-slate-800/80 to-slate-900 border border-white/10 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:border-white/30 group"
 				>
 					<div
-						class="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
 					>
-						<i class="fas fa-credit-card text-4xl text-slate-200"></i>
+						<img
+							src="/campbell-3ZUsNJhi_Ik-unsplash.jpg"
+							alt="3rd Prize"
+							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+						/>
 					</div>
 					<h3 class="text-xl font-bold text-slate-400 mb-2 uppercase tracking-wide">3rd Prize</h3>
 					<p class="text-2xl font-extrabold text-white">$500 Visa Gift Card</p>
 				</div>
 			</div>
-			<p class="text-center text-slate-400 mt-6 italic">No purchase is necessary to participate.</p>
+			<div class="text-center mt-10">
+				<span
+					class="inline-block bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-bold py-3 px-8 rounded-full shadow-lg shadow-indigo-500/10"
+				>
+					No purchase is necessary to participate.
+				</span>
+			</div>
 		</div>
 
 		<!-- How to Enter & Eligibility -->
