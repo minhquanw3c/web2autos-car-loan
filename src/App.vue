@@ -16,6 +16,7 @@
 	import CarFinderForm from '@/components/CarFinderForm.vue'
 	import AboutPage from '@/components/AboutPage.vue'
 	import PromotionPage from '@/components/PromotionPage.vue'
+	import PromotionPopup from '@/components/PromotionPopup.vue'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
@@ -571,6 +572,8 @@
 					</div>
 				</div>
 			</footer>
+
+			<PromotionPopup />
 		</div>
 	</el-config-provider>
 </template>
