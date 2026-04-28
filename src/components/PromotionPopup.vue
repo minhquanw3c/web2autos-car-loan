@@ -4,12 +4,13 @@
 
 	const store = useLoanStore()
 	const isVisible = ref(false)
-	let autoCloseTimer: ReturnType<typeof setTimeout>
+	const dontShowAgain = ref(false)
 
 	const closePopup = () => {
 		isVisible.value = false
-		localStorage.setItem('may_promo_dismissed_2025', 'true')
-		if (autoCloseTimer) clearTimeout(autoCloseTimer)
+		if (dontShowAgain.value) {
+			localStorage.setItem('may_promo_hide_permanently_2025', 'true')
+		}
 	}
 
 	const handleAction = () => {
@@ -18,15 +19,11 @@
 	}
 
 	onMounted(() => {
-		const hasSeen = localStorage.getItem('may_promo_dismissed_2025')
-		if (!hasSeen) {
+		const hidePermanently = localStorage.getItem('may_promo_hide_permanently_2025')
+		if (!hidePermanently) {
 			// Show after 1.5 seconds for better UX so it doesn't jarringly block the immediate page load
 			setTimeout(() => {
 				isVisible.value = true
-				// Auto close after 20 seconds
-				autoCloseTimer = setTimeout(() => {
-					closePopup()
-				}, 20000)
 			}, 1500)
 		}
 	})
@@ -78,16 +75,59 @@
 							>May Exclusive</span
 						>
 						<h3 class="text-3xl font-extrabold text-white mb-3">Win Big This May!</h3>
-						<p class="text-slate-300 mb-8 leading-relaxed">
+						<p class="text-slate-300 mb-6 leading-relaxed">
 							Schedule an appointment and enter to win an iPhone 17, an iPad, an 80-inch TV, or a $500
 							Visa Gift Card!
 						</p>
+
+						<div class="flex justify-center gap-4 mb-8">
+							<div
+								class="w-25 h-25 p-2 flex items-center justify-center shadow-lg transform transition hover:scale-110"
+							>
+								<img
+									src="/iphone.png"
+									alt="1st Prize"
+									class="w-full h-full object-contain drop-shadow-md"
+								/>
+							</div>
+							<div
+								class="w-25 h-25 p-2 flex items-center justify-center shadow-lg transform transition hover:scale-110"
+							>
+								<img
+									src="/tv-and-ipad.png"
+									alt="2nd Prize"
+									class="w-full h-full object-contain drop-shadow-md"
+								/>
+							</div>
+							<div
+								class="w-25 h-25 p-2 flex items-center justify-center shadow-lg transform transition hover:scale-110"
+							>
+								<img
+									src="/gift-card.png"
+									alt="3rd Prize"
+									class="w-full h-full object-contain drop-shadow-md"
+								/>
+							</div>
+						</div>
+
 						<button
 							@click="handleAction"
-							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg shadow-indigo-500/30 transition-transform transform hover:-translate-y-1 mb-4"
+							class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg shadow-indigo-500/30 transition-transform transform hover:-translate-y-1 mb-6"
 						>
 							Claim Your Entry Now
 						</button>
+
+						<label
+							class="flex items-center justify-center gap-2 mb-4 text-sm text-slate-400 cursor-pointer hover:text-slate-300 transition-colors select-none"
+						>
+							<input
+								type="checkbox"
+								v-model="dontShowAgain"
+								class="rounded border-white/20 bg-black/20 text-indigo-500 focus:ring-indigo-500/50 cursor-pointer w-4 h-4"
+							/>
+							<span>Don't show this again</span>
+						</label>
+
 						<button
 							@click="closePopup"
 							class="text-slate-500 hover:text-slate-300 text-sm transition-colors font-medium"
