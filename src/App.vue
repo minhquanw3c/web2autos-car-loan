@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { onMounted, ref, computed } from 'vue'
+	import { onMounted, onUnmounted, ref, computed } from 'vue'
 	import { useLoanStore } from '@/stores/loan'
 	import { useI18n } from 'vue-i18n'
 	import en from 'element-plus/es/locale/lang/en'
@@ -30,6 +30,40 @@
 		localStorage.setItem('user-locale', lang)
 	}
 
+	const handlePopState = () => {
+		const urlParams = new URLSearchParams(window.location.search)
+
+		if (urlParams.get('showApplication') === 'true') {
+			store.currentView = 'application'
+		} else if (urlParams.get('showAbout') === 'true') {
+			store.currentView = 'about'
+		} else if (urlParams.get('showContact') === 'true') {
+			store.currentView = 'contact'
+		} else if (urlParams.get('showPrivacy') === 'true') {
+			store.currentView = 'privacy'
+		} else if (urlParams.get('showTerms') === 'true') {
+			store.currentView = 'terms'
+		} else if (urlParams.get('showDisclaimer') === 'true') {
+			store.currentView = 'disclaimer'
+		} else if (urlParams.get('showInventory') === 'true' || urlParams.get('vehicle_id')) {
+			store.currentView = 'inventory'
+			if (urlParams.get('vehicle_id')) {
+				store.processDeepLink()
+			} else {
+				store.selectedVehicle = null
+			}
+		} else if (urlParams.get('showDealershipInquiry') === 'true') {
+			store.currentView = 'dealership-inquiry'
+		} else if (urlParams.get('showCarFinder') === 'true') {
+			store.currentView = 'car-finder'
+		} else if (urlParams.get('showPromotion') === 'true') {
+			store.currentView = 'promotion'
+		} else {
+			store.currentView = 'home'
+			store.selectedVehicle = null
+		}
+	}
+
 	onMounted(() => {
 		store.fetchInventory()
 
@@ -57,12 +91,18 @@
 			store.goToPromotion()
 		}
 
+		window.addEventListener('popstate', handlePopState)
+
 		// Embed Chat Widget
 		const script = document.createElement('script')
 		script.src = 'https://beta.leadconnectorhq.com/loader.js'
 		script.setAttribute('data-resources-url', 'https://beta.leadconnectorhq.com/chat-widget/loader.js')
 		script.setAttribute('data-widget-id', '68b77d83c08a475db08c6e02')
 		document.body.appendChild(script)
+	})
+
+	onUnmounted(() => {
+		window.removeEventListener('popstate', handlePopState)
 	})
 </script>
 

@@ -618,6 +618,7 @@ export const useLoanStore = defineStore('loan', () => {
 		goToPromotion,
 		applyOnboarding,
 		fetchInventory,
+		processDeepLink,
 		calculatePaymentForPrice,
 		resetFilters
 	}
