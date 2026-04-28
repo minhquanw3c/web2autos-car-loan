@@ -10,7 +10,7 @@
 			title: 'May Exclusive Giveaway',
 			description:
 				'Schedule an appointment this May and enter to win an iPhone 17, an iPad, an 80-inch TV, or a $500 Visa Gift Card! No purchase necessary.',
-			image: '/e105b708-3a9f-42e8-98eb-d6e2a98216b6.jpg', // Re-using an existing image as placeholder
+			image: '/hf_20260427_062012_cff51118-4873-4757-b2cf-b26615a5d65c.jpg', // Re-using an existing image as placeholder
 			cta: 'View Promotion Details'
 		},
 		{
