@@ -6,6 +6,14 @@
 
 	const banners = [
 		{
+			id: 5,
+			title: 'May Exclusive Giveaway',
+			description:
+				'Schedule an appointment this May and enter to win an iPhone 17, an iPad, an 80-inch TV, or a $500 Visa Gift Card! No purchase necessary.',
+			image: '/e105b708-3a9f-42e8-98eb-d6e2a98216b6.jpg', // Re-using an existing image as placeholder
+			cta: 'View Promotion Details'
+		},
+		{
 			id: 4,
 			title: 'AI Instant Pre-Qualification',
 			description:
@@ -61,6 +69,8 @@
 	const handleBannerAction = (banner: { id: number }) => {
 		if (banner.id === 1 || banner.id === 4) {
 			store.startApplication()
+		} else if (banner.id === 5) {
+			store.goToPromotion()
 		}
 	}
 </script>

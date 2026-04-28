@@ -15,6 +15,7 @@
 	import DealershipInquiryPage from '@/components/DealershipInquiryPage.vue'
 	import CarFinderForm from '@/components/CarFinderForm.vue'
 	import AboutPage from '@/components/AboutPage.vue'
+	import PromotionPage from '@/components/PromotionPage.vue'
 	import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 	const store = useLoanStore()
@@ -52,6 +53,8 @@
 			store.goToDealershipInquiry()
 		} else if (urlParams.get('showCarFinder') === 'true') {
 			store.goToCarFinder()
+		} else if (urlParams.get('showPromotion') === 'true') {
+			store.goToPromotion()
 		}
 
 		// Embed Chat Widget
@@ -353,6 +356,10 @@
 
 					<div v-else-if="store.currentView === 'application'" key="app">
 						<ConsultantForm />
+					</div>
+
+					<div v-else-if="store.currentView === 'promotion'" key="promotion">
+						<PromotionPage />
 					</div>
 
 					<div v-else-if="store.currentView === 'contact'" key="contact">
