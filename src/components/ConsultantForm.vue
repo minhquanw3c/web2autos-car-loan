@@ -726,6 +726,7 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
+					referral_source: store.applicationSource || null,
 					...formData,
 					selected_vehicle: store.selectedVehicle
 						? {

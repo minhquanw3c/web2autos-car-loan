@@ -178,7 +178,12 @@
 					</ul>
 				</div>
 				<button
-					@click="store.startApplication"
+					@click="
+						() => {
+							store.applicationSource = 'May2025Promotion'
+							store.startApplication()
+						}
+					"
 					class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-indigo-500/20 hover:-translate-y-1"
 				>
 					Secure Your Appointment Now

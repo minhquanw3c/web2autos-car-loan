@@ -21,6 +21,8 @@ export const useLoanStore = defineStore('loan', () => {
 	>('home')
 	const selectedVehicle = ref<Vehicle | null>(null)
 
+	const applicationSource = ref<string | null>(null)
+
 	// NEW: Dynamic Loading Message
 	const loadingMessage = ref('Loading Inventory...')
 
@@ -394,6 +396,7 @@ export const useLoanStore = defineStore('loan', () => {
 	const resetView = () => {
 		currentView.value = 'home'
 		selectedVehicle.value = null
+		applicationSource.value = null
 
 		const url = new URL(window.location.href)
 		url.searchParams.delete('showApplication')
@@ -575,9 +578,10 @@ export const useLoanStore = defineStore('loan', () => {
 		loanTerm,
 		currentView,
 		selectedVehicle,
+		applicationSource,
 		inventory,
 		isFetchingVehicles,
-		loadingMessage, // NEW: Exported State
+		loadingMessage,
 		fetchError,
 		currentPage,
 		pageSize,
