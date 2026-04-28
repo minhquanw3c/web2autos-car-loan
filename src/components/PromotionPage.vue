@@ -49,12 +49,13 @@
 					class="bg-gradient-to-b from-indigo-900/50 to-slate-900 border border-indigo-500/30 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:shadow-indigo-500/20 group"
 				>
 					<div
-						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
+						class="w-full h-48 md:h-56 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5 p-4 flex items-center justify-center"
 					>
 						<img
-							src="/pexels-japy-34624326.jpg"
+							loading="lazy"
+							src="/iphone.png"
 							alt="1st Prize"
-							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+							class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
 						/>
 					</div>
 					<h3 class="text-xl font-bold text-indigo-400 mb-2 uppercase tracking-wide">1st Prize</h3>
@@ -65,12 +66,13 @@
 					class="bg-gradient-to-b from-slate-800/80 to-slate-900 border border-white/10 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:border-white/30 group"
 				>
 					<div
-						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
+						class="w-full h-48 md:h-56 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5 p-4 flex items-center justify-center"
 					>
 						<img
-							src="/campbell-3ZUsNJhi_Ik-unsplash.jpg"
+							loading="lazy"
+							src="/tv-and-ipad.png"
 							alt="2nd Prize"
-							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+							class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
 						/>
 					</div>
 					<h3 class="text-xl font-bold text-slate-400 mb-2 uppercase tracking-wide">2nd Prize</h3>
@@ -83,12 +85,13 @@
 					class="bg-gradient-to-b from-slate-800/80 to-slate-900 border border-white/10 rounded-3xl p-8 text-center shadow-xl transform transition hover:-translate-y-2 hover:border-white/30 group"
 				>
 					<div
-						class="w-full h-40 md:h-48 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5"
+						class="w-full h-48 md:h-56 mb-6 overflow-hidden rounded-2xl relative bg-white/5 border border-white/5 p-4 flex items-center justify-center"
 					>
 						<img
-							src="/campbell-3ZUsNJhi_Ik-unsplash.jpg"
+							loading="lazy"
+							src="/gift-card.png"
 							alt="3rd Prize"
-							class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+							class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
 						/>
 					</div>
 					<h3 class="text-xl font-bold text-slate-400 mb-2 uppercase tracking-wide">3rd Prize</h3>
