@@ -11,9 +11,21 @@
 		if (dontShowAgain.value) {
 			localStorage.setItem('may_promo_hide_permanently_2025', 'true')
 		}
+
+		if (typeof (window as any).gtag === 'function') {
+			;(window as any).gtag('event', 'close_promotion_popup', {
+				permanently_hidden: dontShowAgain.value
+			})
+		}
 	}
 
 	const handleAction = () => {
+		if (typeof (window as any).gtag === 'function') {
+			;(window as any).gtag('event', 'click_promotion_cta', {
+				promotion_name: 'May Exclusive Giveaway'
+			})
+		}
+
 		closePopup()
 		store.goToPromotion()
 	}
@@ -24,6 +36,12 @@
 			// Show after 1.5 seconds for better UX so it doesn't jarringly block the immediate page load
 			setTimeout(() => {
 				isVisible.value = true
+
+				if (typeof (window as any).gtag === 'function') {
+					;(window as any).gtag('event', 'view_promotion_popup', {
+						promotion_name: 'May Exclusive Giveaway'
+					})
+				}
 			}, 1500)
 		}
 	})
