@@ -140,7 +140,12 @@
 				inputs: [
 					{ label: 'Do you have trade-in?', type: 'radio', options: ['Yes', 'No'], required: true },
 					{ label: 'Please enter your vehicle model/year', type: 'text', required: true },
-					{ label: 'Allow partner dealerships to access my credit report', type: 'checkbox', default: false },
+					{ label: 'Cosigner is available?', type: 'checkbox', default: false },
+					{
+						label: 'Allow partner dealerships to access my credit report.',
+						type: 'checkbox',
+						default: false
+					},
 					{ label: 'Estimated Credit Score', type: 'number', required: true },
 					{ label: 'Planned Down Payment', type: 'number', required: true },
 					{
