@@ -29,7 +29,7 @@
 		<div class="absolute inset-0 w-full h-full pointer-events-none opacity-80">
 			<iframe
 				ref="videoIframe"
-				src="https://player.vimeo.com/video/1131989201?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
+				src="https://player.vimeo.com/video/1131989201?autoplay=1&loop=1&muted=1"
 				class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] max-w-none"
 				frameborder="0"
 				allow="autoplay; fullscreen"
