@@ -7,7 +7,6 @@
 	import HomePage from '@/components/HomePage.vue'
 	import InventoryPage from '@/components/InventoryPage.vue'
 	import ConsultantForm from '@/components/ConsultantForm.vue'
-	import StepsSection from '@/components/StepsSection.vue'
 	import ContactPage from '@/components/ContactPage.vue'
 	import PrivacyPage from '@/components/PrivacyPage.vue'
 	import TermsPage from '@/components/TermsPage.vue'
@@ -23,7 +22,6 @@
 	const isMobileMenuOpen = ref(false)
 
 	const { locale } = useI18n()
-	// Dynamically compute the Element Plus locale based on vue-i18n's current locale
 	const elLocale = computed(() => (locale.value === 'es' ? es : en))
 
 	const switchLanguage = (lang: 'en' | 'es') => {
@@ -207,6 +205,16 @@
 								class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
 								>{{ $t('nav.car_finder') }}</a
 							>
+							<a
+								@click="
+									() => {
+										store.goToBankingAI()
+										isMobileMenuOpen = false
+									}
+								"
+								class="block w-full text-center py-5 text-2xl font-medium text-slate-100 hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
+								>{{ $t('nav.banking_ai') }}</a
+							>
 						</div>
 
 						<div class="flex gap-6 mt-8">
@@ -328,6 +336,15 @@
 								"
 								class="cursor-pointer transition-colors text-sm uppercase tracking-wide"
 								>{{ $t('nav.car_finder') }}</a
+							>
+							<span
+								class="text-white/20 select-none transition-colors duration-300 [a:hover+&]:text-indigo-400 [&:has(+a:hover)]:text-indigo-400"
+								>/</span
+							>
+							<a
+								@click="store.goToBankingAI"
+								class="text-slate-300 hover:text-white cursor-pointer transition-colors text-sm uppercase tracking-wide"
+								>{{ $t('nav.banking_ai') }}</a
 							>
 						</nav>
 

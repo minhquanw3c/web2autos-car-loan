@@ -349,6 +349,10 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 	}
 
+	const goToBankingAI = () => {
+		window.location.href = 'https://ai.web2autos.com'
+	}
+
 	const applyOnboarding = (budget: number | null, make: string, condition: string) => {
 		resetCalculator()
 		resetFilters()
@@ -620,6 +624,7 @@ export const useLoanStore = defineStore('loan', () => {
 		goToDealershipInquiry,
 		goToCarFinder,
 		goToPromotion,
+		goToBankingAI,
 		applyOnboarding,
 		fetchInventory,
 		processDeepLink,
