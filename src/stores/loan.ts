@@ -327,27 +327,6 @@ export const useLoanStore = defineStore('loan', () => {
 		}
 	}
 
-	const goToPromotion = () => {
-		currentView.value = 'promotion'
-		window.scrollTo({ top: 0, behavior: 'smooth' })
-
-		const url = new URL(window.location.href)
-		url.searchParams.delete('showApplication')
-		url.searchParams.delete('vehicle_id')
-		url.searchParams.delete('showContact')
-		url.searchParams.delete('showPrivacy')
-		url.searchParams.delete('showTerms')
-		url.searchParams.delete('showDisclaimer')
-		url.searchParams.delete('showInventory')
-		url.searchParams.delete('showAbout')
-		url.searchParams.delete('showDealershipInquiry')
-		url.searchParams.delete('showCarFinder')
-		if (url.searchParams.get('showPromotion') !== 'true') {
-			url.searchParams.set('showPromotion', 'true')
-			window.history.pushState({}, '', url.toString())
-		}
-	}
-
 	const goToBankingAI = () => {
 		window.location.href = 'https://ai.web2autos.com'
 	}
