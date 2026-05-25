@@ -84,8 +84,6 @@
 			store.goToDealershipInquiry()
 		} else if (urlParams.get('showCarFinder') === 'true') {
 			store.goToCarFinder()
-		} else if (urlParams.get('showPromotion') === 'true') {
-			store.goToPromotion()
 		}
 
 		window.addEventListener('popstate', handlePopState)

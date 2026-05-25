@@ -27,7 +27,7 @@
 		}
 
 		closePopup()
-		store.goToPromotion()
+		// store.goToPromotion()
 	}
 
 	onMounted(() => {

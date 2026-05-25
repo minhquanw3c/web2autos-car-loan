@@ -147,7 +147,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showInventory')
 		url.searchParams.delete('showDealershipInquiry')
 		url.searchParams.delete('showAbout')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showCarFinder')
 		if (url.searchParams.get('showApplication') !== 'true') {
 			url.searchParams.set('showApplication', 'true')
@@ -172,7 +171,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showInventory')
 		url.searchParams.delete('showDealershipInquiry')
 		url.searchParams.delete('showContact')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showCarFinder')
 		if (url.searchParams.get('showAbout') !== 'true') {
 			url.searchParams.set('showAbout', 'true')
@@ -192,7 +190,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showInventory')
 		url.searchParams.delete('showDealershipInquiry')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
 		if (url.searchParams.get('showContact') !== 'true') {
@@ -213,7 +210,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showInventory')
 		url.searchParams.delete('showDealershipInquiry')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
 		if (url.searchParams.get('showPrivacy') !== 'true') {
@@ -233,7 +229,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showInventory')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showDealershipInquiry')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
@@ -254,7 +249,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showPrivacy')
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showInventory')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showDealershipInquiry')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
@@ -275,7 +269,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showDealershipInquiry')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
 		// We don't delete vehicle_id here as we might be navigating to a specific vehicle
@@ -297,7 +290,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showInventory')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
 		if (url.searchParams.get('showDealershipInquiry') !== 'true') {
@@ -318,7 +310,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showTerms')
 		url.searchParams.delete('showDisclaimer')
 		url.searchParams.delete('showInventory')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showDealershipInquiry')
 		if (url.searchParams.get('showCarFinder') !== 'true') {
@@ -390,7 +381,6 @@ export const useLoanStore = defineStore('loan', () => {
 		url.searchParams.delete('showDealershipInquiry')
 		url.searchParams.delete('showAbout')
 		url.searchParams.delete('showCarFinder')
-		url.searchParams.delete('showPromotion')
 		url.searchParams.delete('vehicle_id')
 		window.history.pushState({}, '', url.toString())
 	}
@@ -601,7 +591,6 @@ export const useLoanStore = defineStore('loan', () => {
 		goToInventory,
 		goToDealershipInquiry,
 		goToCarFinder,
-		goToPromotion,
 		goToBankingAI,
 		applyOnboarding,
 		fetchInventory,
