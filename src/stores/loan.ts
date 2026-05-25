@@ -16,7 +16,6 @@ export const useLoanStore = defineStore('loan', () => {
 		| 'terms'
 		| 'disclaimer'
 		| 'dealership-inquiry'
-		| 'promotion'
 		| 'car-finder'
 	>('home')
 	const selectedVehicle = ref<Vehicle | null>(null)

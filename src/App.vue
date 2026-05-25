@@ -55,8 +55,6 @@
 			store.currentView = 'dealership-inquiry'
 		} else if (urlParams.get('showCarFinder') === 'true') {
 			store.currentView = 'car-finder'
-		} else if (urlParams.get('showPromotion') === 'true') {
-			store.currentView = 'promotion'
 		} else {
 			store.currentView = 'home'
 			store.selectedVehicle = null
@@ -416,10 +414,6 @@
 						<ConsultantForm />
 					</div>
 
-					<div v-else-if="store.currentView === 'promotion'" key="promotion">
-						<PromotionPage />
-					</div>
-
 					<div v-else-if="store.currentView === 'contact'" key="contact">
 						<ContactPage />
 					</div>
@@ -589,8 +583,6 @@
 					</div>
 				</div>
 			</footer>
-
-			<PromotionPopup />
 		</div>
 	</el-config-provider>
 </template>
